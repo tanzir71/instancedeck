@@ -23,6 +23,11 @@ removed; WebView2 installation is explicit/separate to avoid setup-time network
 calls. Publishing stays a user step after manual QA; the requested first release
 is a draft.
 
+No updater or draft-readiness Figma frame was supplied. Reuse the shared shell,
+flat documentation surfaces and existing confirmation controls, with 32px dialog
+padding and heading size. Store new copy in en.json. Alternatives: inventing a
+separate visual style or presenting unsigned downloads as trusted.
+
 ## 2026-11-14 — Published Storybook preserves explicit theme examples
 
 Production verification found that Storybook's light-only theme decorator could

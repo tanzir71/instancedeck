@@ -1,0 +1,11 @@
+{
+  "installerExecuted": false,
+  "originalSha256": "40af0402663007fe9d7928b3cdc3ba758ec9e298f45667b00043df972384189c",
+  "authenticode": "unsigned",
+  "privateKeyTransmitted": false,
+  "tamperedOwnInstallerRejected": true,
+  "validSignatureAndVersionAccepted": true,
+  "localBuildOnly": true,
+  "version": "0.1.0",
+  "signedVersionMismatchRejected": true
+}

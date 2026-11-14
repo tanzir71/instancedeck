@@ -23,12 +23,16 @@ export function UpdateCenter({
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [downloaded, setDownloaded] = useState<number>();
+  const requestEpoch = useRef(0);
   const autoAttempt = useRef<
     | { channel: string; client: DesktopClient; promise: Promise<UpdateInfo> }
     | undefined
   >(undefined);
   const allowed = settings.onboardingCompleted && settings.allowUpdateChecks;
   useEffect(() => {
+    const epoch = ++requestEpoch.current;
+    setConfirm(false);
+    setMessage('');
     if (!allowed) {
       autoAttempt.current = undefined;
       setInfo(undefined);
@@ -52,16 +56,17 @@ export function UpdateCenter({
     setError('');
     void autoAttempt.current.promise
       .then((value) => {
-        if (active) setInfo(value);
+        if (active && epoch === requestEpoch.current) setInfo(value);
       })
       .catch((e) => {
-        if (active) setError(String(e));
+        if (active && epoch === requestEpoch.current) setError(String(e));
       })
       .finally(() => {
-        if (active) setChecking(false);
+        if (active && epoch === requestEpoch.current) setChecking(false);
       });
     return () => {
       active = false;
+      requestEpoch.current++;
     };
   }, [client, allowed, settings.updateChannel]);
   useEffect(() => {
@@ -119,14 +124,16 @@ export function UpdateCenter({
           kind="secondary"
           disabled={!allowed || checking || installing}
           onClick={async () => {
+            const epoch = ++requestEpoch.current;
             setChecking(true);
             setError('');
             try {
-              setInfo(await client.checkUpdates());
+              const result = await client.checkUpdates();
+              if (epoch === requestEpoch.current) setInfo(result);
             } catch (e) {
-              setError(String(e));
+              if (epoch === requestEpoch.current) setError(String(e));
             } finally {
-              setChecking(false);
+              if (epoch === requestEpoch.current) setChecking(false);
             }
           }}
         >

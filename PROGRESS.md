@@ -24,7 +24,7 @@ before making requests. Installation has a separate confirmation, checks signed
 artifact versions, and refuses while recovery/history operations are pending.
 Portable builds direct users to manual extraction. The React checklist covers
 StrictMode's single automatic request, stale-result cleanup, subscription
-cleanup, keyboard dialogs and plain release-note rendering. Thirteen updater
+cleanup, keyboard dialogs and plain release-note rendering. Fifteen updater
 stories pass interaction/AA checks; three dedicated browser tests pass.
 
 Windows binaries remain unsigned. A separate project integrity key stays local;
@@ -60,6 +60,15 @@ controls, palette and confirmation spacing. These captures use labelled
 Storybook fixtures, not a published update. Offline verification of the locally
 built own installer also passes with its signed version while Windows
 Authenticode remains **NotSigned**. The private key was not transmitted.
+
+A regression story reproduced an older manual request displaying its error after
+switching update channels. Request generations now invalidate old manual and
+automatic results on channel/consent changes or unmount; review state also
+resets. The regression and installer-started state bring the library to **211
+stories**. All **17 P7 stories** pass interaction and AA checks after the fix;
+TypeScript passes. The local own-installer verifier rejects both tampering and a
+signed-version mismatch:
+[evidence](artifacts/p7/local-integrity-verification.json).
 
 ## P2 — Implementation and automated acceptance complete
 

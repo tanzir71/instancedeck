@@ -5,6 +5,7 @@ import { UpdateCenter } from './UpdateCenter';
 import { DesktopShell } from './DesktopApp';
 import { createPreviewClient } from './previewClient';
 import { fixtureSnapshot } from './fixtures';
+import { Button } from '../components/Button';
 import type { UpdateInfo } from './model';
 const meta = {
   title: 'Desktop/Updates',
@@ -157,6 +158,101 @@ export const Downloading: Story = {
     await expect(
       await within(body.getByRole('dialog')).findByRole('status'),
     ).toHaveTextContent('Downloaded 2.0 MiB');
+  },
+};
+export const InstallerStarted: Story = {
+  render: () => <Example />,
+  play: async () => {
+    const body = within(document.body);
+    await userEvent.click(
+      await body.findByRole('button', { name: 'Review update' }),
+    );
+    await userEvent.click(
+      body.getByRole('button', { name: 'Download and install' }),
+    );
+    await expect(
+      await body.findByText(
+        'Installer launched. Reopen InstanceDeck when it finishes.',
+      ),
+    ).toBeVisible();
+    await expect(body.queryByRole('dialog')).not.toBeInTheDocument();
+  },
+};
+function ChannelRace() {
+  const [settings, setSettings] = useState({
+    ...fixtureSnapshot.settings,
+    onboardingCompleted: true,
+    allowUpdateChecks: true,
+  });
+  const [settled, setSettled] = useState(false);
+  const [fixture] = useState(() => {
+    let count = 0;
+    let rejectOld = () => {};
+    return {
+      client: {
+        ...createPreviewClient(fixtureSnapshot, true),
+        checkUpdates: async (): Promise<UpdateInfo> => {
+          count++;
+          if (count === 2)
+            return new Promise((_, reject) => {
+              rejectOld = () =>
+                reject(new Error('Stale stable fixture request'));
+            });
+          return {
+            status: 'available',
+            version: count >= 3 ? '0.3.0' : '0.2.0',
+            notes: 'Fixture metadata only.',
+            portable: false,
+            currentVersion: '0.1.0',
+          };
+        },
+      },
+      rejectOld: () => rejectOld(),
+    };
+  });
+  return (
+    <DesktopShell
+      screen="settings"
+      onNavigate={() => {}}
+      onWindow={async () => {}}
+    >
+      <UpdateCenter client={fixture.client} settings={settings} />
+      <Button
+        onClick={() =>
+          setSettings((value) => ({ ...value, updateChannel: 'beta' }))
+        }
+      >
+        Choose beta fixture
+      </Button>
+      <Button
+        onClick={() => {
+          fixture.rejectOld();
+          setTimeout(() => setSettled(true), 0);
+        }}
+      >
+        Finish old fixture check
+      </Button>
+      {settled && <p>Old fixture check finished</p>}
+    </DesktopShell>
+  );
+}
+export const ChannelChangedDuringManualCheck: Story = {
+  render: () => <ChannelRace />,
+  play: async () => {
+    const body = within(document.body);
+    await expect(await body.findByRole('status')).toHaveTextContent('0.2.0');
+    await userEvent.click(
+      body.getByRole('button', { name: 'Check for updates' }),
+    );
+    await userEvent.click(
+      body.getByRole('button', { name: 'Choose beta fixture' }),
+    );
+    await expect(await body.findByRole('status')).toHaveTextContent('0.3.0');
+    await userEvent.click(
+      body.getByRole('button', { name: 'Finish old fixture check' }),
+    );
+    await body.findByText('Old fixture check finished');
+    await expect(body.queryByRole('alert')).not.toBeInTheDocument();
   },
 };
 export const Dark: Story = {
