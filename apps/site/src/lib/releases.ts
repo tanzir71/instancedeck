@@ -1,4 +1,5 @@
 // Build-time public metadata only. No browser API calls or target app data.
+import { execFileSync } from 'node:child_process';
 export interface ReleaseAsset {
   name: string;
   browser_download_url: string;
@@ -18,6 +19,23 @@ export function loadReleases() {
   return (pending ??= fetchReleases());
 }
 async function fetchReleases(): Promise<SiteRelease[]> {
+  if (process.env.GITHUB_ACTIONS === 'true') {
+    // The official client handles the job-scoped read token. Never place it in
+    // page data, logs or client code. Drafts are discarded before validation.
+    const data: unknown = JSON.parse(
+      execFileSync(
+        'gh',
+        ['api', 'repos/tanzir71/instancedeck/releases?per_page=100'],
+        {
+          encoding: 'utf8',
+          windowsHide: true,
+          timeout: 20000,
+          stdio: ['ignore', 'pipe', 'pipe'],
+        },
+      ),
+    );
+    return publicReleases(data);
+  }
   const response = await fetch(
     'https://api.github.com/repos/tanzir71/instancedeck/releases?per_page=100',
     {
@@ -33,6 +51,9 @@ async function fetchReleases(): Promise<SiteRelease[]> {
       `Cannot build release pages: GitHub returned ${response.status}`,
     );
   const data: unknown = await response.json();
+  return publicReleases(data);
+}
+export function publicReleases(data: unknown): SiteRelease[] {
   if (!Array.isArray(data))
     throw new Error('GitHub releases response is not a list');
   return data

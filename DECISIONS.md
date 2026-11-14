@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-11-14 — CI release metadata authentication
+
+The first tagged verification passed tests but its later site build received
+HTTP 403 from GitHub's unauthenticated release API. Retry the immutable tag's
+failed job. Future CI builds use the official GitHub CLI with the job-scoped
+read token; application code never receives that token. Drafts and the internal
+beta feed alias are filtered before page data is constructed. Keep site builds
+uncached because published release metadata changes independently of source.
+Local builds retain the public API path. Tests cover draft exclusion, trusted
+public URLs and honest failure on malformed responses. Alternatives: fabricating
+empty release data on errors, exposing draft links, or moving an existing tag.
+
 ## 2026-11-14 — Unsigned CI packages and local updater integrity
 
 Context: Windows certificate signing is unavailable. Updater integrity still

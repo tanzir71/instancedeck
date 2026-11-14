@@ -84,6 +84,15 @@ Rust tests** and warnings-denied clippy pass; core coverage is unchanged because
 these guards live in the desktop adapter. The exact tag workflow will repeat
 verification before building and creating the draft.
 
+The v0.1.0 tag points to `ff27c9a`. Its first verification attempt passed tests
+but the later site build received GitHub API HTTP 403. The failed job is being
+retried without changing the tag. Future CI/Pages builds use the official GitHub
+client and a job-scoped read token; drafts remain excluded from public release
+data. Three metadata tests pass, including private-draft exclusion and rejection
+of unexpected download URLs. TypeScript, lint and actionlint pass. The
+authenticated build path also builds all 25 pages locally. No token is embedded
+in browser code or page data.
+
 ## P2 — Implementation and automated acceptance complete
 
 The user's manual-verification deferral permits P3 to proceed. The desktop now

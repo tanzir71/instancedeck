@@ -1,6 +1,12 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "tasks": {
+    "@instancedeck/site#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "cache": false,
+      "passThroughEnv": ["GITHUB_ACTIONS", "GH_TOKEN"]
+    },
     "@instancedeck/ui#build": { "outputs": [] },
     "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
     "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] }
