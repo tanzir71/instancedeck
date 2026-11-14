@@ -1,0 +1,108 @@
+[
+  {
+    "story": "foundation-mobile",
+    "viewport": 390,
+    "documentWidth": 390,
+    "height": 3417,
+    "credits": 2
+  },
+  {
+    "story": "header",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 76
+    }
+  },
+  {
+    "story": "hero",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 780
+    }
+  },
+  {
+    "story": "works",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 96
+    }
+  },
+  {
+    "story": "pillars",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 991.0625
+    }
+  },
+  {
+    "story": "how",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 1423.0625
+    }
+  },
+  {
+    "story": "use-cases",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 717.9375
+    }
+  },
+  {
+    "story": "spotlight",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 1007.25
+    }
+  },
+  {
+    "story": "security",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 644.5625
+    }
+  },
+  {
+    "story": "faq",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 943.125
+    }
+  },
+  {
+    "story": "cta",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 374.71875
+    }
+  },
+  {
+    "story": "footer",
+    "bounds": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 480.953125
+    }
+  }
+]

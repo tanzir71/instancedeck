@@ -39,6 +39,12 @@ pub struct LaunchPlan {
 
 pub trait LaunchLock {}
 
+pub trait DesktopOperations: Send + Sync {
+    fn open_folder(&self, path: &str) -> Result<()>;
+    /// Caller must have verified an exact profile-name confirmation and stopped state.
+    fn recycle_profile(&self, profile: &crate::Profile) -> Result<()>;
+}
+
 /// Every Windows operation is behind this interface so the engine can run with fakes.
 pub trait Platform: Send + Sync {
     fn directories(&self) -> Result<Directories>;

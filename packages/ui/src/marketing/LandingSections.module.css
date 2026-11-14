@@ -1,0 +1,947 @@
+.header {
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: max(32px, calc((100vw - 1280px) / 2));
+  gap: 24px;
+  background: var(--paper);
+}
+
+.brand {
+  text-decoration: none;
+}
+
+.desktopNav {
+  display: flex;
+  gap: 36px;
+}
+
+.desktopNav :where(a) {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.desktopNav :where(a:hover) {
+  text-decoration: underline;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.headerActions > :where(a:first-child) {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.menuButton {
+  display: none;
+  height: 36px;
+  padding-inline: 14px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mobileMenu {
+  margin: 0;
+  border: 0;
+  padding: 24px;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.mobileMenu::backdrop {
+  background: var(--paper);
+}
+
+.mobileMenu > :where(div) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobileMenu :where(button) {
+  border: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  padding: 8px 14px;
+}
+
+.mobileMenu :where(nav) {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 48px;
+}
+
+.mobileMenu :where(nav > a:not(:last-child)) {
+  font-size: 24px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-2);
+  font: 13px/1.4 var(--font-mono);
+}
+
+.eyebrow > :where(span) {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  background: var(--accent);
+}
+
+.onDark {
+  color: var(--alpha-paper-72);
+}
+
+.onDark > :where(span) {
+  background: var(--accent-on-deep);
+}
+
+.hero {
+  display: flex;
+  min-height: 780px;
+}
+
+.heroCopy {
+  width: calc(50% + 40px);
+  flex-shrink: 0;
+  padding: 48px 48px 48px max(32px, calc((100vw - 1280px) / 2));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.heroCopy :where(h1) {
+  max-width: 632px;
+  font-size: var(--type-display-xl-size);
+  line-height: var(--type-display-xl-line);
+  letter-spacing: var(--type-display-xl-tracking);
+}
+
+.heroBody {
+  max-width: 540px;
+  color: var(--ink-2);
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+}
+
+.heroMeta {
+  color: var(--ink-3);
+  font: 13px/1.4 var(--font-mono);
+}
+
+.fanField {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--canvas);
+}
+
+.fanStage {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 680px;
+  height: 780px;
+  transform: translateX(-50%);
+}
+
+.fanCard {
+  position: absolute;
+  left: 346px;
+  top: 410px;
+  transform-origin: 50% calc(50% + 1000px);
+  transform: translate(-50%, -50%) rotate(calc(var(--fan-step) * 5deg));
+  animation: fan-open 240ms ease-out both;
+  animation-delay: var(--fan-delay);
+}
+
+.instanceCard {
+  width: 240px;
+  height: 320px;
+  padding: 24px;
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.instanceCard > :where(div:first-child) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.instanceCard > :where(div:last-child) {
+  display: grid;
+  gap: 6px;
+}
+
+.instanceCard :where(h3) {
+  font: 400 30px/1.16 var(--font-display);
+  letter-spacing: -0.15px;
+}
+
+.instanceCard :where(p) {
+  color: var(--paper);
+  font: 13px/1.4 var(--font-mono);
+}
+
+.instanceCard :where(small) {
+  color: var(--paper);
+  font: 11px/1.4 var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.works {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 36px max(32px, calc((100vw - 1280px) / 2));
+  background: var(--canvas);
+}
+
+.works > :where(p) {
+  color: var(--ink-3);
+  font: 13px/1.4 var(--font-mono);
+  white-space: nowrap;
+}
+
+.works > :where(div) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+}
+
+.works > :where(div) > :where(span) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.stripTile {
+  background: var(--paper);
+}
+
+.pillars {
+  padding: 160px max(32px, calc((100vw - 1280px) / 2));
+}
+
+.pillarsIntro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 64px;
+  margin-bottom: 80px;
+}
+
+.pillarsIntro > :where(div) {
+  display: grid;
+  gap: 24px;
+}
+
+.pillars :where(h2) {
+  max-width: 700px;
+  font-size: 56px;
+  line-height: 1.06;
+  letter-spacing: -0.84px;
+}
+
+.pillarsIntro > :where(p) {
+  max-width: 440px;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 56px;
+}
+
+.features > :where(article) {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.features :where(h3) {
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+.features > :where(article) > :where(p) {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.featureVisual {
+  height: 280px;
+  width: 100%;
+  background: var(--canvas);
+}
+
+.visual0 {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 32px;
+}
+
+.visual0 :where(span) {
+  flex: 1;
+  min-width: 0;
+  background: var(--profile-iris);
+  color: var(--paper);
+  height: 216px;
+  padding: 12px;
+  font: 11px/1.4 var(--font-mono);
+}
+
+.visual0 :where(span:nth-child(2)) {
+  background: var(--profile-teal);
+  height: 176px;
+}
+
+.visual0 :where(span:nth-child(3)) {
+  background: var(--profile-terracotta);
+  height: 136px;
+}
+
+.visual1 {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  background: var(--deep);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.visual1 :where(p) {
+  font: 11px/1.4 var(--font-mono);
+  color: var(--accent-on-deep);
+}
+
+.visual1 :where(p:first-child) {
+  font-size: 13px;
+}
+
+.visual1 :where(p:last-child) {
+  margin-top: 8px;
+}
+
+.visual1 :where(pre) {
+  margin: 0;
+  font: 11px/2.3 var(--font-mono);
+}
+
+.visual2 {
+  padding: 24px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.visual2 :where(span) {
+  font: 400 120px/1 var(--font-display);
+  letter-spacing: -3.6px;
+}
+
+.visual2 :where(p) {
+  font: 13px/1.4 var(--font-mono);
+  color: var(--ink-2);
+}
+
+.security {
+  display: flex;
+  gap: 96px;
+  padding: 160px max(32px, calc((100vw - 1280px) / 2));
+  background: var(--deep);
+  color: var(--paper);
+}
+
+.securityIntro {
+  flex: 0 0 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.security :where(h2) {
+  font-size: 56px;
+  line-height: 1.06;
+  letter-spacing: -0.84px;
+}
+
+.securityIntro > :where(p:not(:first-child)) {
+  max-width: 460px;
+  color: var(--alpha-paper-72);
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.security :where(a) {
+  color: var(--accent-on-deep);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.security :where(a:hover) {
+  text-decoration: underline;
+}
+
+.securityFacts {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 48px;
+}
+
+.securityFacts > :where(div) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.securityFacts > :where(div) > :where(span) {
+  width: 10px;
+  height: 10px;
+  background: var(--accent-on-deep);
+}
+
+.securityFacts :where(h3) {
+  font: 400 20px/1.4 var(--font-mono);
+  letter-spacing: -0.1px;
+}
+
+.securityFacts :where(p) {
+  font: 13px/1.4 var(--font-mono);
+  color: var(--alpha-paper-56);
+}
+
+.cta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 64px;
+  padding: 128px max(32px, calc((100vw - 1280px) / 2));
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.cta :where(h2) {
+  max-width: 680px;
+  font-size: 56px;
+  line-height: 1.06;
+  letter-spacing: -0.84px;
+}
+
+.cta > :where(div) {
+  display: grid;
+  gap: 16px;
+}
+
+.cta :where(p) {
+  max-width: 380px;
+  color: var(--alpha-paper-80);
+  font: 13px/1.4 var(--font-mono);
+}
+
+.cta :where(a) {
+  justify-self: start;
+}
+
+.footer {
+  padding: 96px max(32px, calc((100vw - 1280px) / 2)) 56px;
+  background: var(--deep);
+  color: var(--paper);
+  display: grid;
+  gap: 96px;
+}
+
+.footerTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.footerBrand {
+  display: grid;
+  gap: 16px;
+}
+
+.footerBrand > :where(p) {
+  max-width: 280px;
+  color: var(--alpha-paper-72);
+}
+
+.footerGroups {
+  display: flex;
+  gap: 72px;
+}
+
+.footerGroups > :where(div) {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footerGroups :where(h2) {
+  color: var(--alpha-paper-56);
+  font: 11px/1.4 var(--font-mono);
+}
+
+.footerGroups :where(a) {
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.footerGroups :where(a:hover) {
+  text-decoration: underline;
+}
+
+.footerBottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 48px;
+}
+
+.legalCopy {
+  display: grid;
+  gap: 10px;
+  max-width: 700px;
+  color: var(--alpha-paper-56);
+  font: 11px/1.4 var(--font-mono);
+}
+
+.credit {
+  flex-shrink: 0;
+  max-width: 100%;
+  color: var(--alpha-paper-72);
+}
+
+.credit :where(a) {
+  color: var(--paper);
+}
+
+.credit :where(a:last-child) {
+  color: var(--accent-on-deep);
+}
+
+.credit > :where(span) {
+  color: var(--alpha-paper-56);
+}
+
+.mobileCopy,
+.mobileFooterNav {
+  display: none;
+}
+
+@keyframes fan-open {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(calc(var(--fan-step) * 5deg));
+  }
+}
+
+@media (width < 1200px) {
+  .desktopNav {
+    gap: 20px;
+  }
+
+  .heroCopy :where(h1) {
+    font-size: 64px;
+  }
+
+  .heroActions {
+    flex-wrap: wrap;
+  }
+
+  .features {
+    gap: 32px;
+  }
+
+  .visual0 {
+    padding: 24px;
+    gap: 12px;
+  }
+
+  .security {
+    gap: 48px;
+  }
+
+  .securityIntro {
+    flex-basis: 42%;
+  }
+
+  .securityFacts {
+    gap: 32px;
+  }
+
+  .footerGroups {
+    gap: 32px;
+  }
+
+  .footerBottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 32px;
+  }
+}
+
+@media (width < 900px) {
+  .desktopNav,
+  .headerActions {
+    display: none;
+  }
+
+  .menuButton {
+    display: block;
+  }
+
+  .pillars,
+  .security {
+    padding-block: 96px;
+  }
+
+  .pillarsIntro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .featureVisual {
+    height: 240px;
+  }
+
+  .security {
+    flex-direction: column;
+  }
+
+  .securityIntro {
+    max-width: 600px;
+  }
+
+  .footerTop {
+    flex-direction: column;
+  }
+
+  .footerGroups {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (width <= 700px) {
+  .header {
+    height: 64px;
+    padding-inline: 24px;
+  }
+
+  .hero {
+    display: block;
+  }
+
+  .heroCopy {
+    width: 100%;
+    padding: 40px 24px;
+    gap: 24px;
+  }
+
+  .heroCopy :where(h1) {
+    font-size: var(--type-display-mobile-size);
+    line-height: var(--type-display-mobile-line);
+    letter-spacing: var(--type-display-mobile-tracking);
+  }
+
+  .heroBody {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .heroActions {
+    display: grid;
+    width: 100%;
+  }
+
+  .heroMeta {
+    font-size: 11px;
+  }
+
+  .fanField {
+    height: 420px;
+  }
+
+  .fanStage {
+    width: 390px;
+    height: 420px;
+  }
+
+  .fanCard {
+    left: 195px;
+    top: 248px;
+    transform-origin: 50% calc(50% + 600px);
+    transform: translate(-50%, -50%) rotate(calc(var(--fan-step) * 4deg));
+    animation-name: fan-open-mobile;
+  }
+
+  .instanceCard {
+    width: 180px;
+    height: 236px;
+    padding: 18px;
+  }
+
+  .works {
+    padding: 40px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--paper);
+  }
+
+  .works > :where(div) {
+    gap: 14px 16px;
+  }
+
+  .works > :where(div) > :where(span) {
+    gap: 8px;
+  }
+
+  .works :where(.anyApp) {
+    display: none;
+  }
+
+  .stripTile {
+    background: var(--canvas-2);
+  }
+
+  .pillars {
+    padding: 72px 24px;
+    background: var(--canvas);
+  }
+
+  .pillarsIntro {
+    margin-bottom: 40px;
+  }
+
+  .pillarsIntro > :where(div) {
+    gap: 16px;
+  }
+
+  .pillarsIntro > :where(p) {
+    display: none;
+  }
+
+  .pillars :where(h2) {
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.4px;
+  }
+
+  .features {
+    gap: 40px;
+  }
+
+  .features > :where(article) {
+    gap: 10px;
+  }
+
+  .featureVisual {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: var(--profile-iris);
+  }
+
+  .visual1 {
+    background: var(--deep);
+  }
+
+  .visual2 {
+    background: var(--profile-teal);
+  }
+
+  .featureVisual > :where(*) {
+    display: none;
+  }
+
+  .security {
+    padding: 72px 24px;
+    gap: 20px;
+  }
+
+  .securityIntro {
+    gap: 20px;
+  }
+
+  .security :where(h2),
+  .cta :where(h2) {
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.4px;
+  }
+
+  .securityIntro > :where(p:not(:first-child)),
+  .securityIntro > :where(a) {
+    display: none;
+  }
+
+  .securityFacts {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 8px;
+  }
+
+  .securityFacts > :where(div) {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .securityFacts > :where(div) > :where(span) {
+    width: 8px;
+    height: 8px;
+  }
+
+  .securityFacts :where(h3) {
+    font: 13px/1.4 var(--font-mono);
+    letter-spacing: normal;
+  }
+
+  .cta {
+    padding: 64px 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  .cta :where(p) {
+    display: none;
+  }
+
+  .cta :where(a) {
+    justify-self: stretch;
+  }
+
+  .footer {
+    padding: 56px 24px 40px;
+    gap: 40px;
+  }
+
+  .footerTop {
+    gap: 40px;
+  }
+
+  .footerBrand > :where(p),
+  .footerGroups {
+    display: none;
+  }
+
+  .mobileFooterNav {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .mobileFooterNav > :where(div) {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mobileFooterNav :where(a) {
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .footerBottom {
+    gap: 16px;
+  }
+
+  .legalCopy {
+    display: contents;
+  }
+
+  .legalCopy > :where(p) {
+    font: 11px/1.4 var(--font-mono);
+    color: var(--alpha-paper-56);
+  }
+
+  .legalCopy > :where(p:first-child) {
+    order: 3;
+  }
+
+  .legalCopy > :where(p:last-child) {
+    order: 1;
+  }
+
+  .credit {
+    flex-shrink: 1;
+    order: 2;
+  }
+
+  .desktopCopy {
+    display: none;
+  }
+
+  .mobileCopy {
+    display: block;
+  }
+}
+
+@keyframes fan-open-mobile {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(calc(var(--fan-step) * 4deg));
+  }
+}

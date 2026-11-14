@@ -117,4 +117,113 @@ Known issues/limits:
   found Claude's application ID is Claude; Codex's is App. Recipes now reflect
   that.
 - Different-account QA and Claude snapshot sign-in belong to P3/manual QA. No
-  recipe has been promoted to Verified. P2–P7 have not started.
+  recipe has been promoted to Verified. P2 is in progress; P3–P7 are not
+  complete.
+
+## P2 — Desktop UI (in progress)
+
+Implemented:
+
+- Shared controls, monograms, badges, status dots, profile/main/add cards,
+  grouped Deck, search, three-step wizard and profile side panel.
+- Apps, metadata-only Diagnostics, Settings, first-run preferences, About, typed
+  force/remove/Recycle Bin confirmations, sign-in and recovery views.
+- Tauri requests call the P1 engine. Profile edits cannot redirect stored paths
+  or claim an account is signed in. Destructive requests require the exact
+  profile name; recycling also requires stopped processes and the launch lock.
+- Windows Recycle Bin and Explorer operations sit behind a core trait. A fake
+  adapter verifies rejection, stopped-state gating, failed recycling retaining
+  metadata and successful dispatch without touching real data.
+- Versioned settings with durable writes and retained backups; grouped native
+  tray menu, close-to-tray, single manager instance and live status events.
+- Browser preview is explicitly labelled and holds changes only in memory.
+  Process simulation is enabled only in Storybook test fixtures.
+
+Evidence so far:
+
+- `pnpm typecheck` and `pnpm lint`: passed for the desktop implementation. The
+  full workspace's 32 Rust tests passed after the final wizard ID change; two
+  further native recycle-only fixture/guard tests passed. Warnings-denied
+  all-target Clippy passed. The x64 native release executable compiled.
+- Core line coverage: **94.49%** (994/1052); regions **89.15%**, functions
+  **83.45%**. [Coverage JSON](artifacts/p2/core-coverage.json). The ≥85% CI
+  threshold applies to lines; branch coverage is not measured.
+- All **157 Storybook stories** passed axe and the a11y addon after adding the
+  marketing and documentation components. All six original browser tests passed,
+  including keyboard create → launch → close and the guarded deletion dialog.
+  This keyboard evidence uses a simulated process adapter.
+- Real native WebView2 boot and first-run dialog were observed. Native UI
+  control was stopped with Escape before the native keyboard/tray check; that
+  final gate remains open. No P2 target profiles have been launched.
+- P1's
+  [Windows CI](https://github.com/tanzir71/instancedeck/actions/runs/43580584572)
+  passed all steps, including coverage and the x64 release build.
+
+Visual comparisons (Figma | built Storybook view):
+
+| Figma                                                  | Built                                        |
+| ------------------------------------------------------ | -------------------------------------------- |
+| ![Deck](design/20-app-deck@2x.png)                     | ![Deck](artifacts/p2/deck.png)               |
+| ![New profile](design/21-app-new-profile@2x.png)       | ![New profile](artifacts/p2/wizard-name.png) |
+| ![Claude sign-in](design/22-app-claude-sign-in@2x.png) | ![Claude sign-in](artifacts/p2/sign-in.png)  |
+
+Other screens: [Profile](artifacts/p2/profile.png),
+[Apps](artifacts/p2/apps.png), [Diagnostics](artifacts/p2/diagnostics.png),
+[Settings](artifacts/p2/settings.png), [First run](artifacts/p2/first-run.png),
+[Recovery](artifacts/p2/recovery.png), [Empty](artifacts/p2/empty.png),
+[Loading](artifacts/p2/loading.png), [Error](artifacts/p2/error.png),
+[Keyboard flow](artifacts/p2/keyboard-flow.png).
+
+The comparison uses the supplied Figma example profiles, versions and account
+labels only as Storybook fixtures. Runtime counts, versions and account-state
+labels come from the engine; no real account identity has been certified.
+Accessibility deviations and phase-dependent controls are recorded in
+`DECISIONS.md`. P2 is not marked complete until native verification is finished.
+
+## P6 — Landing site (in progress, parallel phase)
+
+Implemented in the shared UI package:
+
+- Live Figma desktop/mobile contexts supply all eleven home sections: header,
+  hero fan, compatibility strip, pillars, steps/product image, use cases,
+  Claude/Codex illustrations, security band, native FAQ rows, CTA and footer.
+- Mobile follows the shorter Figma frame. All colors come from generated tokens.
+  The full mandatory non-affiliation statement and both tanziro.com links remain
+  visible. Signed-release claims are conditional.
+- Shared documentation layout, breadcrumbs, compatibility cards and comparison
+  table. Marketing components have responsive and keyboard stories.
+- Real browser keyboard tests passed for menu focus containment, Escape/focus
+  return, and native FAQ Enter/Space toggling. Mobile document width is exactly
+  390px at a 390px viewport. No horizontal overflow was observed.
+- All 157 current stories passed across ten suites. Repository lint, all three
+  TypeScript checks and warnings-denied Rust Clippy passed. The React checklist
+  review keeps site rendering static and the menu enhancement separate from
+  React hydration; FAQ behavior uses native details/summary.
+- `pnpm test` passed all eight browser tests (including all stories and palette
+  contrast checks). `pnpm build` and `pnpm build:storybook` passed.
+
+Visual comparisons (Figma | built Storybook sections):
+
+| Figma                                                                  | Built                                         |
+| ---------------------------------------------------------------------- | --------------------------------------------- |
+| ![Header](design/landing-sections/01-header@2x.png)                    | ![Header](artifacts/p6/header.png)            |
+| ![Hero](design/landing-sections/02-hero@2x.png)                        | ![Hero](artifacts/p6/hero.png)                |
+| ![Works with](design/landing-sections/03-works-with@2x.png)            | ![Works with](artifacts/p6/works.png)         |
+| ![Pillars](design/landing-sections/04-pillars@2x.png)                  | ![Pillars](artifacts/p6/pillars.png)          |
+| ![How it works](design/landing-sections/05-how-it-works@2x.png)        | ![How it works](artifacts/p6/how.png)         |
+| ![Use cases](design/landing-sections/06-use-cases@2x.png)              | ![Use cases](artifacts/p6/use-cases.png)      |
+| ![Spotlight](design/landing-sections/07-spotlight-claude-codex@2x.png) | ![Spotlight](artifacts/p6/spotlight.png)      |
+| ![Security](design/landing-sections/08-security@2x.png)                | ![Security](artifacts/p6/security.png)        |
+| ![FAQ](design/landing-sections/09-faq@2x.png)                          | ![FAQ](artifacts/p6/faq.png)                  |
+| ![CTA](design/landing-sections/10-cta@2x.png)                          | ![CTA](artifacts/p6/cta.png)                  |
+| ![Footer](design/landing-sections/11-footer@2x.png)                    | ![Footer](artifacts/p6/footer.png)            |
+| ![Mobile](design/11-landing-mobile-390@2x.png)                         | ![Mobile](artifacts/p6/mobile-foundation.png) |
+
+[Measured section geometry](artifacts/p6/foundation-layout.json). These are
+component screenshots, not a deployed site. The product image is the supplied
+Figma export as explicitly permitted by design/README.md until P2 ships; it will
+then be replaced with a built app screenshot.
+
+Remaining: Astro routes/content, recipe-generated directory, build-time release
+data, structured metadata/OG images/sitemap, Lighthouse budgets, Pages deploy
+and IndexNow. P6 is not complete. P3–P5 and P7 have not started.

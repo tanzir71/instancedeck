@@ -1,0 +1,208 @@
+.monogram {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: var(--paper);
+  font: 500 13px/1 var(--font-mono);
+}
+
+.S {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.M {
+  width: 32px;
+  height: 32px;
+}
+
+.L {
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+}
+
+.neutral {
+  background: var(--canvas-2);
+}
+
+.ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 11px/1.4 var(--font-mono);
+}
+
+.card {
+  min-width: 0;
+  height: 212px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--paper);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.meta {
+  min-width: 0;
+}
+
+.meta h3 {
+  font: 400 26px/1.16 var(--font-display);
+  letter-spacing: -0.13px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.meta h3 button {
+  padding: 0;
+  border: 0;
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+.meta h3 button:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.meta p {
+  margin-top: 4px;
+  font: 11px/1.4 var(--font-mono);
+  color: var(--paper);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.mainCard {
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+:where(.mainCard) .meta p {
+  color: var(--ink-3);
+}
+
+.mainCard .status {
+  color: var(--ink-2);
+}
+
+.add {
+  display: flex;
+  height: 212px;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.add > span {
+  font: 400 40px/1.1 var(--font-display);
+  color: var(--accent);
+}
+
+.add:hover {
+  background: var(--accent-tint);
+}
+
+.groupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.groupHeader > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.groupHeader h2 {
+  font: 600 18px/1.35 var(--font-sans);
+}
+
+.groupHeader > :where(button) {
+  min-height: 24px;
+  padding: 0;
+}
+
+.version {
+  font: 11px/1.4 var(--font-mono);
+  color: var(--ink-3);
+}
+
+.empty {
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.empty h2 {
+  font-size: 32px;
+}
+
+.empty p {
+  max-width: 380px;
+  color: var(--ink-2);
+  font-size: 17px;
+}
+
+.art {
+  position: relative;
+  width: 104px;
+  height: 104px;
+  margin-bottom: 16px;
+}
+
+.art span {
+  position: absolute;
+  width: 64px;
+  height: 80px;
+  background: var(--profile-terracotta);
+  inset: 24px auto auto 0;
+}
+
+.art span:nth-child(2) {
+  background: var(--profile-teal);
+  inset: 12px auto auto 20px;
+}
+
+.art span:nth-child(3) {
+  background: var(--accent);
+  inset: 0 auto auto 40px;
+}

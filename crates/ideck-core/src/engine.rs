@@ -274,6 +274,60 @@ impl<P: Platform> Engine<P> {
     pub fn close_main(&self, app_id: &str) -> Result<()> {
         self.close_processes(self.main_processes(app_id)?)
     }
+    pub fn launch_main(&self, app_id: &str) -> Result<()> {
+        let _lock = self.platform.launch_lock()?;
+        let current = self.main_processes(app_id)?;
+        if !current.is_empty() {
+            return self.platform.focus(&current);
+        }
+        let recipe = self.recipe(app_id)?;
+        let app = self.platform.discover(recipe, true)?;
+        let working_dir = app
+            .executable
+            .rsplit_once(['\\', '/'])
+            .ok_or_else(|| Error::Invalid("Executable has no parent".into()))?
+            .0
+            .to_owned();
+        let plan = LaunchPlan {
+            profile_id: "main".into(),
+            recipe_id: app_id.into(),
+            recipe_version: recipe.recipe_version,
+            app,
+            args: Vec::new(),
+            env: BTreeMap::new(),
+            working_dir,
+            directories: Vec::new(),
+            match_argument: String::new(),
+        };
+        let mut failure = String::new();
+        for strategy in &recipe.launch.strategies {
+            if *strategy == Strategy::PackageContext && plan.app.package_family.is_none() {
+                continue;
+            }
+            match self.platform.launch(&plan, *strategy) {
+                Ok(_) => {
+                    for _ in 0..40 {
+                        if !self.main_processes(app_id)?.is_empty() {
+                            return Ok(());
+                        }
+                        self.platform.wait(Duration::from_millis(500));
+                    }
+                    failure = "No main process appeared within 20 seconds".into();
+                }
+                Err(error) => failure = error.to_string(),
+            }
+        }
+        Err(Error::Launch {
+            strategies: recipe
+                .launch
+                .strategies
+                .iter()
+                .map(ToString::to_string)
+                .collect::<Vec<_>>()
+                .join(", "),
+            detail: failure,
+        })
+    }
     fn close_processes(&self, processes: Vec<ProcessInfo>) -> Result<()> {
         if processes.is_empty() {
             return Ok(());

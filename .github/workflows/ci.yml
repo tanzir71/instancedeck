@@ -43,7 +43,7 @@ jobs:
       - run:
           cargo llvm-cov -p ideck-core --json --output-path
           artifacts/p1/core-coverage.json --fail-under-lines 85
-      - run: cargo clippy --workspace --locked -- -D warnings
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: pnpm build
       - run: pnpm build:storybook
       - run: pnpm build:desktop
@@ -54,6 +54,10 @@ jobs:
           path: |
             artifacts/p0/
             artifacts/p1/*.json
+            artifacts/p2/*.png
+            artifacts/p2/*.json
+            artifacts/p6/*.png
+            artifacts/p6/*.json
             playwright-report/
             test-results/
           if-no-files-found: ignore

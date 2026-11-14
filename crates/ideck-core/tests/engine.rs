@@ -3,6 +3,34 @@ use common::*;
 use ideck_core::{process::ProcessInfo, *};
 
 #[test]
+fn main_launch_has_no_profile_overrides_focuses_existing_and_never_forces() {
+    let (_temp, engine, profile) = fixture();
+    engine.launch_main("claude-desktop").unwrap();
+    assert!(engine.running(&profile).unwrap().is_empty());
+    assert_eq!(engine.main_processes("claude-desktop").unwrap().len(), 1);
+    assert!(
+        engine.platform.0.lock().unwrap().processes[0]
+            .args
+            .is_empty()
+    );
+    assert!(engine.platform.0.lock().unwrap().directories.is_empty());
+    engine.launch_main("claude-desktop").unwrap();
+    assert_eq!(engine.platform.0.lock().unwrap().attempts.len(), 1);
+    assert!(engine.platform.0.lock().unwrap().events.contains(&"focus"));
+    engine.close_main("claude-desktop").unwrap();
+    assert!(engine.main_processes("claude-desktop").unwrap().is_empty());
+    assert!(
+        !engine
+            .platform
+            .0
+            .lock()
+            .unwrap()
+            .events
+            .contains(&"force-close")
+    );
+}
+
+#[test]
 fn resolved_plans_isolate_claude_and_optional_codex_cli() {
     let (_temp, engine, mut profile) = fixture();
     let plan = engine.plan(&profile, false).unwrap();

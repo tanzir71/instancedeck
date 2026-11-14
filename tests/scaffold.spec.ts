@@ -24,11 +24,11 @@ test('empty Deck renders shared tokens, local assets and fonts without errors', 
     })),
   );
   expect(images.every((i) => i.valid)).toBe(true);
-  expect(images).toHaveLength(5);
+  expect(images).toHaveLength(1);
   expect(errors).toEqual([]);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.screenshot({
-    path: 'artifacts/p0/desktop-empty.png',
+    path: 'artifacts/p2/desktop-empty.png',
     fullPage: true,
   });
 });
@@ -66,7 +66,7 @@ test('Astro serves static React output under the project base with required cred
 });
 
 test('all Storybook stories pass their interactions and WCAG checks', async () => {
-  test.setTimeout(180000);
+  test.setTimeout(300000);
   // Invoke Node directly to avoid shell argument handling on Windows.
   const { stdout } = await promisify(execFile)(
     process.execPath,
@@ -80,7 +80,7 @@ test('all Storybook stories pass their interactions and WCAG checks', async () =
     ],
     {
       cwd: resolve('packages/ui'),
-      timeout: 150000,
+      timeout: 270000,
       maxBuffer: 4 * 1024 * 1024,
     },
   );

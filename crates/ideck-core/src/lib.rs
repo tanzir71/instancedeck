@@ -8,7 +8,9 @@ pub mod platform;
 pub mod process;
 pub mod profile;
 pub mod recipe;
+pub mod settings;
 pub mod template;
+pub use settings::{Settings, SettingsStore};
 
 pub use engine::Engine;
 pub use error::{Error, Result};

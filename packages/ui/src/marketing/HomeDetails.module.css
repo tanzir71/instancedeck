@@ -1,0 +1,363 @@
+.how {
+  padding: 160px max(32px, calc((100vw - 1280px) / 2)) 0;
+  display: grid;
+  gap: 72px;
+  background: var(--paper);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.intro :where(h2) {
+  max-width: 760px;
+  font-size: 56px;
+  line-height: 1.06;
+  letter-spacing: -0.84px;
+}
+
+.intro > :where(p:not(:first-child)) {
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.intro :where(a),
+.spotlights :where(a) {
+  color: var(--accent);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.intro :where(a:hover),
+.spotlights :where(a:hover) {
+  text-decoration: underline;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 56px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.steps > :where(li) {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.steps :where(li > span) {
+  font: 400 40px/1.1 var(--font-display);
+  letter-spacing: -0.4px;
+  color: var(--accent);
+}
+
+.steps :where(h3),
+.useCaseItems :where(h3) {
+  font: 600 22px/1.3 var(--font-sans);
+}
+
+.steps :where(p),
+.useCaseItems :where(p),
+.spotlights :where(article > p) {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.productField {
+  background: var(--accent);
+  padding-top: 72px;
+  height: auto;
+  aspect-ratio: 1280 / 772;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.productField :where(img, picture) {
+  display: block;
+  width: 87.5%;
+  height: auto;
+}
+
+.productField :where(picture img) {
+  width: 100%;
+}
+
+.useCases {
+  padding: 160px max(32px, calc((100vw - 1280px) / 2));
+  display: grid;
+  grid-template-columns: 440px minmax(0, 1fr);
+  gap: 96px;
+  background: var(--canvas);
+}
+
+.useCases .intro > :where(p:not(:first-child)) {
+  max-width: 420px;
+}
+
+.useCaseItems {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px 48px;
+}
+
+.useCaseItems > :where(article) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.useCaseItems :where(article > span) {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  color: var(--paper);
+  font: 15px/1 var(--font-mono);
+}
+
+.spotlights {
+  padding: 160px max(32px, calc((100vw - 1280px) / 2));
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  background: var(--paper);
+}
+
+.spotlights > :where(article) {
+  padding: 56px 56px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: var(--canvas);
+  overflow: hidden;
+}
+
+.spotlights :where(h2) {
+  font-size: 40px;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+}
+
+.claudeVisual,
+.codexVisual {
+  position: relative;
+  height: 300px;
+  flex: 0 0 300px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.claudeWindow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 330px;
+  height: 250px;
+  background: var(--paper);
+}
+
+.claudeWindow:nth-child(2) {
+  left: 170px;
+  top: 56px;
+}
+
+.windowBar {
+  height: 36px;
+  padding-inline: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--profile-iris);
+  color: var(--paper);
+  font: 11px/1.4 var(--font-mono);
+}
+
+.claudeWindow:nth-child(2) .windowBar {
+  background: var(--profile-teal);
+}
+
+.windowBody {
+  padding: 20px 18px 0;
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}
+
+.windowBody > :where(span) {
+  height: 14px;
+  width: 260px;
+  background: var(--canvas);
+}
+
+.windowBody > :where(span:first-child) {
+  width: 200px;
+  background: var(--canvas-2);
+}
+
+.windowBody > :where(span:nth-child(3)) {
+  width: 230px;
+}
+
+.windowBody > :where(span:nth-child(4)) {
+  width: 150px;
+}
+
+.windowBody :where(p) {
+  padding: 10px 12px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font: 11px/1.4 var(--font-mono);
+}
+
+.codexVisual {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.codexVisual :where(pre) {
+  margin: 0;
+  padding: 20px;
+  min-width: 0;
+  flex: 1;
+  height: 300px;
+  background: var(--profile-teal);
+  color: var(--paper);
+  font: 11px/2.1 var(--font-mono);
+}
+
+.codexVisual :where(pre:nth-child(2)) {
+  height: 240px;
+  background: var(--profile-ochre);
+}
+
+.faq {
+  padding: 160px max(32px, calc((100vw - 1280px) / 2));
+  display: grid;
+  grid-template-columns: 400px minmax(0, 1fr);
+  gap: 96px;
+  background: var(--paper);
+}
+
+.faq .intro > :where(p:not(:first-child)) {
+  max-width: 380px;
+}
+
+.faqItem {
+  padding-top: 28px;
+  padding-bottom: 12px;
+  position: relative;
+}
+
+.faqItem::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--canvas-2);
+}
+
+.faqItem :where(summary) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  cursor: pointer;
+  list-style: none;
+  font: 600 22px/1.3 var(--font-sans);
+  padding-bottom: 16px;
+}
+
+.faqItem :where(summary)::-webkit-details-marker {
+  display: none;
+}
+
+.faqIndicator::before {
+  content: '+';
+  font: 400 30px/1 var(--font-display);
+}
+
+.faqItem[open] .faqIndicator::before {
+  content: '−';
+}
+
+.faqItem > :where(div) {
+  max-width: 640px;
+  padding-bottom: 16px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+@media (width <= 1200px) {
+  .useCases,
+  .faq {
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
+    gap: 48px;
+  }
+
+  .spotlights > :where(article) {
+    padding-inline: 32px;
+  }
+
+  .intro :where(h2) {
+    font-size: 48px;
+  }
+
+  .useCaseItems {
+    gap: 40px 24px;
+  }
+}
+
+@media (width <= 900px) {
+  .how,
+  .useCases,
+  .spotlights,
+  .faq {
+    padding-top: 96px;
+  }
+
+  .useCases,
+  .spotlights,
+  .faq {
+    padding-bottom: 96px;
+  }
+
+  .useCases,
+  .spotlights,
+  .faq,
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .productField {
+    padding-top: 40px;
+  }
+
+  .spotlights > :where(article) {
+    padding-top: 40px;
+  }
+}
+
+@media (width <= 700px) {
+  .how,
+  .useCases,
+  .spotlights,
+  .faq {
+    display: none;
+  }
+}

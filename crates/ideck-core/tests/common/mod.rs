@@ -12,6 +12,8 @@ pub struct FakeState {
     pub fail_direct: bool,
     pub fail_package: bool,
     pub fail_force: bool,
+    pub fail_recycle: bool,
+    pub recycled: Vec<String>,
     pub no_process: bool,
     pub stubborn: bool,
     pub missing_app: bool,

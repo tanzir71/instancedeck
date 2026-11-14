@@ -8,6 +8,7 @@
   border-radius: var(--radius-control);
   font-weight: 500;
   line-height: 1;
+  text-decoration: none;
 }
 
 .L {
@@ -37,7 +38,7 @@
 
 .inverse {
   background: var(--paper);
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .onColor {

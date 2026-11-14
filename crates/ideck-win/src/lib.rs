@@ -5,3 +5,5 @@ pub mod discovery;
 mod platform;
 #[cfg(windows)]
 pub use platform::WindowsPlatform;
+#[cfg(windows)]
+mod desktop;

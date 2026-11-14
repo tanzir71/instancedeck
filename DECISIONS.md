@@ -1,5 +1,56 @@
 # Decisions
 
+## 2026-11-14 — Marketing responsiveness and complete legal copy
+
+Context: the mobile Figma frame intentionally omits the desktop How it works,
+Use cases, app spotlight and FAQ bands. Choice: follow that abridged home layout
+at mobile widths; keep the same information available through the guide and FAQ
+pages. Tablet and larger layouts retain every band. Alternative: inventing a
+longer mobile home that disagrees with the authority frame.
+
+The footer retains the full mandatory non-affiliation statement on every page,
+including mobile, even though Figma abbreviates it. This increases its height.
+The two underlined tanziro.com credits remain present. Signed-release claims
+stay conditional on signing approval. No published release is implied by a
+download link while release engineering is unfinished.
+
+## 2026-11-14 — Recycle-only Windows operation
+
+Context: permanent deletion must never be a fallback when a profile does not fit
+in the Recycle Bin or the bin is unavailable. Choice: call IFileOperation with
+explicit RECYCLEONDELETE, ADDUNDORECORD, EARLYFAILURE, WANTNUKEWARNING,
+NOERRORUI and SILENT flags, without any automatic confirmation. Report aborted
+operations and require the source folder to be absent before removing its deck
+entry. Keep the path-shape and reparse-point checks and the service's typed-name
+and stopped-process gates. Alternative: relying on a library's ALLOWUNDO flag
+alone. Microsoft's operation flag documentation is the API reference:
+https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-setoperationflags
+
+An actual Windows test recycles only a newly created, disposable fixture under a
+Unicode path; that fixture remains recoverable in the Recycle Bin. An
+arbitrary-directory rejection test proves the unrelated folder stays in place.
+
+## 2026-11-14 — Desktop UI phase boundaries and accessibility
+
+Context: P2 needs complete screen views before the P3 recovery engine and P4
+shell integration exist. Choice: ship real profile launch/close, metadata edits,
+diagnostics and settings now; show the later sign-in, shortcuts, hotkeys, custom
+recipes and dark-theme controls as unavailable with a concise explanation.
+Sign-in and recovery stories depict supplied journal states, never a simulated
+operation in the live app. Alternative: presenting unimplemented actions as
+successful. Closing a main app is available from Apps with a confirmation; its
+Deck card keeps the Figma Launch/Focus layout.
+
+The wizard allocates its stable ULID before creation and shows the final folder.
+Rust validates the supplied ID and assembles the path again from the chosen
+root. Browsing changes only that parent folder. Renaming never changes the ID.
+
+White secondary card text replaces the Figma paper-72 translucency where it
+fails AA on the palette. Experimental badge text uses ink-2 on ochre-tint for
+the same reason. The previously recorded OnColor correction remains in force.
+Native event permissions are limited to listen/unlisten and titlebar dragging;
+all profile actions go through validated Rust requests.
+
 ## 2026-11-14 — Claude package application ID
 
 Context: live direct launches passed, but the forced MSIX fallback failed for

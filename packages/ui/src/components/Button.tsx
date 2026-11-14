@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 import styles from './Button.module.css';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,6 +16,21 @@ export function Button({
     <button
       {...props}
       type={type}
+      className={`${styles.button} ${styles[kind]} ${styles[size]} ${className}`}
+    />
+  );
+}
+
+export function ButtonLink({
+  kind = 'primary',
+  size = 'L',
+  className = '',
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> &
+  Pick<ButtonProps, 'kind' | 'size'>) {
+  return (
+    <a
+      {...props}
       className={`${styles.button} ${styles[kind]} ${styles[size]} ${className}`}
     />
   );
