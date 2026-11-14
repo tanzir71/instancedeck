@@ -1,5 +1,5 @@
-import mark from '../../../../design/assets/logo-mark.svg';
-import darkMark from '../../../../design/assets/logo-mark-on-dark.svg';
+import mark from '../../../../design/assets/logo-mark.svg?url';
+import darkMark from '../../../../design/assets/logo-mark-on-dark.svg?url';
 import copy from '../copy/en.json';
 import styles from './Logo.module.css';
 

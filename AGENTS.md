@@ -42,6 +42,11 @@ You are building **InstanceDeck**, a multi-instance app launcher for Windows, pl
 - `pnpm dev:site`: Astro site
 - `pnpm test`: all JS tests · `cargo test --workspace`: Rust tests
 - `pnpm lint` · `cargo clippy --workspace -- -D warnings`
+- `pnpm typecheck`: TypeScript and Astro checks
+- `pnpm build:storybook`: static component documentation
+- `pnpm test:smoke`: desktop, site and all Storybook browser checks
+- `pnpm build:desktop`: native Windows build (no installer until P7)
+- `pnpm exec playwright install chromium`: install the browser used by tests
 
 ## Windows specifics
 - Windows-only code lives in `crates/ideck-win` behind traits from `crates/ideck-core`, with fakes for tests.

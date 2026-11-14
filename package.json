@@ -17,7 +17,7 @@
     "typecheck": "pnpm tokens && turbo run typecheck",
     "lint": "eslint . --max-warnings 0 && stylelint \"packages/ui/src/**/*.css\" && prettier --check .",
     "format": "prettier --write .",
-    "test": "pnpm tokens && pnpm --filter @instancedeck/ui test",
+    "test": "pnpm tokens && pnpm --filter @instancedeck/ui test && pnpm test:smoke",
     "test:storybook": "pnpm --filter @instancedeck/ui test:storybook",
     "test:smoke": "playwright test"
   },

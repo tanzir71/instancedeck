@@ -51,6 +51,13 @@ test('Astro serves static React output under the project base with required cred
   );
   expect(await page.locator('a[href^="/"]').count()).toBe(0);
   expect(await page.locator('astro-island').count()).toBe(0);
+  expect(
+    await page
+      .locator('img')
+      .evaluateAll((nodes) =>
+        nodes.every((image) => image.complete && image.naturalWidth > 0),
+      ),
+  ).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.screenshot({
     path: 'artifacts/p0/site-scaffold.png',
@@ -89,6 +96,7 @@ test('capture foundations and Button visual evidence', async ({ page }) => {
       `http://127.0.0.1:6006/iframe.html?id=${id}&viewMode=story`,
     );
     await page.locator('#storybook-root').waitFor();
+    await expect(page.locator('#storybook-root')).not.toBeEmpty();
     await page.evaluate(() => document.fonts.ready);
     await page.screenshot({ path: `artifacts/p0/${file}.png`, fullPage: true });
   }

@@ -5,4 +5,5 @@ export default defineConfig({
   base: '/instancedeck',
   output: 'static',
   integrations: [react()],
+  devToolbar: { enabled: false },
 });

@@ -1,10 +1,10 @@
 import { Logo } from './Logo';
 import copy from '../copy/en.json';
 import styles from './EmptyDeck.module.css';
-import deck from '../../../../design/assets/icons/deck.svg';
-import apps from '../../../../design/assets/icons/apps.svg';
-import diagnostics from '../../../../design/assets/icons/diagnostics.svg';
-import settings from '../../../../design/assets/icons/settings.svg';
+import deck from '../../../../design/assets/icons/deck.svg?url';
+import apps from '../../../../design/assets/icons/apps.svg?url';
+import diagnostics from '../../../../design/assets/icons/diagnostics.svg?url';
+import settings from '../../../../design/assets/icons/settings.svg?url';
 
 export function EmptyDeck() {
   return (
