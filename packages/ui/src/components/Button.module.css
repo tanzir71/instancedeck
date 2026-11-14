@@ -41,7 +41,7 @@
 }
 
 .onColor {
-  background: var(--alpha-paper-16);
+  background: color-mix(in srgb, var(--alpha-paper-16) 12.5%, transparent);
   color: var(--paper);
 }
 

@@ -1,5 +1,17 @@
 # Decisions
 
+## 2026-11-14 — OnColor contrast correction
+
+Context: axe reported color-contrast failure for white button text on a teal
+profile with the Figma `paper-16` button fill. Calculated contrast is 3.57:1;
+all eight profile fills fall below 4.5:1 at that translucency. Neither white nor
+ink text reaches 4.5:1 on the resulting iris/plum fill. Choice: mix `paper-16`
+at 12.5% with transparent for an effective 2% white fill. This is the smallest
+visual change that preserves the white label, flat profile palette, control size
+and WCAG AA across every swatch. Keep this explicit design deviation for review.
+Alternatives: dark labels (still fail iris/plum), changing the palette, or
+enlarging labels enough to qualify as large text.
+
 ## 2026-11-14 — Compatible TypeScript and font packaging
 
 Context: the stable TypeScript 7 tag exceeds typescript-eslint's supported range

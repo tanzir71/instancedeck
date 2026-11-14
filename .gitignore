@@ -6,7 +6,6 @@ target/
 .astro/
 playwright-report/
 test-results/
-artifacts/p0/*.png
 *.log
 .env*
 !.env.example

@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { resolve } from 'node:path';
 
 test('empty Deck renders shared tokens, local assets and fonts without errors', async ({
   page,
@@ -59,16 +60,36 @@ test('Astro serves static React output under the project base with required cred
 
 test('all Storybook stories pass their interactions and WCAG checks', async () => {
   test.setTimeout(180000);
-  // Run via pnpm so the workspace resolves the test runner and its config together.
+  // Invoke Node directly to avoid shell argument handling on Windows.
   const { stdout } = await promisify(execFile)(
-    process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    ['test:storybook'],
+    process.execPath,
+    [
+      resolve(
+        'packages/ui/node_modules/@storybook/test-runner/dist/test-storybook.js',
+      ),
+      '--url',
+      'http://127.0.0.1:6006',
+      '--maxWorkers=2',
+    ],
     {
-      cwd: process.cwd(),
-      shell: process.platform === 'win32',
+      cwd: resolve('packages/ui'),
       timeout: 150000,
       maxBuffer: 4 * 1024 * 1024,
     },
   );
   console.log(stdout);
+});
+
+test('capture foundations and Button visual evidence', async ({ page }) => {
+  for (const [id, file] of [
+    ['foundations-tokens--foundations', 'tokens'],
+    ['components-button--primary', 'button'],
+  ]) {
+    await page.goto(
+      `http://127.0.0.1:6006/iframe.html?id=${id}&viewMode=story`,
+    );
+    await page.locator('#storybook-root').waitFor();
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `artifacts/p0/${file}.png`, fullPage: true });
+  }
 });

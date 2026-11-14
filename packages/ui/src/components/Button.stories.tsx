@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { Button } from './Button';
+import { tokens } from '../tokens/generated';
 
 const meta = {
   title: 'Components/Button',
@@ -23,6 +24,17 @@ const meta = {
 } satisfies Meta<typeof Button>;
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const ProfilePalette: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+      {Object.entries(tokens.color.profile).map(([name, { value }]) => (
+        <div key={name} style={{ background: value, padding: 24 }}>
+          <Button kind="onColor">{name}</Button>
+        </div>
+      ))}
+    </div>
+  ),
+};
 export const Primary: Story = {
   play: async ({ canvasElement, args }) => {
     await userEvent.click(within(canvasElement).getByRole('button'));
