@@ -1,0 +1,13 @@
+HANDOVER.md
+AGENTS.md
+design/
+pnpm-lock.yaml
+Cargo.lock
+target/
+node_modules/
+**/dist/
+**/.astro/
+**/storybook-static/
+**/gen/
+**/tokens/generated.*
+artifacts/

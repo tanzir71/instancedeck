@@ -1,0 +1,6 @@
+{
+  "name": "@instancedeck/recipes",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Recipe schema and data arrive in phase 1."
+}

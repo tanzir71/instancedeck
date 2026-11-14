@@ -1,0 +1,16 @@
+[package]
+name = "ideck-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "ideck"
+path = "src/main.rs"
+
+[dependencies]
+ideck-core = { path = "../ideck-core" }
+ideck-win = { path = "../ideck-win" }
+
+[lints]
+workspace = true

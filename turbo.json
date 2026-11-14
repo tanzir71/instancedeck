@@ -1,0 +1,8 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "@instancedeck/ui#build": { "outputs": [] },
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] }
+  }
+}

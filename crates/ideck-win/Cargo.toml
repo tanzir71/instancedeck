@@ -1,0 +1,11 @@
+[package]
+name = "ideck-win"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ideck-core = { path = "../ideck-core" }
+
+[lints]
+workspace = true

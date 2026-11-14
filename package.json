@@ -1,0 +1,40 @@
+{
+  "name": "instancedeck",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "tokens": "pnpm --filter @instancedeck/ui tokens",
+    "dev:desktop": "pnpm tokens && pnpm --filter @instancedeck/desktop dev",
+    "dev:site": "pnpm tokens && pnpm --filter @instancedeck/site dev",
+    "storybook": "pnpm tokens && pnpm --filter @instancedeck/ui storybook",
+    "build": "pnpm tokens && turbo run build",
+    "build:desktop": "pnpm tokens && pnpm --filter @instancedeck/desktop tauri build --no-bundle",
+    "build:storybook": "pnpm tokens && pnpm --filter @instancedeck/ui build:storybook",
+    "typecheck": "pnpm tokens && turbo run typecheck",
+    "lint": "eslint . --max-warnings 0 && stylelint \"packages/ui/src/**/*.css\" && prettier --check .",
+    "format": "prettier --write .",
+    "test": "pnpm tokens && pnpm --filter @instancedeck/ui test",
+    "test:storybook": "pnpm --filter @instancedeck/ui test:storybook",
+    "test:smoke": "playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@emnapi/core": "1.11.3",
+    "@emnapi/runtime": "1.11.3",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.65.1",
+    "@tybys/wasm-util": "0.10.4",
+    "@types/node": "24.10.1",
+    "eslint": "10.15.0",
+    "prettier": "3.10.1",
+    "stylelint": "18.0.0",
+    "stylelint-config-standard": "41.0.0",
+    "turbo": "2.11.11",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2"
+  }
+}
