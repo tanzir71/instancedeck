@@ -1,0 +1,48 @@
+{
+  "id": "codex",
+  "recipeVersion": 1,
+  "name": "Codex",
+  "vendor": "OpenAI",
+  "category": "ai",
+  "discovery": [
+    {
+      "type": "msix",
+      "packageFamily": "OpenAI.Codex_2p2nqsd0c76g0",
+      "exe": "app\\ChatGPT.exe",
+      "appId": "App"
+    }
+  ],
+  "launch": {
+    "args": ["--user-data-dir={profile}"],
+    "env": {
+      "CODEX_ELECTRON_USER_DATA_PATH": "{profile}\\electron",
+      "CODEX_HOME": "{profile}\\codex-home",
+      "CODEX_CLI_PATH": "{exeDir}\\resources\\codex.exe?"
+    },
+    "strategies": ["direct", "package-context"]
+  },
+  "isolation": "full",
+  "signIn": { "strategy": "in-profile" },
+  "processMatch": {
+    "exeName": "ChatGPT.exe",
+    "arg": "--user-data-dir={profile}"
+  },
+  "limitations": [
+    "After each update, manually check that every profile shows its own account; some app-server versions may ignore CODEX_HOME."
+  ],
+  "verifiedOn": [
+    {
+      "appVersion": "26.1027.3384.0",
+      "os": "Windows 11 26200",
+      "date": "2026-10-30",
+      "by": "ai-multi-instance (upstream report, not local account QA)"
+    }
+  ],
+  "status": "community",
+  "seo": {
+    "slug": "codex",
+    "title": "Multiple Codex App Accounts on Windows",
+    "description": "Run Codex profiles side by side with a separate CODEX_HOME and Electron data path. Check account isolation after every app update.",
+    "intro": "Codex profiles set CODEX_HOME and CODEX_ELECTRON_USER_DATA_PATH before launching the official Store app. This separates desktop state and CLI sessions; check the visible account in every profile after an update."
+  }
+}

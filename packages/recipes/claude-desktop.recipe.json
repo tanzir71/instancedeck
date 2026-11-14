@@ -1,0 +1,55 @@
+{
+  "id": "claude-desktop",
+  "recipeVersion": 1,
+  "name": "Claude Desktop",
+  "vendor": "Anthropic",
+  "category": "ai",
+  "discovery": [
+    {
+      "type": "msix",
+      "packageFamily": "Claude_pzs8sxrjxfjjc",
+      "exe": "app\\claude.exe",
+      "appId": "Claude"
+    },
+    { "type": "registry", "displayName": "Claude", "exe": "claude.exe" },
+    {
+      "type": "known-path",
+      "path": "{localAppData}\\AnthropicClaude\\claude.exe",
+      "versionPrefix": "app-"
+    }
+  ],
+  "launch": {
+    "args": ["--user-data-dir={profile}\\data"],
+    "env": {
+      "LOCALAPPDATA": "{profile}\\localappdata",
+      "CLAUDE_CONFIG_DIR": "{profile}\\claude-code"
+    },
+    "strategies": ["direct", "package-context"]
+  },
+  "isolation": "full",
+  "signIn": { "strategy": "snapshot" },
+  "processMatch": {
+    "exeName": "claude.exe",
+    "arg": "--user-data-dir={profile}\\data"
+  },
+  "limitations": [
+    "Browser sign-in callbacks reach the default Claude instance; use the guided snapshot sign-in.",
+    "Concurrent Cowork VMs are unverified.",
+    "CLAUDE_CONFIG_DIR is experimental and is not officially documented."
+  ],
+  "verifiedOn": [
+    {
+      "appVersion": "3.1623.1.0",
+      "os": "Windows 11 26200",
+      "date": "2026-10-30",
+      "by": "ai-multi-instance (upstream report, not local account QA)"
+    }
+  ],
+  "status": "community",
+  "seo": {
+    "slug": "claude-desktop",
+    "title": "Multiple Claude Desktop Instances on Windows",
+    "description": "Launch separate Claude Desktop profiles with isolated app data and a per-profile LOCALAPPDATA. See sign-in guidance and limitations.",
+    "intro": "Claude Desktop profiles use a separate user-data directory and LOCALAPPDATA so each launch has its own state. Windows sends browser sign-in callbacks to the main app, so new accounts need a guided snapshot sign-in."
+  }
+}

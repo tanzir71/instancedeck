@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Recipe",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string"
+    },
+    "discovery": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Discovery"
+      }
+    },
+    "id": {
+      "type": "string"
+    },
+    "isolation": {
+      "$ref": "#/$defs/Isolation"
+    },
+    "launch": {
+      "$ref": "#/$defs/Launch"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "name": {
+      "type": "string"
+    },
+    "processMatch": {
+      "$ref": "#/$defs/ProcessMatch"
+    },
+    "recipeVersion": {
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "seo": {
+      "$ref": "#/$defs/Seo"
+    },
+    "signIn": {
+      "$ref": "#/$defs/SignIn"
+    },
+    "status": {
+      "$ref": "#/$defs/RecipeStatus"
+    },
+    "vendor": {
+      "type": "string"
+    },
+    "verifiedOn": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Verification"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "recipeVersion",
+    "name",
+    "vendor",
+    "category",
+    "discovery",
+    "launch",
+    "isolation",
+    "signIn",
+    "processMatch",
+    "limitations",
+    "verifiedOn",
+    "status",
+    "seo"
+  ],
+  "$defs": {
+    "Discovery": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "appId": {
+              "type": "string",
+              "default": "App"
+            },
+            "exe": {
+              "type": "string"
+            },
+            "packageFamily": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "msix"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "packageFamily",
+            "exe"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "displayName": {
+              "type": "string"
+            },
+            "exe": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "registry"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "displayName",
+            "exe"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "const": "known-path"
+            },
+            "versionPrefix": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "path"
+          ]
+        }
+      ]
+    },
+    "Isolation": {
+      "type": "string",
+      "enum": [
+        "full",
+        "partial",
+        "unknown"
+      ]
+    },
+    "Launch": {
+      "type": "object",
+      "properties": {
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "env": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "strategies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Strategy"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "args",
+        "env",
+        "strategies"
+      ]
+    },
+    "ProcessMatch": {
+      "type": "object",
+      "properties": {
+        "arg": {
+          "type": "string"
+        },
+        "exeName": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "exeName",
+        "arg"
+      ]
+    },
+    "RecipeStatus": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "community",
+        "experimental"
+      ]
+    },
+    "Seo": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "title",
+        "description",
+        "intro"
+      ]
+    },
+    "SignIn": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "$ref": "#/$defs/SignInStrategy"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "strategy"
+      ]
+    },
+    "SignInStrategy": {
+      "type": "string",
+      "enum": [
+        "in-profile",
+        "snapshot",
+        "manual"
+      ]
+    },
+    "Strategy": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "package-context"
+      ]
+    },
+    "Verification": {
+      "type": "object",
+      "properties": {
+        "appVersion": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "os": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "appVersion",
+        "os",
+        "date",
+        "by"
+      ]
+    }
+  }
+}

@@ -1,5 +1,46 @@
 # Decisions
 
+## 2026-11-14 — Claude package application ID
+
+Context: live direct launches passed, but the forced MSIX fallback failed for
+Claude Desktop 5.11492.5.0 with the handover's generic App application ID.
+Windows' installed app metadata reports `Claude_pzs8sxrjxfjjc!Claude`. Choice:
+set Claude's recipe appId to Claude; keep Codex's independently passing App
+value. The engine remains generic. Alternative: assuming every vendor uses the
+same application ID or hard-coding this exception in the launcher.
+
+## 2026-11-14 — P1 data and process safeguards
+
+Context: initial profile metadata needs migrations and durable updates, while
+Windows reuses process IDs. Choice: schema 0 accepts the same required identity,
+path and creation fields as schema 1 and supplies only documented defaults for
+optional visual/options fields; unknown fields and future versions fail closed.
+Every update retains a backup of InstanceDeck's own metadata before atomic
+replacement. No profile data is copied or removed by these operations. Process
+trees require parent creation time to precede the child; close rechecks
+identity, excludes the manager and fails if creation time cannot be proved.
+Alternatives: silently dropping fields, replacing without backups, or trusting
+PID/parent PID alone.
+
+## 2026-11-14 — Unicode package-context wrapper
+
+Context: §4.4 requires a UTF-16LE BOM .cmd wrapper. cmd.exe cannot directly
+interpret Unicode batch files reliably. Choice: store an ASCII PowerShell
+EncodedCommand launch line in the required UTF-16 file, decode it explicitly
+inside the package host, then pass that line to cmd.exe. All profile paths,
+arguments and environment values stay inside the encoded, quoted payload. The
+real Windows fixture passed with spaces, Japanese, Zoë, apostrophes, percent
+signs, ampersands and exclamation marks. Alternative: relying on an OEM-codepage
+batch file or passing unescaped user values through cmd.
+
+## 2026-11-14 — Legacy versioned installs
+
+Context: legacy Squirrel Claude installs may place the executable in app-version
+subfolders. Choice: an optional recipe versionPrefix on known-path discovery
+selects the highest numeric version containing the requested executable, using
+directory names and metadata only. MSIX remains first. Alternative: hard-coded
+version paths or launching the updater trampoline.
+
 ## 2026-11-14 — OnColor contrast correction
 
 Context: axe reported color-contrast failure for white button text on a teal

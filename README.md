@@ -3,9 +3,9 @@
 InstanceDeck is a multi-instance app launcher for Windows. It launches official
 apps with separate arguments, environment variables and profile data paths.
 
-**Status:** phase 0 scaffold under active development. Profile launching is not
-implemented yet. See [PROGRESS.md](PROGRESS.md) for evidence and remaining
-gates.
+**Status:** the scaffold and launch engine/CLI are verified on Windows 11. The
+desktop UI remains a preview. See [PROGRESS.md](PROGRESS.md) for evidence and
+remaining gates.
 
 The desktop uses Tauri 2, React and TypeScript. The static Astro site and
 desktop share `packages/ui`; all visual tokens are generated from
@@ -38,9 +38,26 @@ pnpm test:smoke
 pnpm build:desktop
 ```
 
-No target app binaries or credential files are read, copied or changed by this
-scaffold. InstanceDeck is not a security sandbox. The app makes no network
-calls.
+Target app binaries stay untouched; credentials are never inspected.
+InstanceDeck is not a security sandbox. The app makes no network calls.
+
+## Engine CLI
+
+```powershell
+cargo run -p ideck-cli -- apps
+cargo run -p ideck-cli -- profiles create claude-desktop Work --color iris
+cargo run -p ideck-cli -- profiles list
+cargo run -p ideck-cli -- launch <profile-id>
+cargo run -p ideck-cli -- close <profile-id>
+cargo run -p ideck-cli -- doctor
+```
+
+`--state-dir` and `--profiles-root` accept absolute paths, including another
+drive and Unicode names. `plan <id>` shows the resolved command without
+launching it. `profiles remove <id>` only removes deck metadata and keeps data.
+Force close requires the profile name after an eight-second graceful attempt.
+Recipe status stays Community until the full manual account checklist has been
+run.
 
 ## License and attribution
 

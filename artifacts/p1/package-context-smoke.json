@@ -1,0 +1,12 @@
+[
+  {
+    "id": "01M7CMM9YX7JDVWB7D3JH7HZMQ",
+    "passed": true,
+    "output": "{\"appId\":\"codex\",\"appVersion\":\"26.1106.6628.0\",\"helperPid\":36364,\"profileId\":\"01M7CMM9YX7JDVWB7D3JH7HZMQ\",\"runningPids\":[38676,37972],\"strategy\":\"package-context\"}"
+  },
+  {
+    "id": "01M7CMM9SCQVK72JN29KCEXWQT",
+    "passed": true,
+    "output": "{\"appId\":\"claude-desktop\",\"appVersion\":\"5.11492.5.0\",\"helperPid\":23028,\"profileId\":\"01M7CMM9SCQVK72JN29KCEXWQT\",\"runningPids\":[25548],\"strategy\":\"package-context\"}"
+  }
+]

@@ -10,4 +10,5 @@ node_modules/
 **/storybook-static/
 **/gen/
 **/tokens/generated.*
+packages/recipes/recipe.schema.json
 artifacts/

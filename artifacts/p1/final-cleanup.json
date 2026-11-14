@@ -1,0 +1,35 @@
+{
+  "verifiedAt": "2026-11-14T09:25:46.1009218Z",
+  "profiles": [
+    {
+      "id": "01M7CMM9SCQVK72JN29KCEXWQT",
+      "runningCount": 0,
+      "dataRetained": true
+    },
+    {
+      "id": "01M7CMM9W4STMT0T1MDAYJ8T0A",
+      "runningCount": 0,
+      "dataRetained": true
+    },
+    {
+      "id": "01M7CMM9YX7JDVWB7D3JH7HZMQ",
+      "runningCount": 0,
+      "dataRetained": true
+    },
+    {
+      "id": "01M7CMMA1XK4WNSKRMP456J97R",
+      "runningCount": 0,
+      "dataRetained": true
+    }
+  ],
+  "mainInstances": [
+    {
+      "appId": "claude-desktop",
+      "runningCount": 10
+    },
+    {
+      "appId": "codex",
+      "runningCount": 103
+    }
+  ]
+}

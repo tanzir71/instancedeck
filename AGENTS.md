@@ -47,6 +47,9 @@ You are building **InstanceDeck**, a multi-instance app launcher for Windows, pl
 - `pnpm test:smoke`: desktop, site and all Storybook browser checks
 - `pnpm build:desktop`: native Windows build (no installer until P7)
 - `pnpm exec playwright install chromium`: install the browser used by tests
+- `cargo run -p ideck-cli -- <command>`: apps, profiles, launch, close, plan, doctor
+- `cargo llvm-cov -p ideck-core --summary-only --fail-under-lines 85`: core coverage gate
+- `cargo run -p ideck-cli -- recipe-schema --check packages/recipes/recipe.schema.json`: schema drift check
 
 ## Windows specifics
 - Windows-only code lives in `crates/ideck-win` behind traits from `crates/ideck-core`, with fakes for tests.

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "01M7CMM9SCQVK72JN29KCEXWQT",
+    "passed": true,
+    "output": "P1 QA claude-desktop A is still running after 8 seconds. Force close can lose unsaved work.\n{\n  \"closed\": \"01M7CMM9SCQVK72JN29KCEXWQT\"\n}\nType the profile name to confirm Force close: ",
+    "dataRetained": true
+  },
+  {
+    "id": "01M7CMM9YX7JDVWB7D3JH7HZMQ",
+    "passed": true,
+    "output": "P1 QA codex A is still running after 8 seconds. Force close can lose unsaved work.\n{\n  \"closed\": \"01M7CMM9YX7JDVWB7D3JH7HZMQ\"\n}\nType the profile name to confirm Force close: ",
+    "dataRetained": true
+  }
+]

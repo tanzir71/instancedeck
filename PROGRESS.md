@@ -59,4 +59,62 @@ Visual evidence (Figma | built):
 Known limits: this is the empty scaffold, with native window decoration. The
 populated Deck and custom title bar are P2; the complete landing site is P6. One
 evidence-backed accessibility deviation from the Figma OnColor translucency is
-recorded in `DECISIONS.md`. P1–P7 have not started.
+recorded in `DECISIONS.md`.
+
+## P1 — Engine core and Windows CLI (complete)
+
+Implemented:
+
+- Rust-generated recipe schema, strict loader/semantic validation and template
+  expansion. Claude Desktop and Codex recipes remain Community; upstream
+  provenance is separate from local process testing.
+- ULID profiles, versioned/migrated metadata, locked atomic writes and retained
+  metadata backups. Rename preserves paths; remove keeps all profile data.
+- Runtime WinRT PackageManager discovery, registry uninstall views, known paths
+  and versioned legacy Squirrel paths. No WindowsApps path is hard-coded.
+- Direct Unicode launch and one package-context fallback with a UTF-16LE BOM
+  wrapper and quoted, encoded arguments/environment values.
+- Exact normalized argument matching, descendant metadata, creation-time checks
+  against PID reuse, manager exclusion, bounded launch tracking, WM_CLOSE and an
+  eight-second grace period before explicitly confirmed force close.
+- Structured launch logs and redacted metadata-only doctor output. CLI: apps;
+  profiles list/create/rename/remove; launch; close; plan; doctor;
+  recipe-schema.
+- CI now checks schema drift and core line coverage ≥85%. Runtime profile
+  folders are excluded from Git and CI uploads.
+
+Evidence:
+
+- All **27 Rust tests passed** across the full workspace: 20 core, 4 Windows and
+  3 CLI. Warnings-denied Clippy, schema drift and repository lint checks passed.
+- Core coverage: **96.92% lines**, **92.16% regions**, **90.00% functions**.
+  [Coverage JSON](artifacts/p1/core-coverage.json).
+- The real Windows wrapper fixture passed with spaces, Japanese, Zoë,
+  apostrophes, percent signs, ampersands and exclamation marks.
+- [Live smoke proof](artifacts/p1/live-smoke.json), 2026-11-14 09:01 UTC on
+  Windows 11 build 26200 x64:
+
+| App            | Discovered MSIX version | Simultaneous result                    |
+| -------------- | ----------------------- | -------------------------------------- |
+| Claude Desktop | 5.11492.5.0             | Main app + 2 new profile process trees |
+| Codex          | 26.1106.6628.0          | Main app + 2 new profile process trees |
+
+All four managed process trees were nonempty and disjoint from one another and
+both main app trees. This verifies concurrent process isolation, **not account
+identity**. No credential files were read and no sign-in was automated.
+
+Known issues/limits:
+
+- All four test profiles retained background processes after WM_CLOSE and the
+  eight-second grace period. The CLI correctly returned StillRunning and
+  required explicit force confirmation. With Tanzir's approval, only those QA
+  profiles were force-closed.
+  [Final cleanup proof](artifacts/p1/final-cleanup.json) shows all four stopped,
+  both main apps running and every profile directory retained.
+- Direct launch and forced live MSIX fallback passed on both installed versions.
+  [Fallback proof](artifacts/p1/package-context-smoke.json) and
+  [scoped cleanup](artifacts/p1/package-context-cleanup.json). The live test
+  found Claude's application ID is Claude; Codex's is App. Recipes now reflect
+  that.
+- Different-account QA and Claude snapshot sign-in belong to P3/manual QA. No
+  recipe has been promoted to Verified. P2–P7 have not started.
