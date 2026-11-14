@@ -1,5 +1,20 @@
 # Progress
 
+## Latest delivery instructions — 2026-11-14
+
+The user selected local verification and Git pushes, and explicitly authorized
+public release: "you can release no problem". Project CI/Pages/Release/beta-feed
+workflows are now manual-only. The static site will be built and audited locally
+and pushed to gh-pages; GitHub only deploys those prebuilt files. Manual
+account, installer and hardware checks remain unverified, and all recipes remain
+Community. This overrides the earlier keep-draft gate.
+
+The final local JS run passed **3 metadata tests**, the contrast checks and all
+**24 browser tests**, including **211 Storybook stories** with interaction and
+AA checks. The unsigned x64/ARM64 release packages and feed were verified
+locally, including signature/version checks and tamper rejection. No installer
+has been executed. Publication and the final local site build are in progress.
+
 ## Current user instructions — 2026-11-14
 
 Manual verification is deferred to the user. Continue all remaining coding,

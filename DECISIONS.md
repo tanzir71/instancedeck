@@ -1,5 +1,20 @@
 # Decisions
 
+## 2026-11-14 — Local delivery and public unsigned preview
+
+The user directed: "do everything locally and just push to github", then "you
+can release no problem". Choice: keep CI, Pages, Release and beta-feed workflows
+available for manual invocation, with no automatic project build/test triggers.
+Run remaining verification locally, publish the already locally verified
+unsigned v0.1.0 development preview, and push a prebuilt static site to
+gh-pages. GitHub Pages performs only its hosting deployment. No force-push,
+history rewrite, installer execution or user-data deletion is needed. Earlier
+release artifacts retain their exact tagged-source provenance; manual account,
+installer and hardware checks remain unverified and every recipe Community. This
+explicit publication authorization overrides the earlier keep-draft gate.
+Alternatives: continuing to wait for hosted verification or implying manual QA
+had passed.
+
 ## 2026-11-14 — CI release metadata authentication
 
 The first tagged verification passed tests but its later site build received

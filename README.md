@@ -53,6 +53,7 @@ pnpm test:smoke
 pnpm build:desktop
 pnpm --filter @instancedeck/site build
 pnpm --filter @instancedeck/site test:lighthouse
+pnpm publish:site
 ```
 
 Target app binaries stay untouched; credentials are never inspected.

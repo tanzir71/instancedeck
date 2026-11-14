@@ -1,11 +1,12 @@
 # Manual verification before publication
 
 The automated build does not complete these checks. All entries below are
-**unverified**. Keep the GitHub Release draft and all recipes Community until
-the relevant checks have evidence. Record the tester, date, Windows build,
-architecture, InstanceDeck artifact/hash, official app versions and observed
-result. Do not attach credentials, profile contents or unredacted account
-screenshots to public reports.
+**unverified**. Keep all recipes Community until the relevant checks have
+evidence. The maintainer authorized the unsigned v0.1.0 development preview
+before manual QA; publication does not mark these checks complete. Record the
+tester, date, Windows build, architecture, InstanceDeck artifact/hash, official
+app versions and observed result. Do not attach credentials, profile contents or
+unredacted account screenshots to public reports.
 
 Use accounts you own and save work before testing closure or recovery. Review
 the unsigned policy and SHA-256 checksums first. WebView2 and official target

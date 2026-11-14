@@ -14,6 +14,7 @@
     "build": "pnpm tokens && turbo run build",
     "build:desktop": "pnpm tokens && pnpm --filter @instancedeck/desktop tauri build --no-bundle",
     "build:storybook": "pnpm tokens && pnpm --filter @instancedeck/ui build:storybook",
+    "publish:site": "pnpm --filter @instancedeck/site build && pnpm build:storybook && node scripts/package-pages.mjs && node scripts/verify-packaged-storybook.mjs && pwsh -NoProfile -File scripts/publish-site.ps1",
     "typecheck": "pnpm tokens && turbo run typecheck",
     "lint": "eslint . --max-warnings 0 && stylelint \"packages/ui/src/**/*.css\" && prettier --check .",
     "format": "prettier --write .",

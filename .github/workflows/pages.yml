@@ -1,18 +1,5 @@
 name: Pages
 on:
-  push:
-    branches: [main]
-    paths:
-      [
-        'apps/site/**',
-        'packages/**',
-        'scripts/**',
-        'design/**',
-        '.github/workflows/pages.yml',
-        'pnpm-lock.yaml',
-      ]
-  release:
-    types: [published]
   workflow_dispatch:
 permissions:
   contents: read
@@ -65,7 +52,7 @@ jobs:
             test-results/
   deploy:
     # Enable only once the public feature claims match shipped desktop behavior.
-    if: vars.SITE_PUBLISH_ENABLED == 'true'
+    if: vars.SITE_ACTIONS_DEPLOY_ENABLED == 'true'
     needs: build
     runs-on: ubuntu-latest
     permissions:
