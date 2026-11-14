@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 753.8810000000001,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/apps/claude-desktop/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/apps/claude-desktop/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/apps/claude-desktop/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/faq/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/faq/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/faq/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 810,
+      "cls": 0
+    }
+  ]
+}

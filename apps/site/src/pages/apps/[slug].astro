@@ -1,0 +1,34 @@
+---
+import { Badge } from '@instancedeck/ui/controls';
+import { DocLayout, ComparisonTable } from '@instancedeck/ui/marketing';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { recipes, type SiteRecipe } from '../../lib/recipes';
+import { absoluteUrl } from '../../lib/urls';
+import type { Graph } from 'schema-dts';
+export function getStaticPaths() { return recipes.map((recipe) => ({ params: { slug: recipe.seo.slug }, props: { recipe } })); }
+interface Props { recipe: SiteRecipe; }
+const { recipe } = Astro.props;
+const related = recipes.filter((item) => item.id !== recipe.id).slice(0, 3);
+const schema: Graph = { '@context': 'https://schema.org', '@graph': [{ '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl() }, { '@type': 'ListItem', position: 2, name: 'Apps', item: absoluteUrl('apps/') }, { '@type': 'ListItem', position: 3, name: recipe.name, item: absoluteUrl(`apps/${recipe.seo.slug}/`) }] }] };
+const launch = [...recipe.launch.args, ...Object.entries(recipe.launch.env).map(([key, value]) => `${key}=${value}`)].join('\n');
+---
+<SiteLayout title={`${recipe.name} Profiles on Windows – InstanceDeck`} description={recipe.seo.description} noindex={recipe.status === 'experimental'} schema={schema} ogSlug={`apps-${recipe.seo.slug}`}>
+  <DocLayout title={`Run multiple instances of ${recipe.name} on Windows`} intro={recipe.seo.intro} eyebrow="App compatibility" breadcrumbs={[{ label: 'Apps', href: '../' }, { label: recipe.name }]} linkPrefix="../../">
+    <Badge status={recipe.status} />
+    <p>Recipe version {recipe.recipeVersion}. Reported test evidence below is not a guarantee for a different app version or Windows installation.</p>
+    <h2>Reported versions and provenance</h2>
+    {recipe.verifiedOn.length ? <ComparisonTable caption="Recipe test reports" columns={['App version', 'Windows', 'Reported by']} rows={recipe.verifiedOn.map((entry) => ({ label: entry.date, values: [entry.appVersion, entry.os, entry.by] }))} /> : <p>No app/Windows version has been verified yet.</p>}
+    <h2>How InstanceDeck isolates {recipe.name}</h2>
+    <pre><code>{launch}</code></pre>
+    <p><code>{'{profile}'}</code> means that profile's own data folder. <code>{'{exeDir}'}</code> is the currently discovered installation folder. A trailing <code>?</code> marks an optional executable-path environment value.</p>
+    <p>Launch strategies: {recipe.launch.strategies.join(' → ')}. Target binaries are left untouched.</p>
+    <h2>Set up a profile</h2>
+    <ol><li>Install the official {recipe.name} app for your Windows user.</li><li>Create a profile in InstanceDeck and choose its data location.</li><li>Launch it, complete the app's supported sign-in flow and verify the visible account.</li></ol>
+    {recipe.id === 'claude-desktop' && <aside>The guided snapshot sign-in engine has not shipped in this development build. Read the <a href="../../claude-desktop-multiple-accounts/">Claude guide</a> before attempting sign-in.</aside>}
+    <h2>Known limitations</h2>
+    <ul>{recipe.limitations.map((limitation) => <li>{limitation}</li>)}</ul>
+    <h2>Related apps and guides</h2>
+    <ul>{related.map((item) => <li><a href={`../${item.seo.slug}/`}>{item.name}</a></li>)}</ul>
+    <p><a href="../">All apps</a> · <a href="../../claude-desktop-multiple-accounts/">Claude Desktop guide</a> · <a href="../../codex-multiple-accounts/">Codex guide</a> · <a href="../../download/">Download status</a></p>
+  </DocLayout>
+</SiteLayout>

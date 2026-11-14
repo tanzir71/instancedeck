@@ -47,6 +47,7 @@ export const HowDesktop: Story = {
 };
 export const HowLaptop: Story = { ...HowDesktop, parameters: laptop };
 export const HowTablet: Story = { ...HowDesktop, parameters: tablet };
+export const HowMobile: Story = { ...HowDesktop, parameters: mobile };
 export const Steps: Story = { render: () => <StepList /> };
 export const UseCasesDesktop: Story = {
   parameters: desktop,
@@ -54,6 +55,7 @@ export const UseCasesDesktop: Story = {
 };
 export const UseCasesLaptop: Story = { ...UseCasesDesktop, parameters: laptop };
 export const UseCasesTablet: Story = { ...UseCasesDesktop, parameters: tablet };
+export const UseCasesMobile: Story = { ...UseCasesDesktop, parameters: mobile };
 export const SpotlightDesktop: Story = {
   parameters: desktop,
   render: () => <AppSpotlights />,
@@ -67,6 +69,10 @@ export const SpotlightTablet: Story = {
   parameters: tablet,
 };
 export const ClaudeVisual: Story = { render: () => <ClaudeAccountVisual /> };
+export const SpotlightMobile: Story = {
+  ...SpotlightDesktop,
+  parameters: mobile,
+};
 export const CodexVisual: Story = { render: () => <CodexHomeVisual /> };
 export const FaqDesktop: Story = {
   parameters: desktop,
@@ -74,6 +80,7 @@ export const FaqDesktop: Story = {
 };
 export const FaqLaptop: Story = { ...FaqDesktop, parameters: laptop };
 export const FaqTablet: Story = { ...FaqDesktop, parameters: tablet };
+export const FaqMobile: Story = { ...FaqDesktop, parameters: mobile };
 export const FaqClosed: Story = {
   render: () => (
     <FAQItem question={copy.marketing.faqItems[1]!.question}>

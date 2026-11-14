@@ -158,6 +158,9 @@ Evidence so far:
 - P1's
   [Windows CI](https://github.com/tanzir71/instancedeck/actions/runs/43580584572)
   passed all steps, including coverage and the x64 release build.
+- [Desktop and component milestone CI](https://github.com/tanzir71/instancedeck/actions/runs/43585841035)
+  passed every Windows check, including the real recycle-only fixture, all Rust
+  tests, core coverage and the native x64 release build.
 
 Visual comparisons (Figma | built Storybook view):
 
@@ -224,6 +227,47 @@ component screenshots, not a deployed site. The product image is the supplied
 Figma export as explicitly permitted by design/README.md until P2 ships; it will
 then be replaced with a built app screenshot.
 
-Remaining: Astro routes/content, recipe-generated directory, build-time release
-data, structured metadata/OG images/sitemap, Lighthouse budgets, Pages deploy
-and IndexNow. P6 is not complete. P3–P5 and P7 have not started.
+Astro implementation and production evidence:
+
+- **19 HTML pages** now build: every §9.1 route, the two existing recipe pages,
+  Docs, Contributing, MIT license and Trademarks. Additional recipe pages
+  generate automatically when the P5 recipes ship. Guides distinguish current
+  behavior from the unfinished sign-in, shell and shared-history features.
+- Download, Changelog and home version metadata use a single cached public
+  GitHub Releases fetch at build time. No release is fabricated, and an API
+  error fails the build. No browser request to GitHub is needed.
+- Unique metadata, canonical URLs, visible breadcrumbs and typed JSON-LD,
+  nineteen Satori/Resvg OG images, Git-dated sitemap, llms.txt, local fonts,
+  WebP product image, .nojekyll and an Astro-generated hashed CSP.
+- Sticky header and the mobile menu use **473 bytes gzipped** of JavaScript. No
+  React islands or third-party scripts are sent to the home page.
+- All **11 browser tests passed**, including the 19-page metadata/link/AA audit,
+  mobile home and app/FAQ/comparison overflow checks. **162 stories** passed
+  across ten suites, including the mobile-omitted sections and scrolled header
+  state. Lint and TypeScript checks passed.
+- Lighthouse: **100 Performance / 100 Accessibility / 100 Best Practices / 100
+  SEO** on home, Claude recipe and FAQ in all nine runs. LCP ≤810ms and CLS 0.
+  [Results](artifacts/p6/lighthouse-summary.json). These are local mobile lab
+  results, not a claim about real-user or deployed performance.
+- The packaged artifact has **21 HTML files**, including Storybook's manager and
+  preview, with required credit/non-affiliation, no absolute-root anchors and
+  zero box-shadow declarations across eleven CSS files.
+  [Artifact audit](artifacts/p6/packaged-site-audit.json).
+  [Packaged browser check](artifacts/p6/packaged-library-browser.json).
+- Pages workflow builds, audits, packages and uploads the site. Deployment is
+  gated by SITE_PUBLISH_ENABLED until the desktop feature claims are true. The
+  post-deploy IndexNow script verifies its project-scoped key and sitemap before
+  submission. Publication and a successful live ping remain unverified.
+
+Built Astro screenshots: [1440 home](artifacts/p6/home-desktop-browser.png),
+[390 home](artifacts/p6/home-mobile-browser.png),
+[mobile app guide](artifacts/p6/apps-claude-desktop-mobile.png),
+[mobile FAQ](artifacts/p6/faq-mobile.png),
+[mobile comparison](artifacts/p6/compare-parall-for-windows-mobile.png). The
+eleven `artifacts/p6/site-*.png` files capture each actual built section, in
+addition to the component comparisons above.
+
+Remaining: live Pages deployment/IndexNow, P5's additional recipe entries and
+related-app links, and replacing the permitted product design image when P2
+ships. P6 is not complete. P3–P5 and P7 have not started; the required native P2
+check was stopped with Escape and has not been resumed.

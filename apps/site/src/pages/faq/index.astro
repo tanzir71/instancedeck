@@ -1,0 +1,16 @@
+---
+import { DocLayout, FAQItem, faqItems } from '@instancedeck/ui/marketing';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { absoluteUrl } from '../../lib/urls';
+import type { Graph } from 'schema-dts';
+const schema: Graph = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'FAQPage', mainEntity: faqItems.map((item) => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } })) },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl() }, { '@type': 'ListItem', position: 2, name: 'FAQ', item: absoluteUrl('faq/') }] },
+] };
+---
+<SiteLayout title="Frequently Asked Questions – InstanceDeck" description="Plain answers about multiple accounts, Windows profiles, data safety, compatibility, SmartScreen and InstanceDeck's independence from app vendors." schema={schema} ogSlug="faq">
+  <DocLayout title="Questions about accounts, data and trust" intro="Plain answers, with links to the details." breadcrumbs={[{ label: 'FAQ' }]} linkPrefix="../">
+    <aside>This project is in development. Guided Claude sign-in and custom-app editing are not available yet. The answers describe the planned release workflow; check each guide's current limitations.</aside>
+    {faqItems.map((item) => <FAQItem question={item.question}><p>{item.answer}</p><p><a href={`../${item.related}`}>Read more</a></p></FAQItem>)}
+  </DocLayout>
+</SiteLayout>

@@ -1,5 +1,26 @@
 # Decisions
 
+## 2026-11-14 — Site publication follows shipped claims
+
+Context: P6 may run alongside the ordered desktop phases. The Figma home copy
+describes guided sign-in, shell identity and generic recipes that are not yet
+enabled in the P2 build. Choice: build and audit the complete site now, but keep
+Pages publication behind SITE_PUBLISH_ENABLED until those desktop behaviors
+ship. Enable that repository variable and deploy once the claims are true; no
+additional approval is needed. Alternative: publishing unsupported feature
+claims or changing the authority copy into temporary marketing prose.
+
+Guide pages and llms.txt identify the current development limits. No release
+version or installer is invented: Download and Changelog read public GitHub
+metadata during the build, and fail the build on an API error. Community test
+reports remain distinct from manual account verification. Shared-history and
+Claude recovery documentation must be updated when their engines ship.
+
+The Pages artifact includes Storybook. Its two HTML entry pages receive the same
+shared footer and noindex metadata. Packaged third-party Storybook CSS has
+shadow declarations removed so the complete published artifact passes the
+flat-style audit. Development Storybook sources stay untouched.
+
 ## 2026-11-14 — Marketing responsiveness and complete legal copy
 
 Context: the mobile Figma frame intentionally omits the desktop How it works,

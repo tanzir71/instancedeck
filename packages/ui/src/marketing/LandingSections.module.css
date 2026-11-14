@@ -1,4 +1,7 @@
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   height: 76px;
   display: flex;
   align-items: center;
@@ -6,6 +9,16 @@
   padding-inline: max(32px, calc((100vw - 1280px) / 2));
   gap: 24px;
   background: var(--paper);
+}
+
+.header[data-scrolled]::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 4px;
+  background: var(--canvas);
 }
 
 .brand {
@@ -240,11 +253,17 @@
   gap: 16px 28px;
 }
 
-.works > :where(div) > :where(span) {
+.works > :where(div) > :where(a) {
   display: flex;
   align-items: center;
   gap: 10px;
   white-space: nowrap;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.works > :where(div) > :where(a:hover) {
+  text-decoration: underline;
 }
 
 .stripTile {
@@ -749,7 +768,7 @@
     gap: 14px 16px;
   }
 
-  .works > :where(div) > :where(span) {
+  .works > :where(div) > :where(a) {
     gap: 8px;
   }
 

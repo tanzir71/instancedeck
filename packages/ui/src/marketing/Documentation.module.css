@@ -112,6 +112,27 @@
   min-width: 480px;
 }
 
+.prose > :where(table) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  text-align: start;
+}
+
+.prose > :where(table) :where(th, td) {
+  padding: 16px;
+  vertical-align: top;
+}
+
+.prose > :where(table) :where(thead) {
+  background: var(--deep);
+  color: var(--paper);
+}
+
+.prose > :where(table) :where(tbody tr:nth-child(odd)) {
+  background: var(--canvas);
+}
+
 .tableRegion :where(caption) {
   text-align: start;
   color: var(--ink-2);

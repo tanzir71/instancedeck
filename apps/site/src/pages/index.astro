@@ -1,6 +1,31 @@
 ---
-import { ScaffoldPage } from '@instancedeck/ui';
-import '@instancedeck/ui/styles';
+import { Image } from 'astro:assets';
+import { Hero, LogoTextStrip, FeatureTriplet, HowItWorks, UseCaseGrid, AppSpotlights, SecurityBand, FAQPreview, CTABand } from '@instancedeck/ui/marketing';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import deck from '../../../../design/20-app-deck@2x.png';
+import { absoluteUrl } from '../lib/urls';
+import type { Graph } from 'schema-dts';
+import { loadReleases } from '../lib/releases';
+import { recipes } from '../lib/recipes';
+const latest = (await loadReleases()).find((release) => !release.prerelease);
+const schema: Graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'SoftwareApplication', name: 'InstanceDeck', alternateName: 'InstanceDeck multi-instance app launcher', applicationCategory: 'UtilitiesApplication', operatingSystem: 'Windows 10, Windows 11', processorRequirements: 'x64, ARM64', isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, ...(latest ? { softwareVersion: latest.tag_name.replace(/^v/, ''), downloadUrl: latest.html_url } : {}), license: 'https://opensource.org/licenses/MIT', url: absoluteUrl(), author: { '@type': 'Person', name: 'Tanzir Rahman', url: 'https://tanziro.com', sameAs: ['https://medium.com/@tanzir71', 'https://github.com/tanzir71'] }, description: 'Run separate desktop app profiles side by side on Windows, using official apps and isolated data folders.' },
+    { '@type': 'WebSite', name: 'InstanceDeck', url: absoluteUrl() },
+  ],
+};
 ---
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex" /><meta name="description" content="InstanceDeck is an open-source multi-instance app launcher for Windows, currently in development." /><title>InstanceDeck — Multi-instance app launcher for Windows</title></head><body><ScaffoldPage /></body></html>
+<SiteLayout title="InstanceDeck — Run Multiple App Instances on Windows" description="Run separate desktop app accounts side by side on Windows. Isolated profiles, official apps and no telemetry. Free and open source." schema={schema}>
+  <main id="main">
+    <Hero />
+    <LogoTextStrip availableSlugs={recipes.map((recipe) => recipe.seo.slug)} />
+    <FeatureTriplet />
+    <HowItWorks><Image src={deck} alt="InstanceDeck Deck design showing separate Claude Desktop and Codex profiles, each with its own launch controls." format="webp" width={1120} height={700} widths={[560, 1120, 2240]} sizes="87.5vw" loading="lazy" decoding="async" /></HowItWorks>
+    <UseCaseGrid />
+    <AppSpotlights />
+    <SecurityBand signingEnabled={import.meta.env.SIGNING_ENABLED === 'true'} />
+    <FAQPreview />
+    <CTABand />
+  </main>
+</SiteLayout>

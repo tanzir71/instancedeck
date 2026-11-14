@@ -8,7 +8,10 @@
     "./styles": "./src/styles.css",
     "./tokens": "./src/tokens/generated.ts",
     "./marketing": "./src/marketing/index.ts",
-    "./dialog-focus": "./src/components/dialogFocus.ts"
+    "./dialog-focus": "./src/components/dialogFocus.ts",
+    "./controls": "./src/components/Controls.tsx",
+    "./button": "./src/components/Button.tsx",
+    "./fonts": "./src/assets/fonts.ts"
   },
   "scripts": {
     "tokens": "node scripts/tokens.mjs",

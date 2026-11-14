@@ -13,9 +13,11 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'pnpm --filter @instancedeck/site dev',
-      url: 'http://127.0.0.1:4321/instancedeck/',
+      command:
+        'pnpm --filter @instancedeck/site build && pnpm --filter @instancedeck/site exec astro preview --host 127.0.0.1 --port 4322 --ignore-lock',
+      url: 'http://127.0.0.1:4322/instancedeck/',
       reuseExistingServer: !process.env.CI,
+      timeout: 120000,
     },
     {
       command:

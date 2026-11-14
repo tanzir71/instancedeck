@@ -36,10 +36,10 @@ test('empty Deck renders shared tokens, local assets and fonts without errors', 
 test('Astro serves static React output under the project base with required credit', async ({
   page,
 }) => {
-  await page.goto('http://127.0.0.1:4321/instancedeck/');
+  await page.goto('http://127.0.0.1:4322/instancedeck/');
   await page.evaluate(() => document.fonts.ready);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'InstanceDeck is in development.',
+    'Run multiple instances of your desktop apps on Windows.',
   );
   await expect(
     page
@@ -60,7 +60,7 @@ test('Astro serves static React output under the project base with required cred
   ).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.screenshot({
-    path: 'artifacts/p0/site-scaffold.png',
+    path: 'artifacts/p6/home-browser.png',
     fullPage: true,
   });
 });

@@ -3,9 +3,10 @@
 InstanceDeck is a multi-instance app launcher for Windows. It launches official
 apps with separate arguments, environment variables and profile data paths.
 
-**Status:** the scaffold and launch engine/CLI are verified on Windows 11. The
-desktop UI remains a preview. See [PROGRESS.md](PROGRESS.md) for evidence and
-remaining gates.
+**Status:** the launch engine/CLI are verified on Windows 11. The desktop UI is
+implemented with native keyboard/tray QA pending. The complete Astro site is
+built and audited locally; publication waits for the desktop features described
+by its copy. See [PROGRESS.md](PROGRESS.md) for evidence and remaining gates.
 
 The desktop uses Tauri 2, React and TypeScript. The static Astro site and
 desktop share `packages/ui`; all visual tokens are generated from
@@ -36,10 +37,14 @@ pnpm build:storybook
 pnpm exec playwright install chromium
 pnpm test:smoke
 pnpm build:desktop
+pnpm --filter @instancedeck/site build
+pnpm --filter @instancedeck/site test:lighthouse
 ```
 
 Target app binaries stay untouched; credentials are never inspected.
-InstanceDeck is not a security sandbox. The app makes no network calls.
+InstanceDeck is not a security sandbox. The app makes no network calls. The site
+build fetches public GitHub release metadata. Browser tests serve the production
+site at port 4322; Lighthouse uses a separate foreground preview.
 
 ## Engine CLI
 

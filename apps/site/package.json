@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1 --port 4321",
-    "build": "astro build",
-    "typecheck": "astro check"
+    "build": "astro build && node scripts/og.mjs",
+    "typecheck": "astro check",
+    "test:lighthouse": "node ../../scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@astrojs/react": "7.1.9",

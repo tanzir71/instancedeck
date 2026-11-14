@@ -25,7 +25,13 @@ export function Eyebrow({
     </p>
   );
 }
-export function SiteHeader({ linkPrefix = './' }: { linkPrefix?: string }) {
+export function SiteHeader({
+  linkPrefix = './',
+  scrolled = false,
+}: {
+  linkPrefix?: string;
+  scrolled?: boolean;
+}) {
   const menuId = useId();
   const links = [
     [text.product, '#product'],
@@ -35,7 +41,7 @@ export function SiteHeader({ linkPrefix = './' }: { linkPrefix?: string }) {
     [text.docs, 'docs/'],
   ];
   return (
-    <header className={styles.header}>
+    <header className={styles.header} data-scrolled={scrolled ? '' : undefined}>
       <a
         className={styles.brand}
         href={siteLink(linkPrefix)}
@@ -200,34 +206,50 @@ export function Hero({ linkPrefix = './' }: { linkPrefix?: string }) {
   );
 }
 const appNames = [
-  ['Cl', 'Claude Desktop'],
-  ['Cx', 'Codex'],
-  ['VS', 'VS Code'],
-  ['Cu', 'Cursor'],
-  ['Ch', 'Chrome'],
-  ['Ed', 'Edge'],
-  ['Br', 'Brave'],
-  ['Tg', 'Telegram'],
-];
-export function LogoTextStrip() {
+  ['Cl', 'Claude Desktop', 'claude-desktop'],
+  ['Cx', 'Codex', 'codex'],
+  ['VS', 'VS Code', 'vscode'],
+  ['Cu', 'Cursor', 'cursor'],
+  ['Ch', 'Chrome', 'chrome'],
+  ['Ed', 'Edge', 'edge'],
+  ['Br', 'Brave', 'brave'],
+  ['Tg', 'Telegram', 'telegram'],
+] as const;
+const initialSlugs = ['claude-desktop', 'codex'];
+export function LogoTextStrip({
+  linkPrefix = './',
+  availableSlugs = initialSlugs,
+}: {
+  linkPrefix?: string;
+  availableSlugs?: readonly string[];
+}) {
   return (
     <section className={styles.works} aria-label={text.worksWith}>
       <p>{text.worksWith}</p>
       <div>
-        {appNames.map(([letters = '', name]) => (
-          <span key={name}>
+        {appNames.map(([letters, name, slug]) => (
+          <a
+            key={name}
+            href={siteLink(
+              linkPrefix,
+              availableSlugs.includes(slug) ? `apps/${slug}/` : 'apps/#planned',
+            )}
+          >
             <MonogramTile
               letters={letters}
               size="S"
               className={styles.stripTile}
             />
             <span>{name}</span>
-          </span>
+          </a>
         ))}
-        <span className={styles.anyApp}>
+        <a
+          className={styles.anyApp}
+          href={siteLink(linkPrefix, 'apps/#planned')}
+        >
           <MonogramTile letters="+" size="S" tone="ink" />
           <span>{text.anyApp}</span>
-        </span>
+        </a>
       </div>
     </section>
   );

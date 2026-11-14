@@ -1,0 +1,138 @@
+{
+  "pages": [
+    {
+      "path": "404.html",
+      "title": "Page Not Found – InstanceDeck",
+      "descriptionLength": 67,
+      "links": 46,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/claude-desktop/",
+      "title": "Claude Desktop Profiles on Windows – InstanceDeck",
+      "descriptionLength": 132,
+      "links": 49,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/codex/",
+      "title": "Codex Profiles on Windows – InstanceDeck",
+      "descriptionLength": 130,
+      "links": 48,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/",
+      "title": "App Compatibility Directory – InstanceDeck",
+      "descriptionLength": 150,
+      "links": 49,
+      "axeViolations": 0
+    },
+    {
+      "path": "changelog/",
+      "title": "Changelog – InstanceDeck",
+      "descriptionLength": 111,
+      "links": 45,
+      "axeViolations": 0
+    },
+    {
+      "path": "claude-desktop-multiple-accounts/",
+      "title": "Multiple Claude Desktop Accounts on Windows – InstanceDeck",
+      "descriptionLength": 142,
+      "links": 46,
+      "axeViolations": 0
+    },
+    {
+      "path": "code-signing-policy/",
+      "title": "Code Signing Policy – InstanceDeck",
+      "descriptionLength": 118,
+      "links": 45,
+      "axeViolations": 0
+    },
+    {
+      "path": "codex-multiple-accounts/",
+      "title": "Multiple Codex App Accounts on Windows – InstanceDeck",
+      "descriptionLength": 132,
+      "links": 47,
+      "axeViolations": 0
+    },
+    {
+      "path": "compare/parall-for-windows/",
+      "title": "Parall Alternative for Windows – InstanceDeck",
+      "descriptionLength": 139,
+      "links": 47,
+      "axeViolations": 0
+    },
+    {
+      "path": "contributing/",
+      "title": "Contributing – InstanceDeck",
+      "descriptionLength": 130,
+      "links": 44,
+      "axeViolations": 0
+    },
+    {
+      "path": "docs/",
+      "title": "Documentation – InstanceDeck",
+      "descriptionLength": 123,
+      "links": 52,
+      "axeViolations": 0
+    },
+    {
+      "path": "download/",
+      "title": "Download for Windows – InstanceDeck",
+      "descriptionLength": 114,
+      "links": 46,
+      "axeViolations": 0
+    },
+    {
+      "path": "faq/",
+      "title": "Frequently Asked Questions – InstanceDeck",
+      "descriptionLength": 146,
+      "links": 51,
+      "axeViolations": 0
+    },
+    {
+      "path": "how-it-works/",
+      "title": "How Multi-instance Profiles Work – InstanceDeck",
+      "descriptionLength": 145,
+      "links": 46,
+      "axeViolations": 0
+    },
+    {
+      "path": "/",
+      "title": "InstanceDeck — Run Multiple App Instances on Windows",
+      "descriptionLength": 131,
+      "links": 58,
+      "axeViolations": 0
+    },
+    {
+      "path": "license/",
+      "title": "MIT License – InstanceDeck",
+      "descriptionLength": 103,
+      "links": 42,
+      "axeViolations": 0
+    },
+    {
+      "path": "privacy/",
+      "title": "Privacy – InstanceDeck",
+      "descriptionLength": 130,
+      "links": 45,
+      "axeViolations": 0
+    },
+    {
+      "path": "security/",
+      "title": "Security Model – InstanceDeck",
+      "descriptionLength": 120,
+      "links": 48,
+      "axeViolations": 0
+    },
+    {
+      "path": "trademarks/",
+      "title": "Trademarks and Non-affiliation – InstanceDeck",
+      "descriptionLength": 125,
+      "links": 44,
+      "axeViolations": 0
+    }
+  ],
+  "jsGzipBytes": 473
+}

@@ -1,0 +1,9 @@
+---
+import { DocLayout } from '@instancedeck/ui/marketing';
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+<SiteLayout title="Page Not Found – InstanceDeck" description="Find InstanceDeck downloads, app compatibility, guides and answers." noindex ogSlug="404" canonicalPath="404.html">
+  <DocLayout title="This page is not in the deck." intro="Try one of these starting points." breadcrumbs={[{ label: 'Page not found' }]}>
+    <ul><li><a href="./">Home</a></li><li><a href="./apps/">App compatibility</a></li><li><a href="./download/">Download status</a></li><li><a href="./faq/">Questions and answers</a></li></ul>
+  </DocLayout>
+</SiteLayout>

@@ -29,6 +29,10 @@ export const HeaderDesktop: Story = {
   render: () => <SiteHeader />,
 };
 export const HeaderLaptop: Story = { ...HeaderDesktop, parameters: laptop };
+export const HeaderScrolled: Story = {
+  parameters: desktop,
+  render: () => <SiteHeader scrolled />,
+};
 export const HeaderTablet: Story = { ...HeaderDesktop, parameters: tablet };
 export const HeaderMobile: Story = { ...HeaderDesktop, parameters: mobile };
 export const MobileMenu: Story = {

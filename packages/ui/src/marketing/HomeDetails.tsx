@@ -20,7 +20,13 @@ export function StepList() {
   );
 }
 
-export function HowItWorks({ productShot }: { productShot: ReactNode }) {
+export function HowItWorks({
+  productShot,
+  children,
+}: {
+  productShot?: ReactNode;
+  children?: ReactNode;
+}) {
   return (
     <section className={styles.how} aria-labelledby="how-title">
       <div className={styles.intro}>
@@ -28,7 +34,7 @@ export function HowItWorks({ productShot }: { productShot: ReactNode }) {
         <h2 id="how-title">{text.howTitle}</h2>
       </div>
       <StepList />
-      <div className={styles.productField}>{productShot}</div>
+      <div className={styles.productField}>{productShot ?? children}</div>
     </section>
   );
 }

@@ -1,0 +1,6 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import license from '../../../../../LICENSE?raw';
+const frontmatter = { title: 'MIT License – InstanceDeck', description: 'InstanceDeck is free and open source under the MIT license. Read the full license and copyright notice.', heading: 'MIT license', name: 'License', intro: 'Free to use, study, modify and distribute under these terms.' };
+---
+<ArticleLayout frontmatter={frontmatter}>{license.trim().split(/\r?\n\r?\n/).map((paragraph) => <p>{paragraph}</p>)}</ArticleLayout>
