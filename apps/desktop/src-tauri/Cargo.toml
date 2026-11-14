@@ -19,7 +19,7 @@ tauri-plugin-window-state = "=2.5.0"
 serde = { version = "=1.0.229", features = ["derive"] }
 serde_json = "=1.0.154"
 ulid = "=3.0.0"
-tokio = {version="=1.54.1",features=["sync","time","macros"]}
+tokio = { version = "=1.54.1", features = ["sync", "time", "macros"] }
 specta = { version = "=2.0.0-rc.28", features = ["derive", "function", "serde_json"] }
 specta-typescript = "=0.0.15"
 tauri-specta = { version = "=2.0.0-rc.29", features = ["typescript"] }

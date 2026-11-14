@@ -6,6 +6,7 @@
 
 .powerDialog {
   width: min(740px, calc(100vw - 48px));
+  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -506,6 +507,7 @@
   gap: 24px;
 }
 
+.powerDialog h2,
 .confirm h2 {
   font-size: 32px;
   line-height: 1.15;

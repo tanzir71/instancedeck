@@ -30,12 +30,12 @@ integrity key, not a Windows certificate or self-signed root.
    Windows binaries remain NotSigned. All working copies/logs are retained under
    target; no user data is pruned.
 
-5. Complete the manual matrix, review unsigned SmartScreen behavior, install and
-   uninstall preservation, then publish the draft yourself. Publishing is not
-   implied by automated packaging. Pages refreshes public download/changelog
-   metadata when a release is published. A checked-in draft-status snapshot can
-   describe real automated draft readiness without publishing private asset
-   links.
+5. Complete the [manual matrix](manual-verification.md), review unsigned
+   SmartScreen behavior, install and uninstall preservation, then publish the
+   draft yourself. Publishing is not implied by automated packaging. Pages
+   refreshes public download/changelog metadata when a release is published. A
+   checked-in draft-status snapshot can describe real automated draft readiness
+   without publishing private asset links.
 
 Keep a secure retained backup of the local key. Losing it breaks the updater
 trust chain. The public key in tauri.conf.json must match; do not replace it

@@ -36,6 +36,31 @@ Remaining: native x64/ARM64 package builds, complete automated checks, the
 actual v0.1.0 tag/draft, local integrity verification and a real draft-status
 snapshot for Download/Changelog. No release has been published.
 
+The implementation checkpoint `50b46dd` is pushed. The
+[build-only Release preflight](https://github.com/tanzir71/instancedeck/actions/runs/43605787043)
+is running without creating a release or executing an installer. All **63 Rust
+tests**, warnings-denied clippy, TypeScript, lint, actionlint and PowerShell
+syntax checks pass. Core coverage is **87.54% lines** (1954/2232), regions
+82.42%, functions 68.62%; [report](artifacts/p7/core-coverage.json). Manual
+remaining work is collected in [the checklist](docs/manual-verification.md).
+
+The complete browser suite passes **24 tests**, including all **209 stories**
+and their AA checks. The first local x64 NSIS build succeeds (4.14 MiB), without
+executing the installer. Visual inspection caught missing padding in the shared
+power dialog; it now uses the existing 32px confirmation spacing. All seven
+affected power/updater browser tests pass after correction.
+
+| Figma foundation                                            | Built updater variant                                        |
+| ----------------------------------------------------------- | ------------------------------------------------------------ |
+| ![Wizard modal reference](design/21-app-new-profile@2x.png) | ![Update confirmation](artifacts/p7/update-confirmation.png) |
+| ![Deck light reference](design/20-app-deck@2x.png)          | ![Dark update settings](artifacts/p7/update-dark.png)        |
+
+There is no dedicated updater Figma frame. The variants reuse the shared shell,
+controls, palette and confirmation spacing. These captures use labelled
+Storybook fixtures, not a published update. Offline verification of the locally
+built own installer also passes with its signed version while Windows
+Authenticode remains **NotSigned**. The private key was not transmitted.
+
 ## P2 — Implementation and automated acceptance complete
 
 The user's manual-verification deferral permits P3 to proceed. The desktop now
