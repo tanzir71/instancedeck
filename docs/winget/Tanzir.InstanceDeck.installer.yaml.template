@@ -1,0 +1,21 @@
+# Draft-only template. Fill with real finalized release values after publication
+# and manual verification. Do not submit this file with placeholders.
+PackageIdentifier: Tanzir.InstanceDeck
+PackageVersion: '{{VERSION}}'
+InstallerType: nullsoft
+Scope: user
+MinimumOSVersion: 10.0.19045.0
+InstallModes:
+  - interactive
+  - silent
+  - silentWithProgress
+UpgradeBehavior: install
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/tanzir71/instancedeck/releases/download/v{{VERSION}}/InstanceDeck_{{VERSION}}_x64-setup.exe
+    InstallerSha256: '{{X64_SHA256}}'
+  - Architecture: arm64
+    InstallerUrl: https://github.com/tanzir71/instancedeck/releases/download/v{{VERSION}}/InstanceDeck_{{VERSION}}_arm64-setup.exe
+    InstallerSha256: '{{ARM64_SHA256}}'
+ManifestType: installer
+ManifestVersion: 1.28.0

@@ -14,6 +14,7 @@ pub mod settings;
 pub mod shell;
 pub mod signin;
 pub mod template;
+pub mod updates;
 pub use settings::{Settings, SettingsStore};
 
 pub use engine::Engine;

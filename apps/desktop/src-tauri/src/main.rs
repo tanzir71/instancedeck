@@ -5,6 +5,7 @@ mod commands;
 mod runtime;
 mod service;
 mod tray;
+mod updates;
 use ideck_core::shell::ShellOperations;
 use std::{path::PathBuf, sync::Arc, time::Duration};
 use tauri::{Emitter, Manager};
@@ -40,6 +41,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             runtime::forwarded_args(app, &args);
         }))
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_log::Builder::new().skip_logger().build())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .plugin(
             tauri_plugin_autostart::Builder::new()
@@ -65,6 +69,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
                 .build(),
         )
         .manage(Arc::clone(&state))
+        .manage(updates::Updates::default())
         .invoke_handler(bindings::commands().invoke_handler())
         .setup(move |app| {
             if let Err(error) =

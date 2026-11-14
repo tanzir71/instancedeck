@@ -108,10 +108,12 @@ export function SettingsScreen({
   settings,
   onSave,
   onBrowse,
+  onExternal,
 }: {
   settings: Settings;
   onSave: (settings: Settings) => Promise<void>;
   onBrowse: () => Promise<string | null>;
+  onExternal?: DesktopClient['openExternal'];
 }) {
   const [draft, setDraft] = useState(settings);
   const [busy, setBusy] = useState(false);
@@ -228,7 +230,15 @@ export function SettingsScreen({
         <p>{copy.nonAffiliation}</p>
         <p>
           {copy.creditPrefix}{' '}
-          <a href="https://tanziro.com">
+          <a
+            href="https://tanziro.com"
+            onClick={(event) => {
+              if (onExternal) {
+                event.preventDefault();
+                void onExternal('credit').catch((e) => setError(String(e)));
+              }
+            }}
+          >
             {copy.creditName} · {copy.creditDomain}
           </a>
         </p>
@@ -479,6 +489,24 @@ export function ProfileDetail({
         </Button>
         <p className={styles.muted}>{copy.desktop.shortcutHelp}</p>
         <p className={styles.muted}>{copy.desktop.pinTip}</p>
+        {(profile.appId === 'claude-desktop' || profile.appId === 'codex') && (
+          <>
+            <Button
+              size="M"
+              kind="quiet"
+              onClick={() =>
+                void client
+                  .openExternal(
+                    profile.appId === 'codex' ? 'codex-usage' : 'claude-usage',
+                  )
+                  .catch((e) => setError(String(e)))
+              }
+            >
+              {copy.updates.usage}
+            </Button>
+            <p className={styles.muted}>{copy.updates.usageHelp}</p>
+          </>
+        )}
         <details>
           <summary>{copy.desktop.launchSettings}</summary>
           {plan && (

@@ -404,6 +404,26 @@ impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopSta
         }
         result
     }
+    pub fn run_installer(&self, install: impl FnOnce() -> Result<()>) -> Result<()> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck".into()))?;
+        let _launch = self.engine.platform.launch_lock()?;
+        ideck_core::updates::permitted(&self.settings.read()?)?;
+        if !JournalStore::new(self.engine.store.root())
+            .active()?
+            .is_empty()
+        {
+            return Err(Error::Invalid(
+                "Finish or restore active sign-in recovery before updating InstanceDeck".into(),
+            ));
+        }
+        for profile in &self.engine.store.read()?.profiles {
+            ideck_core::history::guard_pending(self.engine.store.root(), profile)?;
+        }
+        install()
+    }
     pub fn shared_history(&self, id: &str, enabled: bool) -> Result<()> {
         let _mutation = self
             .mutation
@@ -791,6 +811,69 @@ mod tests {
         let mut report = json!({"nested": [{"path": "C:\\Users\\Zoë\\AppData\\Local"}]});
         redact_value(&mut report, r"C:\Users\Zoë");
         assert!(!report.to_string().contains("Zoë"));
+    }
+    #[test]
+    fn installer_callback_requires_saved_consent_and_completed_history_recovery() {
+        use std::cell::Cell;
+        let temp = tempfile::tempdir().unwrap();
+        let state =
+            DesktopState::with_platform(temp.path().join("manager"), FakePlatform::default())
+                .unwrap();
+        let calls = Cell::new(0);
+        assert!(
+            state
+                .run_installer(|| {
+                    calls.set(calls.get() + 1);
+                    Ok(())
+                })
+                .is_err()
+        );
+        let mut settings = state.settings.read().unwrap();
+        settings.onboarding_completed = true;
+        settings.allow_update_checks = false;
+        state.settings.write(&settings).unwrap();
+        assert!(
+            state
+                .run_installer(|| {
+                    calls.set(calls.get() + 1);
+                    Ok(())
+                })
+                .is_err()
+        );
+        settings.allow_update_checks = true;
+        state.settings.write(&settings).unwrap();
+        let profile = state.engine.store.create(fake::profile("codex")).unwrap();
+        {
+            let mut fake = state.engine.platform.0.lock().unwrap();
+            fake.history.insert(
+                Path::new(&profile.data_dir)
+                    .join("codex-home")
+                    .join("sessions")
+                    .to_string_lossy()
+                    .into_owned(),
+                ideck_core::history::Kind::Directory,
+            );
+            fake.fail_history_at = Some(1);
+        }
+        assert!(ideck_core::history::configure(&state.engine, &profile.id, true).is_err());
+        assert!(
+            state
+                .run_installer(|| {
+                    calls.set(calls.get() + 1);
+                    Ok(())
+                })
+                .is_err()
+        );
+        assert_eq!(calls.get(), 0);
+        state.engine.platform.0.lock().unwrap().fail_history_at = None;
+        ideck_core::history::configure(&state.engine, &profile.id, false).unwrap();
+        state
+            .run_installer(|| {
+                calls.set(calls.get() + 1);
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(calls.get(), 1);
     }
     #[test]
     fn dark_theme_and_metadata_import_do_not_create_app_data_or_change_startup() {

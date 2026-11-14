@@ -235,3 +235,10 @@
     padding: 32px;
   }
 }
+
+.draftNotice {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+  background: var(--canvas);
+}

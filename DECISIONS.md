@@ -1,5 +1,28 @@
 # Decisions
 
+## 2026-11-14 — Unsigned CI packages and local updater integrity
+
+Context: Windows certificate signing is unavailable. Updater integrity still
+needs a stable project key. A combined key/ACL/repository-secret setup command
+was rejected by automatic approval review with the stated reason "blocked by
+policy"; no private key was uploaded. Choice: generate and retain the project
+key locally, embed only its public key, build unsigned packages in trusted CI,
+and finalize the draft locally with the official signer. The finalizer verifies
+CI hashes/tag provenance, valid signatures, signed-version mismatch rejection
+and a tampered copy of our own installer, then uploads public signatures/feed
+only. No trusted root or signing service is used. Alternatives: transmitting a
+private key to CI, disabling updater integrity, or implying unsigned Windows
+packages have a trusted publisher.
+
+Update checks require completed first-run and the saved allow-check preference.
+Downloads and installation need separate confirmation; consent/channel are
+rechecked after download and recovery must be complete before installation.
+Signatures must bind the announced version. Portable packages use manual
+extraction. The NSIS template's data-deletion UI and AppData removal block are
+removed; WebView2 installation is explicit/separate to avoid setup-time network
+calls. Publishing stays a user step after manual QA; the requested first release
+is a draft.
+
 ## 2026-11-14 — Published Storybook preserves explicit theme examples
 
 Production verification found that Storybook's light-only theme decorator could

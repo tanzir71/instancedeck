@@ -1,0 +1,249 @@
+{
+  "checkedAt": "2026-11-14T14:01:19.563Z",
+  "prefix": "https://tanzir71.github.io/instancedeck/",
+  "pages": [
+    {
+      "url": "https://tanzir71.github.io/instancedeck/",
+      "status": 200,
+      "title": "InstanceDeck — Run Multiple App Instances on Windows",
+      "canonical": "https://tanzir71.github.io/instancedeck/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/",
+      "status": 200,
+      "title": "App Compatibility Directory – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/brave/",
+      "status": 200,
+      "title": "Brave Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/brave/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/chrome/",
+      "status": 200,
+      "title": "Google Chrome Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/chrome/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/claude-desktop/",
+      "status": 200,
+      "title": "Claude Desktop Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/claude-desktop/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/codex/",
+      "status": 200,
+      "title": "Codex Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/codex/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/cursor/",
+      "status": 200,
+      "title": "Cursor Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/cursor/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/edge/",
+      "status": 200,
+      "title": "Microsoft Edge Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/edge/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/telegram-desktop/",
+      "status": 200,
+      "title": "Telegram Desktop Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/telegram-desktop/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/vscode/",
+      "status": 200,
+      "title": "Visual Studio Code Profiles on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/apps/vscode/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/changelog/",
+      "status": 200,
+      "title": "Changelog – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/changelog/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/claude-desktop-multiple-accounts/",
+      "status": 200,
+      "title": "Multiple Claude Desktop Accounts on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/claude-desktop-multiple-accounts/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/code-signing-policy/",
+      "status": 200,
+      "title": "Code Signing Policy – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/code-signing-policy/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/codex-multiple-accounts/",
+      "status": 200,
+      "title": "Multiple Codex App Accounts on Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/codex-multiple-accounts/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/compare/parall-for-windows/",
+      "status": 200,
+      "title": "Parall Alternative for Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/compare/parall-for-windows/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/contributing/",
+      "status": 200,
+      "title": "Contributing – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/contributing/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/docs/",
+      "status": 200,
+      "title": "Documentation – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/docs/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/download/",
+      "status": 200,
+      "title": "Download for Windows – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/download/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/faq/",
+      "status": 200,
+      "title": "Frequently Asked Questions – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/faq/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/how-it-works/",
+      "status": 200,
+      "title": "How Multi-instance Profiles Work – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/how-it-works/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/license/",
+      "status": 200,
+      "title": "MIT License – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/license/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/privacy/",
+      "status": 200,
+      "title": "Privacy – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/privacy/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/security/",
+      "status": 200,
+      "title": "Security Model – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/security/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/trademarks/",
+      "status": 200,
+      "title": "Trademarks and Non-affiliation – InstanceDeck",
+      "canonical": "https://tanzir71.github.io/instancedeck/trademarks/",
+      "credit": 2,
+      "nonAffiliation": true,
+      "absoluteRootLinks": 0,
+      "h1": 1
+    }
+  ],
+  "mobileWidth": 390,
+  "custom404": 404,
+  "errors": []
+}

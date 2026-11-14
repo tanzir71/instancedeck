@@ -39,5 +39,40 @@
       "csp": "default-src 'self'; img-src 'self' asset: http://asset.localhost; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src ipc: http://ipc.localhost"
     }
   },
-  "bundle": { "active": false, "targets": "nsis" }
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "Tanzir Rahman",
+    "homepage": "https://tanzir71.github.io/instancedeck/",
+    "license": "MIT",
+    "licenseFile": "../../../LICENSE",
+    "icon": ["icons/icon.ico"],
+    "createUpdaterArtifacts": false,
+    "windows": {
+      "allowDowngrades": false,
+      "webviewInstallMode": {
+        "type": "skip"
+      },
+      "nsis": {
+        "installMode": "currentUser",
+        "template": "windows/installer.nsi",
+        "languages": ["English"],
+        "displayLanguageSelector": false,
+        "startMenuFolder": "InstanceDeck"
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "windows": {
+        "installMode": "passive"
+      },
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEM5NUQ5Q0I4MjFDNjY2NTQKUldSVVpzWWh1SnhkeVNUeDZZWU55ODFINHo1NjhGbTlwZEFYMEh2M1RydlkreHRLUUdhdkR4RmkK",
+      "endpoints": [
+        "https://github.com/tanzir71/instancedeck/releases/latest/download/latest.json"
+      ],
+      "requireSignedVersion": true,
+      "allowDowngrades": false
+    }
+  }
 }

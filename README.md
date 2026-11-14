@@ -49,9 +49,13 @@ pnpm --filter @instancedeck/site test:lighthouse
 ```
 
 Target app binaries stay untouched; credentials are never inspected.
-InstanceDeck is not a security sandbox. The app makes no network calls. The site
-build fetches public GitHub release metadata. Browser tests serve the production
-site at port 4322; Lighthouse uses a separate foreground preview.
+InstanceDeck is not a security sandbox. Its only network feature is the
+user-enabled update check and confirmed download from this project's releases.
+It makes no update request before first-run consent. Windows packages are
+unsigned; see [the signing policy](CODE_SIGNING_POLICY.md) and
+[release process](docs/releases.md). The site build fetches public GitHub
+release metadata. Browser tests serve the production site at port 4322;
+Lighthouse uses a separate foreground preview.
 
 ## Engine CLI
 

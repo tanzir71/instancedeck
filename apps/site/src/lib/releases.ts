@@ -36,11 +36,11 @@ async function fetchReleases(): Promise<SiteRelease[]> {
   if (!Array.isArray(data))
     throw new Error('GitHub releases response is not a list');
   return data
-    .filter((entry) => !entry.draft)
+    .filter((entry) => !entry.draft && entry.tag_name !== 'updater-beta')
     .map((entry) => {
       if (
         typeof entry.tag_name !== 'string' ||
-        typeof entry.name !== 'string' ||
+        (entry.name !== null && typeof entry.name !== 'string') ||
         typeof entry.published_at !== 'string' ||
         typeof entry.prerelease !== 'boolean' ||
         !Array.isArray(entry.assets) ||
@@ -63,7 +63,7 @@ async function fetchReleases(): Promise<SiteRelease[]> {
       });
       return {
         tag_name: entry.tag_name,
-        name: entry.name,
+        name: entry.name ?? entry.tag_name,
         html_url: entry.html_url,
         published_at: entry.published_at,
         prerelease: entry.prerelease,

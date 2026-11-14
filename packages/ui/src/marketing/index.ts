@@ -6,3 +6,4 @@ export {
   AppSpotlights as SpotlightSplit,
 } from './HomeDetails';
 export { MarketingFooter as SiteFooter } from './LandingSections';
+export { ReleaseDraftNotice } from './ReleaseDraftNotice';

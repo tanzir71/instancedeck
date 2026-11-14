@@ -5,6 +5,28 @@ use serde_json::{Value, json};
 use std::sync::Arc;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_opener::OpenerExt;
+
+#[derive(Deserialize, specta::Type)]
+#[serde(rename_all = "kebab-case")]
+pub enum ExternalTarget {
+    Credit,
+    Source,
+    Download,
+    ClaudeUsage,
+    CodexUsage,
+}
+impl ExternalTarget {
+    fn url(&self) -> &'static str {
+        match self {
+            Self::Credit => "https://tanziro.com",
+            Self::Source => "https://github.com/tanzir71/instancedeck",
+            Self::Download => "https://tanzir71.github.io/instancedeck/download/",
+            Self::ClaudeUsage => "https://claude.ai/settings/usage",
+            Self::CodexUsage => "https://chatgpt.com/codex/settings/usage",
+        }
+    }
+}
 
 #[derive(Deserialize, specta::Type)]
 #[serde(tag = "type", rename_all = "camelCase", deny_unknown_fields)]
@@ -50,6 +72,14 @@ pub enum Request {
         document: String,
     },
     ExportProfiles,
+    OpenExternal {
+        target: ExternalTarget,
+    },
+    CheckUpdates,
+    InstallUpdate {
+        version: String,
+        confirmed: bool,
+    },
     SharedHistory {
         id: String,
         enabled: bool,
@@ -92,9 +122,26 @@ pub async fn desktop_request(
     request: Request,
 ) -> std::result::Result<Value, String> {
     let state = Arc::clone(state.inner());
+    let request = match request {
+        Request::CheckUpdates => {
+            return crate::updates::check(app, state)
+                .await
+                .and_then(|info| Ok(serde_json::to_value(info)?))
+                .map_err(|e| e.to_string());
+        }
+        Request::InstallUpdate { version, confirmed } => {
+            return crate::updates::install(app, state, version, confirmed)
+                .await
+                .map(|()| Value::Null)
+                .map_err(|e| e.to_string());
+        }
+        request => request,
+    };
     tauri::async_runtime::spawn_blocking(move || -> std::result::Result<Value, String> {
         let execute = || -> ideck_core::Result<Value> {
             match request {
+                Request::CheckUpdates|Request::InstallUpdate {..}=>unreachable!("async update requests handled above"),
+                Request::OpenExternal {target}=>{app.opener().open_url(target.url(),None::<&str>).map_err(|e|ideck_core::Error::Platform(e.to_string()))?;Ok(Value::Null)}
                 Request::Snapshot { refresh } => Ok(serde_json::to_value(
                     state.snapshot(refresh.unwrap_or(false))?,
                 )?),

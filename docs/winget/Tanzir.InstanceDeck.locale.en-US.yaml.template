@@ -1,0 +1,13 @@
+PackageIdentifier: Tanzir.InstanceDeck
+PackageVersion: '{{VERSION}}'
+PackageLocale: en-US
+Publisher: Tanzir Rahman
+PublisherUrl: https://tanziro.com
+PackageName: InstanceDeck
+PackageUrl: https://tanzir71.github.io/instancedeck/
+License: MIT
+LicenseUrl: https://github.com/tanzir71/instancedeck/blob/main/LICENSE
+ShortDescription: Run official installed Windows apps with separate profile data folders.
+Description: Windows binaries are unsigned. Profiles separate app state and are not a security sandbox. Install the official target apps and WebView2 separately.
+ManifestType: defaultLocale
+ManifestVersion: 1.28.0

@@ -1,11 +1,13 @@
 ---
 import { ButtonLink } from '@instancedeck/ui/button';
-import { DocLayout } from '@instancedeck/ui/marketing';
+import { DocLayout, ReleaseDraftNotice } from '@instancedeck/ui/marketing';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { loadReleases } from '../../lib/releases';
+import { visibleDraft } from '../../lib/draft-release';
 import { absoluteUrl, sourceUrl } from '../../lib/urls';
 import type { Graph } from 'schema-dts';
 const releases = await loadReleases();
+const draft = visibleDraft(releases);
 const latest = releases.find((release) => !release.prerelease);
 const downloads = latest?.assets.filter((asset) => /(?:\.exe|\.zip)$/i.test(asset.name)) ?? [];
 const checksums = latest?.assets.find((asset) => /sha256|checksums/i.test(asset.name));
@@ -23,6 +25,7 @@ const schema: Graph = { '@context': 'https://schema.org', '@graph': [{ '@type': 
       <ButtonLink href={sourceUrl}>View source on GitHub</ButtonLink>
     </>}
     <h2>Requirements</h2><p>Windows 10 22H2 or later, or Windows 11. x64 and ARM64 are target architectures; native x64 development builds have been tested. Install the official target apps separately.</p>
+    {draft && <ReleaseDraftNotice tag={draft.tag} createdAt={draft.createdAt} runUrl={draft.runUrl} notes={draft.notes} />}
     <h2>Signing and SmartScreen</h2><p>Releases are unsigned. Windows may warn or block installation. Check the source and SHA-256 checksum; do not disable Windows protection to install an untrusted file.</p>
     <h2>Verify integrity</h2><p>Download the checksum file from the same release, then compare it with PowerShell's result:</p><pre><code>Get-FileHash -Algorithm SHA256 -LiteralPath '.\your-downloaded-file.exe'</code></pre>
     <p><a href="../code-signing-policy/">Code signing policy</a> · <a href="../security/">Security model</a> · <a href="../changelog/">Changelog</a></p>

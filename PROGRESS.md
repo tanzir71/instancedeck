@@ -11,6 +11,31 @@ and no signing approval is described as pending. TypeScript, lint and all **12
 browser tests**, including **161 Storybook stories**, passed after this change.
 Historical phase evidence below remains intact.
 
+## P7 — Release engineering (in progress)
+
+Implemented unsigned, per-user NSIS and portable x64/ARM64 packaging, a
+tag-triggered draft-release workflow, architecture/provenance/checksum checks,
+trust documents, a winget PR template and Store checklist. The installer has no
+profile-data deletion option. WebView2 is installed separately, so setup has no
+runtime download. Installer execution and hardware QA remain deferred.
+
+The optional updater requires saved first-run consent plus the update preference
+before making requests. Installation has a separate confirmation, checks signed
+artifact versions, and refuses while recovery/history operations are pending.
+Portable builds direct users to manual extraction. The React checklist covers
+StrictMode's single automatic request, stale-result cleanup, subscription
+cleanup, keyboard dialogs and plain release-note rendering. Thirteen updater
+stories pass interaction/AA checks; three dedicated browser tests pass.
+
+Windows binaries remain unsigned. A separate project integrity key stays local;
+CI never receives its contents. Local finalization will sign and verify the
+exact draft artifacts, exercise tamper/version rejection, then upload public
+signatures, feed and checksums. No trusted Windows signing claim is made.
+
+Remaining: native x64/ARM64 package builds, complete automated checks, the
+actual v0.1.0 tag/draft, local integrity verification and a real draft-status
+snapshot for Download/Changelog. No release has been published.
+
 ## P2 — Implementation and automated acceptance complete
 
 The user's manual-verification deferral permits P3 to proceed. The desktop now

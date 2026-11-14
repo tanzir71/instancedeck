@@ -9,6 +9,14 @@ function request<T>(value: Request_Deserialize): Promise<T> {
   return commands.desktopRequest(value).then((result) => result as T);
 }
 const nativeClient: DesktopClient = {
+  checkUpdates: () => request({ type: 'checkUpdates' }),
+  installUpdate: (version, confirmed) =>
+    request({ type: 'installUpdate', version, confirmed }),
+  updateProgress: async (listener) =>
+    listen<{ downloaded: number; total?: number }>('update-progress', (event) =>
+      listener(event.payload.downloaded, event.payload.total),
+    ),
+  openExternal: (target) => request({ type: 'openExternal', target }),
   sharedHistory: (id, enabled) =>
     request({ type: 'sharedHistory', id, enabled }),
   addCustom: (input) => request({ type: 'addCustom', input }),

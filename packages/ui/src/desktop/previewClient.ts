@@ -30,6 +30,23 @@ export function createPreviewClient(
     for (const listener of listeners) listener(structuredClone(state));
   };
   return {
+    checkUpdates: async () => {
+      if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
+      return {
+        status: 'unavailable',
+        version: null,
+        notes: null,
+        portable: false,
+        currentVersion: '0.1.0',
+      };
+    },
+    installUpdate: async () => {
+      throw new Error(copy.desktop.previewBanner);
+    },
+    updateProgress: async () => () => {},
+    openExternal: async () => {
+      throw new Error(copy.desktop.previewBanner);
+    },
     sharedHistory: async (id, enabled) => {
       if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
       if (state.running[id]?.length)

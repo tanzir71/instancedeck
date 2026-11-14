@@ -130,7 +130,7 @@
     "startWithWindows": "Start with Windows",
     "switcherHotkey": "Global switcher hotkey",
     "allowUpdates": "Allow automatic update checks",
-    "updatesPending": "No network request is made until the signed updater is installed. This preference is visible here and on first run.",
+    "updatesPending": "Checks start only after first-run when enabled. Update packages use project integrity signatures; Windows executables remain unsigned.",
     "updateChannel": "Update channel",
     "stable": "Stable",
     "beta": "Beta",
@@ -491,5 +491,35 @@
     "restoreHistory": "Restore private history",
     "historyEnabled": "Sessions sharing is enabled.",
     "historyRestored": "Private sessions restored."
+  },
+  "updates": {
+    "title": "InstanceDeck updates",
+    "check": "Check for updates",
+    "checking": "Checking GitHub…",
+    "consent": "Checks contact only this project’s GitHub release feed. Enable checks above after first-run to continue. Downloads and installation require another confirmation.",
+    "available": "Version {version} is available.",
+    "current": "You are using the current published version.",
+    "unavailable": "The public update feed is not available yet, or could not be reached.",
+    "review": "Review update",
+    "install": "Download and install",
+    "confirm": "Install InstanceDeck {version}?",
+    "confirmHelp": "The installer is unsigned. The download must pass the project integrity signature and signed-version checks. InstanceDeck will close; reopen it when installation finishes. Target apps and their profiles stay in place.",
+    "installing": "Downloading and verifying…",
+    "started": "Installer launched. Reopen InstanceDeck when it finishes.",
+    "downloaded": "Downloaded {size} MiB.",
+    "portable": "Portable builds update by extracting a new portable package. Your profiles remain in the configured folder.",
+    "downloadPage": "Open download page",
+    "notes": "Release notes",
+    "cancel": "Cancel",
+    "installedVersion": "Installed version {version}",
+    "usage": "Open usage page",
+    "usageHelp": "Opens the provider’s page in your default browser. Check the browser account; InstanceDeck does not read or match its session."
+  },
+  "releaseDraft": {
+    "title": "Draft {tag} is ready for manual verification",
+    "body": "Unsigned x64 and ARM64 installers and portable packages have passed automated packaging and integrity checks. Manual verification is pending before publication.",
+    "created": "Draft created {date}.",
+    "source": "Inspect tagged source",
+    "build": "View automated build"
   }
 }

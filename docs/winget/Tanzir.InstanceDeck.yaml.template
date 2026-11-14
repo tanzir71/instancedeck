@@ -1,0 +1,5 @@
+PackageIdentifier: Tanzir.InstanceDeck
+PackageVersion: '{{VERSION}}'
+DefaultLocale: en-US
+ManifestType: version
+ManifestVersion: 1.28.0

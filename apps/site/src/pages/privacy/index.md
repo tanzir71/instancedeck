@@ -32,10 +32,12 @@ posting it publicly.
 
 ## Network activity
 
-InstanceDeck has no telemetry or background analytics. Its only intended network
-feature is a user-enabled update check against the project's public release
-feed. Update checking is unavailable in the current development build; enabling
-the preference does not send requests yet.
+InstanceDeck has no telemetry or background analytics. Its only network feature
+is the user-enabled update check against this project's GitHub release feed and
+the update download you explicitly confirm. No update request is made before
+first-run consent or while the preference is disabled. Windows packages are
+unsigned; updater integrity signatures do not establish Windows publisher trust.
+There is no public update feed while the first release remains a draft.
 
 ## This website
 

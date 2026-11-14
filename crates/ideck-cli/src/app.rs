@@ -28,6 +28,12 @@ struct Cli {
 }
 #[derive(Subcommand)]
 enum Command {
+    /// Verify only this project's updater artifact and its signed app version, offline.
+    VerifyReleaseArtifact {
+        file: PathBuf,
+        #[arg(long)]
+        app_version: String,
+    },
     Apps {
         #[arg(long)]
         refresh: bool,
@@ -103,6 +109,11 @@ enum Profiles {
 
 pub fn run() -> Result<()> {
     let cli = Cli::parse();
+    if let Command::VerifyReleaseArtifact { file, app_version } = &cli.command {
+        crate::release::verify(file, app_version)?;
+        println!("Updater integrity and signed version verified.");
+        return Ok(());
+    }
     if let Command::RecipeSchema { check } = &cli.command {
         let schema = recipe_schema()?;
         if let Some(path) = check {
@@ -213,7 +224,7 @@ pub fn run() -> Result<()> {
                 SignInCommand::Restore { id } => print_json(&runner.restore(&id)?),
             }
         }
-        Command::RecipeSchema { .. } => unreachable!(),
+        Command::RecipeSchema { .. } | Command::VerifyReleaseArtifact { .. } => unreachable!(),
     }
 }
 

@@ -20,6 +20,7 @@ import {
 import { Wizard } from './Wizard';
 import { CustomAppEditor } from './CustomAppEditor';
 import { ProfileTransfer } from './ProfileTransfer';
+import { UpdateCenter } from './UpdateCenter';
 import { useDesktopTheme } from './useDesktopTheme';
 import { FirstRunDialog } from './FirstRunDialog';
 import { AccountGuidance, SignInFlow } from './SignInFlow';
@@ -552,10 +553,17 @@ export function DesktopApp({
                   setToast(copy.desktop.saved);
                 }}
                 onBrowse={client.browse}
+                onExternal={client.openExternal}
               />
               <ProfileTransfer client={client} onImported={reload} />
             </>
           )}
+          <UpdateCenter
+            client={client}
+            settings={snapshot.settings}
+            expanded={screen === 'settings'}
+            onShow={() => setScreen('settings')}
+          />
           {wizard && (
             <Wizard
               apps={snapshot.apps}

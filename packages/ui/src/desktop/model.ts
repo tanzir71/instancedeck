@@ -102,6 +102,14 @@ export interface LaunchPlan {
 export type ProfileAction =
   'launch' | 'close' | 'force-close' | 'remove' | 'recycle' | 'open-folder';
 export interface DesktopClient {
+  checkUpdates(): Promise<UpdateInfo>;
+  installUpdate(version: string, confirmed: boolean): Promise<void>;
+  updateProgress(
+    listener: (downloaded: number, total?: number) => void,
+  ): Promise<() => void>;
+  openExternal(
+    target: 'credit' | 'source' | 'download' | 'claude-usage' | 'codex-usage',
+  ): Promise<void>;
   sharedHistory(id: string, enabled: boolean): Promise<void>;
   addCustom(input: CustomApp): Promise<void>;
   previewCustom(input: CustomApp, root: string): Promise<LaunchPlan>;
@@ -157,4 +165,11 @@ export interface CustomApp {
   args: string[];
   env: Record<string, string>;
   matchArgument: string;
+}
+export interface UpdateInfo {
+  status: 'available' | 'current' | 'unavailable';
+  version: string | null;
+  notes: string | null;
+  portable: boolean;
+  currentVersion: string;
 }
