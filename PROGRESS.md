@@ -1,6 +1,6 @@
 # Progress
 
-## P0 — Scaffold and tooling (in progress)
+## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:
 handover, AGENTS.md and Figma exports only; no Git repository.
@@ -33,10 +33,14 @@ Local evidence (2026-11-14):
 - `cargo test --workspace`: passed (scaffold has no Rust domain tests yet).
 - `cargo clippy --workspace -- -D warnings`: passed.
 - `pnpm build:desktop`: passed; produced an x64 native executable.
-- Prior browser run: 4 tests passed, including the Storybook suite. A new run is
-  verifying the corrected site SVGs and all eight OnColor palette cases.
-- [Windows CI](https://github.com/tanzir71/instancedeck/actions/runs/43575422595)
-  is running; **P0 is not complete until the latest code passes CI**.
+- `pnpm test`: all 4 browser tests passed, including all 20 Storybook stories
+  across 5 suites, the corrected site SVGs and all eight OnColor palette cases.
+- [Windows CI](https://github.com/tanzir71/instancedeck/actions/runs/43575723466)
+  passed all steps, including native x64 release compilation (9m28s).
+- [Final tooling validation](https://github.com/tanzir71/instancedeck/actions/runs/43576518592)
+  passed every step for the path-safe generator and stricter CSS lint rules.
+  Negative local fixtures also confirmed logical borders, gradients and shadows
+  are rejected. P0's required development commands and Windows CI gate passed.
 
 Visual evidence (Figma | built):
 
