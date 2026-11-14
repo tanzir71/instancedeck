@@ -36,6 +36,7 @@ jobs:
       - run: pnpm test
       - run: cargo fmt --all -- --check
       - run: cargo test --workspace --locked
+      - run: git diff --exit-code -- apps/desktop/src/bindings.ts
       - run:
           cargo run -p ideck-cli --locked -- recipe-schema --check
           packages/recipes/recipe.schema.json

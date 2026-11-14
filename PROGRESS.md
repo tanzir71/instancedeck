@@ -11,6 +11,22 @@ and no signing approval is described as pending. TypeScript, lint and all **12
 browser tests**, including **161 Storybook stories**, passed after this change.
 Historical phase evidence below remains intact.
 
+## P2 — Implementation and automated acceptance complete
+
+The user's manual-verification deferral permits P3 to proceed. The desktop now
+uses the required Radix modal primitives, per-view Zustand store and generated
+tauri-specta request bindings. The binding export test starts no native window;
+CI rejects generated-file drift. Keyboard create → launch → close and guarded
+deletion checks pass in the explicitly simulated Storybook client. Fresh Radix
+screenshots are retained in `artifacts/p2` alongside the existing Figma
+comparisons below.
+
+Validation: **161 stories / 10 suites**, zero axe WCAG 2.2 AA violations; **35
+Rust tests**; TypeScript, lint and clippy with warnings denied all pass. The
+targeted two desktop browser tests passed after the modal migration. Actual
+native account, tray and keyboard verification remains deferred to the user. No
+recipe was promoted from Community.
+
 ## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:

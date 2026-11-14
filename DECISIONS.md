@@ -1,5 +1,18 @@
 # Decisions
 
+## 2026-11-14 — Desktop state, dialogs and generated IPC
+
+Context: HANDOVER §5.1 requires Radix, Zustand and tauri-specta. Choice: use
+Radix modal primitives with focus restoration and a scoped vanilla Zustand store
+for each desktop view. Manager metadata stays in Rust; the browser preview does
+not persist it. Generate the tagged IPC request types from Rust and check for
+binding drift after Rust tests in CI. The compatible published pair is
+tauri-specta 2.0.0-rc.29 / specta 2.0.0-rc.28, pinned exactly; Tauri itself
+stays on stable 2.12.5. JSON result numbers retain JSON's JavaScript-number
+semantics, while IDs and saved dates are strings. Alternative: manually
+maintained request types and custom modal behavior. A 24px switch hit area
+preserves the 22px visual while meeting WCAG 2.2 target size.
+
 ## 2026-11-14 — Manual verification deferred; unsigned releases
 
 Context: the user explicitly instructed “I will do manual verification later, do

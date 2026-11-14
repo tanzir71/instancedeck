@@ -6,7 +6,7 @@ use std::sync::Arc;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_dialog::DialogExt;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, specta::Type)]
 #[serde(tag = "type", rename_all = "camelCase", deny_unknown_fields)]
 pub enum Request {
     Snapshot {
@@ -42,7 +42,7 @@ pub enum Request {
         action: WindowAction,
     },
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase")]
 pub enum WindowAction {
     Minimize,
@@ -50,6 +50,7 @@ pub enum WindowAction {
     Close,
 }
 #[tauri::command]
+#[specta::specta]
 pub async fn desktop_request(
     app: AppHandle,
     state: State<'_, Arc<DesktopState>>,

@@ -1,10 +1,11 @@
-import { invoke, isTauri } from '@tauri-apps/api/core';
+import { isTauri } from '@tauri-apps/api/core';
+import { commands, type Request_Deserialize } from './bindings';
 import { listen } from '@tauri-apps/api/event';
 import type { DesktopClient, DesktopSnapshot } from '@instancedeck/ui';
 import { createPreviewClient } from '@instancedeck/ui';
 
-function request<T>(value: Record<string, unknown>): Promise<T> {
-  return invoke<T>('desktop_request', { request: value });
+function request<T>(value: Request_Deserialize): Promise<T> {
+  return commands.desktopRequest(value).then((result) => result as T);
 }
 const nativeClient: DesktopClient = {
   snapshot: (refresh = false) => request({ type: 'snapshot', refresh }),

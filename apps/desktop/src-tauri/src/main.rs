@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod bindings;
 mod commands;
 mod service;
 mod tray;
@@ -37,7 +38,7 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         }))
         .plugin(tauri_plugin_dialog::init())
         .manage(Arc::clone(&state))
-        .invoke_handler(tauri::generate_handler![commands::desktop_request])
+        .invoke_handler(bindings::commands().invoke_handler())
         .setup(move |app| {
             tray::install(app.handle(), Arc::clone(&state))?;
             let handle = app.handle().clone();

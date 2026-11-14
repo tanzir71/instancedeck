@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useStore } from 'zustand';
+import { createDesktopStore, type Screen } from './store';
 import { Button } from '../components/Button';
 import { Dialog, Input, Kbd, Toast } from '../components/Controls';
 import {
@@ -31,7 +33,7 @@ import apps from '../../../../design/assets/icons/apps.svg?url';
 import diagnostics from '../../../../design/assets/icons/diagnostics.svg?url';
 import settings from '../../../../design/assets/icons/settings.svg?url';
 
-export type Screen = 'deck' | 'apps' | 'diagnostics' | 'settings';
+export type { Screen } from './store';
 export function DesktopShell({
   screen,
   onNavigate,
@@ -351,9 +353,11 @@ export function DesktopApp({
   client: DesktopClient;
   initialScreen?: Screen;
 }) {
-  const [snapshot, setSnapshot] = useState<DesktopSnapshot>();
-  const [error, setError] = useState('');
-  const [screen, setScreen] = useState<Screen>(initialScreen);
+  const [store] = useState(() => createDesktopStore(initialScreen));
+  const snapshot = useStore(store, (state) => state.snapshot);
+  const error = useStore(store, (state) => state.error);
+  const screen = useStore(store, (state) => state.screen);
+  const { setSnapshot, setScreen, setError } = store.getState();
   const [search, setSearch] = useState('');
   const [wizard, setWizard] = useState<{ appId?: string }>();
   const [detail, setDetail] = useState<string>();
@@ -404,7 +408,7 @@ export function DesktopApp({
       active = false;
       unsubscribe?.();
     };
-  }, [client]);
+  }, [client, setSnapshot, setError]);
   const act = async (
     action: ProfileAction,
     profile: Profile,

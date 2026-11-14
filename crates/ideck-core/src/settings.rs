@@ -10,6 +10,7 @@ use std::{
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct Settings {
     pub schema_version: u32,
     pub profiles_root: String,
@@ -23,12 +24,14 @@ pub struct Settings {
 }
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum UpdateChannel {
     Stable,
     Beta,
 }
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum Theme {
     Light,
     Dark,

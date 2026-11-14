@@ -12,3 +12,4 @@ node_modules/
 **/tokens/generated.*
 packages/recipes/recipe.schema.json
 artifacts/
+apps/desktop/src/bindings.ts

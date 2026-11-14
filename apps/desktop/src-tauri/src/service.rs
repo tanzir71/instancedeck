@@ -29,7 +29,7 @@ pub struct Snapshot {
     status_errors: BTreeMap<String, String>,
     settings: Settings,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CreateProfile {
     id: Option<String>,
@@ -39,7 +39,7 @@ pub struct CreateProfile {
     root: String,
     isolate_claude_code: bool,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "kebab-case")]
 pub enum ProfileAction {
     Launch,
@@ -49,7 +49,7 @@ pub enum ProfileAction {
     Recycle,
     OpenFolder,
 }
-#[derive(Deserialize)]
+#[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "kebab-case")]
 pub enum MainAction {
     Launch,

@@ -1,14 +1,13 @@
 import {
-  useEffect,
   useId,
-  useRef,
+  useState,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
   type ReactNode,
   type SelectHTMLAttributes,
 } from 'react';
 import { Button } from './Button';
-import { keepDialogFocus } from './dialogFocus';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { profileColors, type ProfileColor } from '../desktop/model';
 import copy from '../copy/en.json';
 import styles from './Controls.module.css';
@@ -170,30 +169,40 @@ export function Dialog({
   className?: string;
   labelId?: string;
 }) {
-  const ref = useRef<HTMLDialogElement>(null);
-  const generatedId = useId();
-  const id = labelId ?? generatedId;
-  useEffect(() => {
-    const dialog = ref.current;
-    dialog?.showModal();
-    return () => {
-      dialog?.close();
-    };
-  }, []);
+  const [returnFocus] = useState(() =>
+    typeof document === 'undefined'
+      ? null
+      : (document.activeElement as HTMLElement | null),
+  );
   return (
-    <dialog
-      ref={ref}
-      onKeyDown={(event) => keepDialogFocus(event.currentTarget, event)}
-      className={`${styles.dialog} ${className}`}
-      aria-label={labelId ? undefined : title}
-      aria-labelledby={labelId ? id : undefined}
-      onCancel={(event) => {
-        event.preventDefault();
-        onClose();
+    <DialogPrimitive.Root
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
       }}
     >
-      {children}
-    </dialog>
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Overlay className={styles.dialogOverlay} />
+        <DialogPrimitive.Content
+          className={`${styles.dialog} ${className}`}
+          aria-label={labelId ? undefined : title}
+          aria-labelledby={labelId}
+          aria-describedby={undefined}
+          onPointerDownOutside={(event) => event.preventDefault()}
+          onCloseAutoFocus={(event) => {
+            if (returnFocus?.isConnected) {
+              event.preventDefault();
+              returnFocus.focus();
+            }
+          }}
+        >
+          <DialogPrimitive.Title asChild>
+            <span hidden>{title}</span>
+          </DialogPrimitive.Title>
+          {children}
+        </DialogPrimitive.Content>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   );
 }
 export function Sheet({

@@ -11,6 +11,7 @@ use std::{
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema, Default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum ProfileColor {
     Terracotta,
     Teal,
@@ -25,6 +26,7 @@ pub enum ProfileColor {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema, Default)]
 #[serde(rename_all = "kebab-case")]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub enum SignInState {
     SignedIn,
     #[default]
@@ -34,6 +36,7 @@ pub enum SignInState {
 
 #[derive(Clone, Debug, Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct ProfileOptions {
     #[serde(default = "default_true")]
     pub isolate_claude_code: bool,
@@ -57,6 +60,7 @@ fn default_badge() -> String {
 
 #[derive(Clone, Debug, Deserialize, Serialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[cfg_attr(feature = "bindings", derive(specta::Type))]
 pub struct Profile {
     pub id: String,
     pub app_id: String,
