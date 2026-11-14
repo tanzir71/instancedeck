@@ -1,0 +1,34 @@
+# InstanceDeck
+
+> Multi-instance app launcher for Windows. Free and open source under MIT.
+
+InstanceDeck launches official installed apps with per-profile arguments, environment variables and data paths. It does not modify target binaries, read credentials or collect telemetry. Profiles are not a security sandbox.
+
+Current status: development. Guided Claude sign-in has synthetic crash-test coverage; real account verification is pending. Windows shell integration is implemented with pinning verification pending. Eight built-in recipes, custom app configuration, metadata import/export, optional Codex sessions sharing and dark theme are implemented. All built-in recipes remain Community while manual account smoke testing is deferred. Recipe status does not imply verified account identity.
+
+## Guides
+
+- [Home](https://tanzir71.github.io/instancedeck/)
+- [How it works](https://tanzir71.github.io/instancedeck/how-it-works/)
+- [Claude Desktop accounts](https://tanzir71.github.io/instancedeck/claude-desktop-multiple-accounts/)
+- [Codex accounts](https://tanzir71.github.io/instancedeck/codex-multiple-accounts/)
+- [Compatibility directory](https://tanzir71.github.io/instancedeck/apps/)
+- [FAQ](https://tanzir71.github.io/instancedeck/faq/)
+- [Security](https://tanzir71.github.io/instancedeck/security/)
+- [Download status](https://tanzir71.github.io/instancedeck/download/)
+- [Source](https://github.com/tanzir71/instancedeck)
+
+## Recipes
+
+- [Brave](https://tanzir71.github.io/instancedeck/apps/brave/) — community: InstanceDeck launches the installed Brave executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use.
+- [Claude Desktop](https://tanzir71.github.io/instancedeck/apps/claude-desktop/) — community: Claude Desktop profiles use a separate user-data directory and LOCALAPPDATA so each launch has its own state. Windows sends browser sign-in callbacks to the main app, so new accounts need a guided snapshot sign-in.
+- [Codex](https://tanzir71.github.io/instancedeck/apps/codex/) — community: Codex profiles set CODEX_HOME and CODEX_ELECTRON_USER_DATA_PATH before launching the official Store app. This separates desktop state and CLI sessions; check the visible account in every profile after an update.
+- [Cursor](https://tanzir71.github.io/instancedeck/apps/cursor/) — community: InstanceDeck launches the installed Cursor executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use.
+- [Google Chrome](https://tanzir71.github.io/instancedeck/apps/chrome/) — community: InstanceDeck launches the installed Google Chrome executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use.
+- [Microsoft Edge](https://tanzir71.github.io/instancedeck/apps/edge/) — community: InstanceDeck launches the installed Microsoft Edge executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use.
+- [Telegram Desktop](https://tanzir71.github.io/instancedeck/apps/telegram-desktop/) — community: InstanceDeck launches the installed Telegram Desktop executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use.
+- [Visual Studio Code](https://tanzir71.github.io/instancedeck/apps/vscode/) — community: InstanceDeck launches the installed Visual Studio Code executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use.
+
+## Non-affiliation
+
+InstanceDeck is an independent open-source project. It is not affiliated with, endorsed by or sponsored by Anthropic, OpenAI, Microsoft or any other app vendor. Claude is a trademark of Anthropic, PBC. Codex and ChatGPT are trademarks of OpenAI. All other trademarks belong to their owners.
