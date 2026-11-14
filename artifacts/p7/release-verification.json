@@ -1,16 +1,16 @@
 {
-  "feedSignatureVerified": true,
-  "installerSignaturesVerified": true,
-  "workingDirectory": "target\\release-finalization-d67a1be0ee984776ae8f98947d883147",
-  "installerExecuted": false,
-  "privateKeyTransmitted": false,
-  "signedVersionMismatchRejected": true,
-  "commit": "ff27c9adeb827f82a6a4160f7f19da656c31c4a5",
   "architectures": [
     "x64",
     "arm64"
   ],
   "tag": "v0.1.0",
   "tamperedOwnInstallerRejected": true,
-  "authenticode": "unsigned"
+  "privateKeyTransmitted": false,
+  "signedVersionMismatchRejected": true,
+  "installerExecuted": false,
+  "authenticode": "unsigned",
+  "feedSignatureVerified": true,
+  "commit": "ff27c9adeb827f82a6a4160f7f19da656c31c4a5",
+  "workingDirectory": "target\\release-finalization-f3159c861e5348079caabf739efb1c2f",
+  "installerSignaturesVerified": true
 }

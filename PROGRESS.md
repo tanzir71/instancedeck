@@ -13,7 +13,11 @@ The final local JS run passed **3 metadata tests**, the contrast checks and all
 **24 browser tests**, including **211 Storybook stories** with interaction and
 AA checks. The unsigned x64/ARM64 release packages and feed were verified
 locally, including signature/version checks and tamper rejection. No installer
-has been executed. Publication and the final local site build are in progress.
+has been executed. The unsigned v0.1.0 preview is now public with all **11
+assets**, and the local public-release audit passes at 1440px and 390px with
+zero AA violations. Five post-publication site tests pass, including the new
+download/changelog case, bringing the unique browser checks to **25**. The final
+local site package and prebuilt-branch push are in progress.
 
 ## Current user instructions — 2026-11-14
 

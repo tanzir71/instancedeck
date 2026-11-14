@@ -1,0 +1,30 @@
+{
+  "release": "v0.1.0",
+  "publicPackageLinks": 4,
+  "observations": [
+    {
+      "route": "download",
+      "width": 1440,
+      "version": "v0.1.0",
+      "axeViolations": 0
+    },
+    {
+      "route": "changelog",
+      "width": 1440,
+      "version": "v0.1.0",
+      "axeViolations": 0
+    },
+    {
+      "route": "download",
+      "width": 390,
+      "version": "v0.1.0",
+      "axeViolations": 0
+    },
+    {
+      "route": "changelog",
+      "width": 390,
+      "version": "v0.1.0",
+      "axeViolations": 0
+    }
+  ]
+}

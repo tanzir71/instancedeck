@@ -15,12 +15,14 @@ manual account verification. The
 and live Lighthouse scores of 97–100 across all categories. See
 [PROGRESS.md](PROGRESS.md) for evidence and remaining gates.
 
-The unsigned **v0.1.0 draft** contains x64 and ARM64 installers, portable
-archives, checksums and updater integrity files. See
-[Releases](https://github.com/tanzir71/instancedeck/releases). There is no
-public installer until the maintainer publishes the draft after the
-[manual checks](docs/manual-verification.md). Update checks require saved
-first-run consent; downloads and installation require another confirmation.
+The unsigned
+[v0.1.0 development preview](https://github.com/tanzir71/instancedeck/releases/tag/v0.1.0)
+includes x64 and ARM64 installers, portable archives, checksums and updater
+integrity files. The maintainer authorized publication with
+[manual checks](docs/manual-verification.md) still pending. Update checks
+require saved first-run consent; downloads and installation require another
+confirmation. Verification and website builds run locally; project workflows are
+manual-only. See [local delivery commands](docs/local-builds.md).
 
 The desktop uses Tauri 2, React and TypeScript. The static Astro site and
 desktop share `packages/ui`; all visual tokens are generated from
