@@ -1,5 +1,18 @@
 # Decisions
 
+## 2026-11-14 — Windows identity uses original project artwork
+
+Context: §4.6 suggests extracting a vendor icon, while AGENTS.md forbids drawing
+third-party logos and modifying/copying target binaries. Choice: generate
+profile ICO files from InstanceDeck's own neutral deck/I mark and profile color
+tokens, at 16, 24, 32, 48, 64, 128 and 256px. Never extract vendor resources.
+The shortcut and window share a stable InstanceDeck.appId.ULID identity and
+launch through the manager. Existing shortcut files are renamed to retained
+backups before replacement, and saved properties are reloaded and checked.
+Alternative: vendor icon extraction or file replacement that discards a prior
+shortcut. Native taskbar grouping, pinned relaunch and DWM border verification
+remain deferred manual checks.
+
 ## 2026-11-14 — Snapshot recovery and cross-drive adoption
 
 Context: P3 must survive interruptions without reading credential files,

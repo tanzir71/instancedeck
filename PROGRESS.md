@@ -89,6 +89,19 @@ the corrected dialog layouts. P2's Windows
 [Pages build](https://github.com/tanzir71/instancedeck/actions/runs/43591473182)
 also passed.
 
+## P4 — Windows shell integration (in progress)
+
+Started after P3's automated checks passed. Implemented pure shortcut identity
+plans, safe Unicode shortcut names, canonical hotkey validation and duplicate
+binding checks. Neutral profile ICOs use only project artwork and token colors.
+The Windows shortcut adapter saves to a staged file, commits shell properties,
+reloads with read/write mode to verify them, and retains an existing link before
+activation. Three core shell tests and two Windows shell fixture tests pass. All
+52 workspace Rust tests, clippy and generated-binding drift checks pass. window
+identity, runtime shortcut registration, switcher, autostart and their UI
+controls remain to be completed. Nothing has been added to the user's Desktop or
+Start Menu during automated tests.
+
 ## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:

@@ -45,7 +45,7 @@ const CREATE_FLAGS: u32 = 0x00000008 | 0x00000200 | 0x00000400;
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 pub struct WindowsPlatform {
-    state_dir: PathBuf,
+    pub(crate) state_dir: PathBuf,
     cache: Mutex<HashMap<String, InstalledApp>>,
     pub(crate) sign_in_watch: Mutex<Option<crate::signin::MetadataWatch>>,
 }

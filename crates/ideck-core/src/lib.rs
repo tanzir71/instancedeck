@@ -9,6 +9,7 @@ pub mod process;
 pub mod profile;
 pub mod recipe;
 pub mod settings;
+pub mod shell;
 pub mod signin;
 pub mod template;
 pub use settings::{Settings, SettingsStore};

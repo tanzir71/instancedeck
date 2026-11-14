@@ -51,6 +51,7 @@ impl Settings {
         }
     }
     pub fn validate(&self) -> Result<()> {
+        crate::shell::normalize_hotkey(&self.switcher_hotkey)?;
         if self.schema_version != 1
             || self.switcher_hotkey.is_empty()
             || self.switcher_hotkey.len() > 80

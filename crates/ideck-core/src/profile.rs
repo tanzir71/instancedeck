@@ -107,6 +107,9 @@ impl Profile {
         Ok(profile)
     }
     pub fn validate(&self) -> Result<()> {
+        if let Some(hotkey) = &self.hotkey {
+            crate::shell::normalize_hotkey(hotkey)?;
+        }
         if ulid::Ulid::from_string(&self.id).is_err()
             || !valid_id(&self.app_id)
             || self.name.trim().is_empty()
@@ -156,8 +159,14 @@ impl ProfileState {
         }
         let mut ids = BTreeSet::new();
         let mut dirs = BTreeSet::new();
+        let mut hotkeys = BTreeSet::new();
         for profile in &state.profiles {
             profile.validate()?;
+            if let Some(hotkey) = &profile.hotkey
+                && !hotkeys.insert(crate::shell::normalize_hotkey(hotkey)?)
+            {
+                return Err(Error::Invalid("Profile hotkeys must be unique".into()));
+            }
             if !ids.insert(&profile.id) || !dirs.insert(paths::normalize_windows(&profile.data_dir))
             {
                 return Err(Error::Invalid(
