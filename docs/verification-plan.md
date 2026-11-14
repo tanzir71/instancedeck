@@ -1,5 +1,11 @@
 # Handover acceptance ledger
 
+**User update, 2026-11-14:** manual verification is deferred to the user.
+Continue implementation and automated checks through the remaining phases, and
+push the work to GitHub. Manual account, tray, pinning and hardware-matrix
+checks stay unverified. Releases will be unsigned; signing-provider approval is
+no longer a dependency. See the newest decision in DECISIONS.md.
+
 The handover and Figma remain authoritative. This ledger preserves the full
 scope and identifies the evidence required to close each phase. A passing
 scaffold check does not prove isolation, account identity, recovery or shell
@@ -108,12 +114,12 @@ availability/checksums/signing.
 MIT, README, SECURITY.md, PRIVACY.md, CODE_SIGNING_POLICY.md, CONTRIBUTING.md
 and public threat model. Explain that profiles are not a sandbox and same-user
 processes can access DPAPI-protected data. Include truthful unsigned-download
-guidance until signing is approved. Signing is CI-only behind an approval flag;
-updater signatures are distinct from Windows code signing.
+guidance for unsigned releases. Updater integrity signatures are distinct from
+Windows code signing; no trusted-publisher certificate is claimed.
 
 P7 also requires per-user NSIS, portable ZIP, x64 and ARM64, SHA-256 manifests,
-draft releases, signed updater metadata, conditional SignPath integration,
-winget PR template and docs/store.md. Human account registration,
-signing-provider approval and manual account/pinning QA must remain explicitly
-unverified until their outcomes are observed; they cannot be replaced with
-unit-test claims.
+draft releases, updater metadata, winget PR template and docs/store.md. Human
+account registration and manual account/pinning QA remain explicitly unverified
+until their outcomes are observed; they cannot be replaced with unit-test
+claims. The Store EXE/MSI certificate requirement must be documented accurately
+under the unsigned distribution decision.

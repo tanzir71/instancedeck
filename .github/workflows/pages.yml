@@ -24,7 +24,6 @@ env:
   STORYBOOK_DISABLE_TELEMETRY: '1'
   SITE_URL: https://tanzir71.github.io
   BASE_PATH: /instancedeck
-  SIGNING_ENABLED: ${{ vars.SIGNING_ENABLED || 'false' }}
 jobs:
   build:
     runs-on: ubuntu-latest

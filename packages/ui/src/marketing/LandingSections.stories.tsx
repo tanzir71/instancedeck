@@ -117,10 +117,6 @@ export const SecurityDesktop: Story = {
 export const SecurityLaptop: Story = { ...SecurityDesktop, parameters: laptop };
 export const SecurityTablet: Story = { ...SecurityDesktop, parameters: tablet };
 export const SecurityMobile: Story = { ...SecurityDesktop, parameters: mobile };
-export const SecuritySigned: Story = {
-  parameters: desktop,
-  render: () => <SecurityBand signingEnabled />,
-};
 export const CtaDesktop: Story = {
   parameters: desktop,
   render: () => <CTABand />,

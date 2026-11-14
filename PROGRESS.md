@@ -1,5 +1,16 @@
 # Progress
 
+## Current user instructions — 2026-11-14
+
+Manual verification is deferred to the user. Continue all remaining coding,
+automated verification and GitHub pushes without waiting for those checks. Keep
+manual acceptance items and recipe account verification unverified. The user
+allows unsigned or self-signed releases; unsigned builds were selected. The site
+now states that policy, the signed-release variant and enable flag were removed,
+and no signing approval is described as pending. TypeScript, lint and all **12
+browser tests**, including **161 Storybook stories**, passed after this change.
+Historical phase evidence below remains intact.
+
 ## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:

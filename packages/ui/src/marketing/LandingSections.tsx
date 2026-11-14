@@ -306,13 +306,7 @@ export function FeatureTriplet() {
     </section>
   );
 }
-export function SecurityBand({
-  linkPrefix = './',
-  signingEnabled = false,
-}: {
-  linkPrefix?: string;
-  signingEnabled?: boolean;
-}) {
+export function SecurityBand({ linkPrefix = './' }: { linkPrefix?: string }) {
   return (
     <section className={styles.security} aria-labelledby="security-title">
       <div className={styles.securityIntro}>
@@ -330,13 +324,6 @@ export function SecurityBand({
             <h3 className={styles.mobileCopy}>{fact.mobile}</h3>
           </div>
         ))}
-        {signingEnabled && (
-          <div>
-            <span aria-hidden="true" />
-            <h3>{text.signed}</h3>
-            <p>{text.signedBody}</p>
-          </div>
-        )}
       </div>
       <a className={styles.mobileCopy} href={siteLink(linkPrefix, 'security/')}>
         {text.securityLink}

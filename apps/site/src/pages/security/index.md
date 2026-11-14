@@ -56,8 +56,8 @@ reported versions are shown in the [Apps directory](../apps/).
 
 ## Release trust
 
-Signing is not approved yet. No release should be described as signed until the
-trusted build actually signs it. See the
+Releases are unsigned. Verify the source and the published SHA-256 checksums. No
+trusted-publisher certificate or pending signing approval is claimed. See the
 [code signing policy](../code-signing-policy/) and
 [download status](../download/). Never disable Windows security protections to
 run an untrusted build.

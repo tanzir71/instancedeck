@@ -342,7 +342,7 @@
       {
         "id": "smartscreen",
         "question": "Why does Windows show a SmartScreen warning?",
-        "answer": "New downloads build reputation over time. Releases are unsigned while signing approval is pending. Verify the published checksums and review the code signing policy before installing.",
+        "answer": "InstanceDeck releases are unsigned, so Windows may warn or block installation. Verify the source and published SHA-256 checksums, and review the code signing policy before installing.",
         "related": "code-signing-policy/"
       },
       {
@@ -396,8 +396,6 @@
         "mobile": "Recycle Bin, not delete"
       }
     ],
-    "signed": "Signed releases",
-    "signedBody": "Built and signed by trusted CI",
     "ctaTitle": "Every account you own, side by side.",
     "ctaSmall": "Requires the official app to be installed. Works with Microsoft Store and standard installs.",
     "resources": "Resources",
