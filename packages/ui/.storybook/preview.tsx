@@ -29,7 +29,7 @@ const preview: Preview = {
   },
   decorators: [
     withThemeByDataAttribute({
-      themes: { light: 'light' },
+      themes: { light: 'light', dark: 'dark' },
       defaultTheme: 'light',
       attributeName: 'data-theme',
     }),

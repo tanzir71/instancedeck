@@ -56,7 +56,7 @@ StyleDictionary.registerFormat({
         'ink-2': 'canvas-2',
         'ink-3': 'accent-on-deep',
         accent: 'accent-on-deep',
-        'accent-tint': 'ink-2',
+        'accent-tint': 'deep',
         success: 'accent-on-deep',
       },
     )

@@ -1,0 +1,104 @@
+{
+  "passed": true,
+  "runs": [
+    {
+      "url": "https://tanzir71.github.io/instancedeck/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 905.5085,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 905.966,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/",
+      "scores": {
+        "performance": 97,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 1155.442,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/claude-desktop/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 840.8375,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/claude-desktop/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 824.8275,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/apps/claude-desktop/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 835.1485,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/faq/",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 858.7775,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/faq/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 823.15,
+      "cls": 0
+    },
+    {
+      "url": "https://tanzir71.github.io/instancedeck/faq/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 775.292,
+      "cls": 0.008603229193218646
+    }
+  ]
+}

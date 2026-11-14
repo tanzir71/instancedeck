@@ -16,9 +16,10 @@ if (urls.length !== 24 || urls.some((url) => !url.startsWith(prefix)))
 const browser = await chromium.launch({ headless: true });
 const results = [];
 try {
-  const page = await browser.newPage({
+  const context = await browser.newContext({
     viewport: { width: 1440, height: 1000 },
   });
+  const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(String(error)));
   for (const url of urls) {

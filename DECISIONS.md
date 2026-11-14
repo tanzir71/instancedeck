@@ -1,5 +1,16 @@
 # Decisions
 
+## 2026-11-14 — Published Storybook preserves explicit theme examples
+
+Production verification found that Storybook's light-only theme decorator could
+override the desktop's dark setting after hydration. Choice: register both
+themes and lock the three dark examples with themeOverride. Actual dark axe
+checks exposed selected navigation contrast on ink-2; use the existing deep
+token for its background. Keep the shared footer's paper alias fixed to the
+generated white on-color token. A packaged-manager/dark-preview browser and
+footer contrast check now runs before Pages deployment. Alternative: relying
+only on fast development screenshots that can precede decorator effects.
+
 ## 2026-11-14 — Generic recipes, custom ownership and metadata transfer
 
 Context: the user deferred manual QA while asking for all implementation to

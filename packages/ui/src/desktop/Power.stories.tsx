@@ -175,6 +175,7 @@ export const SharedHistoryError: Story = {
   },
 };
 export const DarkDeck: Story = {
+  parameters: { themes: { themeOverride: 'dark' } },
   render: () => (
     <DesktopApp
       client={createPreviewClient(
@@ -188,6 +189,7 @@ export const DarkDeck: Story = {
   ),
 };
 export const DarkWizard: Story = {
+  parameters: { themes: { themeOverride: 'dark' } },
   render: () => (
     <DesktopShell
       theme="dark"
@@ -208,6 +210,7 @@ export const DarkWizard: Story = {
   ),
 };
 export const DarkSettings: Story = {
+  parameters: { themes: { themeOverride: 'dark' } },
   render: () => (
     <DesktopApp
       initialScreen="settings"

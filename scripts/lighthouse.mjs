@@ -5,12 +5,13 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 const require = createRequire(
   new URL('../apps/site/package.json', import.meta.url),
 );
+const live = process.argv.includes('--live');
 const child = spawn(
   process.execPath,
   [
     require.resolve('@lhci/cli/src/cli.js'),
     'autorun',
-    '--config=lighthouserc.cjs',
+    live ? '--config=lighthouserc.live.cjs' : '--config=lighthouserc.cjs',
   ],
   {
     cwd: new URL('../apps/site/', import.meta.url),
@@ -49,7 +50,12 @@ child.on('exit', async (code) => {
       }),
     );
     await writeFile(
-      new URL('../artifacts/p6/lighthouse-summary.json', import.meta.url),
+      new URL(
+        live
+          ? '../artifacts/p6/lighthouse-live-summary.json'
+          : '../artifacts/p6/lighthouse-summary.json',
+        import.meta.url,
+      ),
       JSON.stringify({ passed: code === 0, runs }, null, 2) + '\n',
     );
     console.log(JSON.stringify(runs));
