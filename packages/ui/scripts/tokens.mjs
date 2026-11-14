@@ -1,4 +1,5 @@
 import { readFile, mkdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import StyleDictionary from 'style-dictionary';
 
 const source = JSON.parse(
@@ -53,7 +54,7 @@ const sd = new StyleDictionary({
   tokens,
   platforms: {
     css: {
-      buildPath: out.pathname.replace(/^\/(\w:)/, '$1'),
+      buildPath: fileURLToPath(out),
       files: [
         { destination: 'generated.css', format: 'ideck/css' },
         { destination: 'generated.ts', format: 'ideck/ts' },
