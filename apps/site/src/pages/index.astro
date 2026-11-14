@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import { Hero, LogoTextStrip, FeatureTriplet, HowItWorks, UseCaseGrid, AppSpotlights, SecurityBand, FAQPreview, CTABand } from '@instancedeck/ui/marketing';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import deck from '../../../../design/20-app-deck@2x.png';
+import deck from '../assets/desktop-deck.png';
 import { absoluteUrl } from '../lib/urls';
 import type { Graph } from 'schema-dts';
 import { loadReleases } from '../lib/releases';
@@ -21,7 +21,7 @@ const schema: Graph = {
     <Hero />
     <LogoTextStrip availableSlugs={recipes.map((recipe) => recipe.seo.slug)} />
     <FeatureTriplet />
-    <HowItWorks><Image src={deck} alt="InstanceDeck Deck design showing separate Claude Desktop and Codex profiles, each with its own launch controls." format="webp" width={1120} height={700} widths={[560, 1120, 2240]} sizes="87.5vw" loading="lazy" decoding="async" /></HowItWorks>
+    <HowItWorks><Image src={deck} alt="Built InstanceDeck interface showing example Claude Desktop and Codex profiles with separate launch controls." format="webp" width={1120} height={700} widths={[560, 1120, 2240]} sizes="87.5vw" loading="lazy" decoding="async" /></HowItWorks>
     <UseCaseGrid />
     <AppSpotlights />
     <SecurityBand />

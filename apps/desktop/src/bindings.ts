@@ -18,6 +18,7 @@ export type CreateProfile_Deserialize = {
 	color: ProfileColor,
 	root: string,
 	isolateClaudeCode: boolean,
+	hotkey?: string | null,
 };
 
 export type CreateProfile_Serialize = {
@@ -27,6 +28,7 @@ export type CreateProfile_Serialize = {
 	color: ProfileColor,
 	root: string,
 	isolateClaudeCode: boolean,
+	hotkey: string | null,
 };
 
 export type MainAction = "launch" | "close";
@@ -79,9 +81,9 @@ export type Profile_Serialize = {
 
 export type Request = Request_Serialize | Request_Deserialize;
 
-export type Request_Deserialize = { type: "snapshot"; refresh?: boolean | null } | { type: "create"; input: CreateProfile_Deserialize } | { type: "update"; profile: Profile_Deserialize } | { type: "action"; id: string; action: ProfileAction; confirmation?: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed?: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction };
+export type Request_Deserialize = { type: "snapshot"; refresh?: boolean | null } | { type: "create"; input: CreateProfile_Deserialize } | { type: "update"; profile: Profile_Deserialize } | { type: "action"; id: string; action: ProfileAction; confirmation?: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed?: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "shortcuts"; id: string; locations: ShortcutLocation[] } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction; label?: string | null };
 
-export type Request_Serialize = { type: "snapshot"; refresh: boolean | null } | { type: "create"; input: CreateProfile_Serialize } | { type: "update"; profile: Profile_Serialize } | { type: "action"; id: string; action: ProfileAction; confirmation: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction };
+export type Request_Serialize = { type: "snapshot"; refresh: boolean | null } | { type: "create"; input: CreateProfile_Serialize } | { type: "update"; profile: Profile_Serialize } | { type: "action"; id: string; action: ProfileAction; confirmation: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "shortcuts"; id: string; locations: ShortcutLocation[] } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction; label: string | null };
 
 export type Settings = {
 	schemaVersion: number,
@@ -94,6 +96,8 @@ export type Settings = {
 	theme: Theme,
 	onboardingCompleted: boolean,
 };
+
+export type ShortcutLocation = "desktop" | "start-menu";
 
 export type SignInAction = "start" | "resume" | "finish" | "restore";
 

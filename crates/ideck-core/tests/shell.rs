@@ -37,6 +37,8 @@ fn identity_waits_for_a_stable_nonzero_window_and_rejects_reused_process_identit
             )
             .is_empty()
     );
+    assert!(windows.observe(3001, &[reused]).is_empty());
+    assert_eq!(windows.observe(3751, &[reused]), vec![reused]);
 }
 
 #[test]

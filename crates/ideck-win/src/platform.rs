@@ -13,7 +13,7 @@ use std::{
     os::windows::process::CommandExt,
     path::{Path, PathBuf},
     process::{Command, Stdio},
-    sync::Mutex,
+    sync::{Mutex, OnceLock},
     time::Duration,
 };
 use windows::{
@@ -48,6 +48,7 @@ pub struct WindowsPlatform {
     pub(crate) state_dir: PathBuf,
     cache: Mutex<HashMap<String, InstalledApp>>,
     pub(crate) sign_in_watch: Mutex<Option<crate::signin::MetadataWatch>>,
+    pub(crate) identity_monitor: OnceLock<crate::window_identity::IdentityMonitor>,
 }
 impl WindowsPlatform {
     pub fn new(state_dir: impl Into<PathBuf>) -> Self {
@@ -55,6 +56,7 @@ impl WindowsPlatform {
             state_dir: state_dir.into(),
             cache: Mutex::new(HashMap::new()),
             sign_in_watch: Mutex::new(None),
+            identity_monitor: OnceLock::new(),
         }
     }
     fn msix(
@@ -241,6 +243,18 @@ impl Drop for MutexGuard {
 }
 
 impl Platform for WindowsPlatform {
+    fn track_profile_windows(
+        &self,
+        profile: &ideck_core::Profile,
+        processes: &[ProcessInfo],
+    ) -> Result<()> {
+        self.identity_monitor()
+            .upsert(ideck_core::shell::IdentityBinding {
+                profile: profile.clone(),
+                processes: processes.to_vec(),
+            });
+        Ok(())
+    }
     fn directories(&self) -> Result<Directories> {
         Ok(Directories {
             local_app_data: env_path("LOCALAPPDATA")?,

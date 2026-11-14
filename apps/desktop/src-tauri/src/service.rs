@@ -1,3 +1,4 @@
+use ideck_core::shell::{IdentityBinding, ShellOperations, ShellRuntime, ShortcutLocation};
 use ideck_core::signin::{self, JournalStore, SignIn, SignInFiles};
 use ideck_core::{
     DesktopOperations, Engine, Error, Platform, Profile, ProfileColor, ProfileStore, Result,
@@ -11,13 +12,15 @@ use std::{
     fs,
     io::{Read, Seek, SeekFrom},
     path::{Path, PathBuf},
-    sync::Mutex,
+    sync::{Arc, Mutex, OnceLock},
 };
 
 pub struct DesktopState<P: Platform = WindowsPlatform> {
     pub engine: Engine<P>,
     pub settings: SettingsStore,
     mutation: Mutex<()>,
+    runtime: OnceLock<Arc<dyn ShellRuntime>>,
+    runtime_warning: Mutex<Option<String>>,
 }
 #[derive(Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -57,6 +60,8 @@ pub struct CreateProfile {
     color: ProfileColor,
     root: String,
     isolate_claude_code: bool,
+    #[serde(default)]
+    hotkey: Option<String>,
 }
 #[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "kebab-case")]
@@ -80,24 +85,43 @@ impl DesktopState {
         Self::with_platform(root, platform)
     }
 }
-impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
+impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopState<P> {
     fn with_platform(root: PathBuf, platform: P) -> Result<Self> {
         Ok(Self {
             engine: Engine::new(platform, ProfileStore::new(&root), built_in_recipes()?)?,
             settings: SettingsStore::new(root),
             mutation: Mutex::new(()),
+            runtime: OnceLock::new(),
+            runtime_warning: Mutex::new(None),
         })
     }
     pub fn snapshot(&self, refresh: bool) -> Result<Snapshot> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
         let profiles = self.engine.store.read()?.profiles;
+        if self.runtime.get().is_some() {
+            let _ = self.apply_runtime(&self.settings.read()?, &profiles, false);
+        }
         let apps = self.engine.apps(refresh);
         let mut running = BTreeMap::new();
         let mut running_since = BTreeMap::new();
         let mut main_running = BTreeMap::new();
         let mut status_errors = BTreeMap::new();
+        if let Ok(warning) = self.runtime_warning.lock()
+            && let Some(warning) = &*warning
+        {
+            status_errors.insert("shell-runtime".into(), warning.clone());
+        }
+        let mut bindings = Vec::new();
         for profile in &profiles {
             match self.engine.running(profile) {
                 Ok(processes) => {
+                    bindings.push(IdentityBinding {
+                        profile: profile.clone(),
+                        processes: processes.clone(),
+                    });
                     if let Some(started) = processes
                         .iter()
                         .map(|process| process.started_at)
@@ -134,6 +158,18 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
                 }
             }
         }
+        match self.engine.platform.sync_window_identity(bindings) {
+            Ok(reports) => {
+                status_errors.extend(
+                    reports
+                        .into_iter()
+                        .map(|(id, warning)| (format!("window-identity:{id}"), warning)),
+                );
+            }
+            Err(error) => {
+                status_errors.insert("window-identity".into(), error.to_string());
+            }
+        }
         Ok(Snapshot {
             profiles,
             apps,
@@ -163,6 +199,10 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
         })
     }
     pub fn create(&self, input: CreateProfile) -> Result<Profile> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
         self.engine.recipe(&input.app_id)?;
         let mut profile = Profile::new(
             &input.app_id,
@@ -171,6 +211,11 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
             input.color,
         )?;
         profile.options.isolate_claude_code = input.isolate_claude_code;
+        profile.hotkey = input
+            .hotkey
+            .as_deref()
+            .map(ideck_core::shell::normalize_hotkey)
+            .transpose()?;
         if let Some(id) = input.id {
             profile.data_dir = Path::new(&input.root)
                 .join(&input.app_id)
@@ -179,11 +224,40 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
                 .into_owned();
             profile.id = id;
         }
-        self.engine.store.create(profile)
+        profile.validate()?;
+        let previous = self.engine.store.read()?.profiles;
+        let mut desired = previous.clone();
+        desired.push(profile.clone());
+        let settings = self.settings.read()?;
+        ideck_core::shell::validate_hotkeys(&settings, &desired)?;
+        if profile.hotkey.is_some() {
+            self.apply_runtime(&settings, &desired, false)?;
+        }
+        let result = self.engine.store.create(profile);
+        if result.is_err() {
+            let _ = self.apply_runtime(&settings, &previous, false);
+        }
+        result
     }
     pub fn update(&self, profile: Profile) -> Result<()> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
         profile.validate()?;
-        self.engine.store.transaction(|state| {
+        let previous = self.engine.store.read()?;
+        let original = previous.profile(&profile.id)?;
+        let hotkey_changed = original.hotkey != profile.hotkey;
+        let settings = self.settings.read()?;
+        let mut desired = previous.profiles.clone();
+        if let Some(saved) = desired.iter_mut().find(|p| p.id == profile.id) {
+            saved.hotkey = profile.hotkey.clone();
+        }
+        ideck_core::shell::validate_hotkeys(&settings, &desired)?;
+        if hotkey_changed {
+            self.apply_runtime(&settings, &desired, false)?;
+        }
+        let result = self.engine.store.transaction(|state| {
             let saved = state
                 .profiles
                 .iter_mut()
@@ -193,8 +267,13 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
             saved.name = profile.name.trim().into();
             saved.color = profile.color;
             saved.options.isolate_claude_code = profile.options.isolate_claude_code;
+            saved.hotkey = profile.hotkey.clone();
             Ok(())
-        })
+        });
+        if result.is_err() && hotkey_changed {
+            let _ = self.apply_runtime(&settings, &previous.profiles, false);
+        }
+        result
     }
     pub fn action(
         &self,
@@ -266,6 +345,19 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
     pub fn copy_mcp(&self, from: &str, to: &str) -> Result<()> {
         signin::copy_mcp(&self.engine, from, to)
     }
+    pub fn shortcuts(&self, id: &str, locations: &[ShortcutLocation]) -> Result<Vec<String>> {
+        if locations.len() > 2 || (locations.len() == 2 && locations[0] == locations[1]) {
+            return Err(Error::Invalid(
+                "Choose Desktop and/or Start Menu once each".into(),
+            ));
+        }
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
+        let profile = self.engine.store.read()?.profile(id)?.clone();
+        self.engine.platform.create_shortcuts(&profile, locations)
+    }
     pub fn confirm_account(&self, id: &str, matches: bool) -> Result<()> {
         self.engine.store.transaction(|state| {
             let profile = state
@@ -288,16 +380,58 @@ impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
         }
     }
     pub fn save_settings(&self, settings: &Settings) -> Result<()> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
         let previous = self.settings.read()?;
-        if settings.start_with_windows != previous.start_with_windows
-            || settings.switcher_hotkey != previous.switcher_hotkey
-            || !matches!(settings.theme, ideck_core::settings::Theme::Light)
-        {
+        if !matches!(settings.theme, ideck_core::settings::Theme::Light) {
             return Err(Error::Invalid(
                 "Shell integration and dark theme are not installed yet".into(),
             ));
         }
-        self.settings.write(settings)
+        settings.validate()?;
+        let profiles = self.engine.store.read()?.profiles;
+        ideck_core::shell::validate_hotkeys(settings, &profiles)?;
+        let autostart_changed = settings.start_with_windows != previous.start_with_windows;
+        let runtime_changed =
+            autostart_changed || settings.switcher_hotkey != previous.switcher_hotkey;
+        if runtime_changed {
+            self.apply_runtime(settings, &profiles, autostart_changed)?;
+        }
+        let result = self.settings.write(settings);
+        if result.is_err() && runtime_changed {
+            let _ = self.apply_runtime(&previous, &profiles, autostart_changed);
+        }
+        result
+    }
+    pub fn install_runtime(&self, runtime: Arc<dyn ShellRuntime>) -> Result<()> {
+        self.runtime
+            .set(runtime)
+            .map_err(|_| Error::Invalid("Shell runtime is already installed".into()))?;
+        self.apply_runtime(
+            &self.settings.read()?,
+            &self.engine.store.read()?.profiles,
+            false,
+        )
+    }
+    fn apply_runtime(
+        &self,
+        settings: &Settings,
+        profiles: &[Profile],
+        change_autostart: bool,
+    ) -> Result<()> {
+        let result = self
+            .runtime
+            .get()
+            .ok_or_else(|| {
+                Error::Invalid("Windows shell runtime is unavailable in this session".into())
+            })?
+            .apply(settings, profiles, change_autostart);
+        if let Ok(mut warning) = self.runtime_warning.lock() {
+            *warning = result.as_ref().err().map(ToString::to_string);
+        }
+        result
     }
     pub fn diagnostics(&self, redact: bool) -> Result<Value> {
         let directories = self.engine.platform.directories()?;
@@ -391,6 +525,82 @@ mod fake;
 mod tests {
     use super::fake::FakePlatform;
     use super::*;
+    #[derive(Default)]
+    struct RecordingRuntime {
+        reject: std::sync::atomic::AtomicBool,
+        autostart_edits: Mutex<Vec<bool>>,
+    }
+    impl ShellRuntime for RecordingRuntime {
+        fn apply(&self, _: &Settings, _: &[Profile], change_autostart: bool) -> Result<()> {
+            self.autostart_edits.lock().unwrap().push(change_autostart);
+            if self.reject.load(std::sync::atomic::Ordering::SeqCst) {
+                Err(Error::Platform("Fixture hotkey conflict".into()))
+            } else {
+                Ok(())
+            }
+        }
+    }
+    #[test]
+    fn runtime_failure_preserves_metadata_and_never_blocks_an_unrelated_privacy_edit() {
+        let temp = tempfile::tempdir().unwrap();
+        let state =
+            DesktopState::with_platform(temp.path().join("manager"), FakePlatform::default())
+                .unwrap();
+        let runtime = Arc::new(RecordingRuntime::default());
+        state.install_runtime(runtime.clone()).unwrap();
+        assert_eq!(*runtime.autostart_edits.lock().unwrap(), vec![false]);
+        let mut settings = state.settings.read().unwrap();
+        settings.start_with_windows = true;
+        state.save_settings(&settings).unwrap();
+        assert_eq!(*runtime.autostart_edits.lock().unwrap(), vec![false, true]);
+        let profile = state
+            .create(CreateProfile {
+                id: None,
+                app_id: "codex".into(),
+                name: "Hotkey fixture".into(),
+                color: ProfileColor::Teal,
+                root: temp.path().join("Profiles").to_string_lossy().into_owned(),
+                isolate_claude_code: true,
+                hotkey: Some("ctrl+alt+1".into()),
+            })
+            .unwrap();
+        assert_eq!(profile.hotkey.as_deref(), Some("Ctrl+Alt+1"));
+        runtime
+            .reject
+            .store(true, std::sync::atomic::Ordering::SeqCst);
+        let mut changed = profile.clone();
+        changed.hotkey = Some("Ctrl+Alt+2".into());
+        assert!(state.update(changed).is_err());
+        assert_eq!(
+            state
+                .engine
+                .store
+                .read()
+                .unwrap()
+                .profile(&profile.id)
+                .unwrap()
+                .hotkey,
+            profile.hotkey
+        );
+        let mut conflicting = settings.clone();
+        conflicting.switcher_hotkey = "Ctrl+Alt+F2".into();
+        assert!(state.save_settings(&conflicting).is_err());
+        assert_eq!(
+            state.settings.read().unwrap().switcher_hotkey,
+            settings.switcher_hotkey
+        );
+        settings.allow_update_checks = false;
+        state.save_settings(&settings).unwrap();
+        assert!(!state.settings.read().unwrap().allow_update_checks);
+        assert!(!Path::new(&profile.data_dir).exists());
+        assert!(
+            state
+                .snapshot(false)
+                .unwrap()
+                .status_errors
+                .contains_key("shell-runtime")
+        );
+    }
     impl DesktopOperations for FakePlatform {
         fn open_folder(&self, _: &str) -> Result<()> {
             self.0.lock().unwrap().events.push("open-folder");
@@ -423,6 +633,7 @@ mod tests {
                     .to_string_lossy()
                     .into_owned(),
                 isolate_claude_code: true,
+                hotkey: None,
             })
             .unwrap();
         fs::create_dir_all(&profile.data_dir).unwrap();
@@ -451,7 +662,8 @@ mod tests {
                     name: "Invalid id".into(),
                     color: ProfileColor::Teal,
                     root: temp.path().join("Profiles").to_string_lossy().into_owned(),
-                    isolate_claude_code: true
+                    isolate_claude_code: true,
+                    hotkey: None,
                 })
                 .is_err()
         );
@@ -491,6 +703,7 @@ mod tests {
                 color: ProfileColor::Teal,
                 root: temp.path().join("Profiles").to_string_lossy().into_owned(),
                 isolate_claude_code: true,
+                hotkey: None,
             })
             .unwrap();
         state.confirm_account(&profile.id, true).unwrap();

@@ -221,6 +221,90 @@ export const WizardError: Story = {
     </ReferenceDeck>
   ),
 };
+export const WizardOptionsConfigured: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <Wizard
+        apps={fixtureApps}
+        root={'D:\\Profiles'}
+        initialName="Work"
+        initialStep={2}
+        onClose={noop}
+        onCreate={done}
+        onBrowse={browse}
+      />
+    </ReferenceDeck>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      body.getByRole('checkbox', { name: 'Desktop shortcut' }),
+    );
+    await userEvent.click(
+      body.getByRole('checkbox', { name: 'Start Menu shortcut' }),
+    );
+    await userEvent.type(
+      body.getByRole('textbox', { name: 'Profile hotkey' }),
+      'Ctrl+Alt+1',
+    );
+  },
+};
+export const SettingsHotkeyConflict: Story = {
+  render: () => (
+    <DesktopShell screen="settings" onNavigate={noop} onWindow={done}>
+      <SettingsScreen
+        settings={fixtureSnapshot.settings}
+        onBrowse={browse}
+        onSave={async () => {
+          throw new globalThis.Error(
+            'This hotkey is already used by Windows. Choose a different hotkey.',
+          );
+        }}
+      />
+    </DesktopShell>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(body.getByRole('button', { name: 'Save changes' }));
+    await expect(body.getByRole('alert')).toHaveTextContent(
+      'Choose a different hotkey.',
+    );
+  },
+};
+export const ProfileShortcutError: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <ProfileDetail
+        profile={fixtureProfiles[0]!}
+        profiles={fixtureProfiles}
+        client={{
+          ...createPreviewClient(fixtureSnapshot),
+          shortcuts: async () => {
+            throw new globalThis.Error(
+              'Shortcut destination is unavailable. Existing links were kept.',
+            );
+          },
+        }}
+        onSignIn={noop}
+        onAccountHealth={noop}
+        onClose={noop}
+        onSaved={done}
+        onAction={noop}
+      />
+    </ReferenceDeck>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      body.getByRole('button', {
+        name: 'Create Desktop and Start Menu shortcuts',
+      }),
+    );
+    await expect(body.getByRole('alert')).toHaveTextContent(
+      'Existing links were kept.',
+    );
+  },
+};
 export const SignIn: Story = {
   render: () => (
     <ReferenceDeck>

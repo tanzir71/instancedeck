@@ -13,6 +13,7 @@ pub struct FakeState {
     pub fail_package: bool,
     pub fail_force: bool,
     pub fail_recycle: bool,
+    pub fail_identity: bool,
     pub recycled: Vec<String>,
     pub no_process: bool,
     pub stubborn: bool,
@@ -24,6 +25,17 @@ pub struct FakeState {
 }
 #[derive(Default)]
 pub struct FakePlatform(pub Mutex<FakeState>);
+impl ideck_core::shell::ShellOperations for FakePlatform {
+    fn create_shortcuts(
+        &self,
+        _: &Profile,
+        _: &[ideck_core::shell::ShortcutLocation],
+    ) -> Result<Vec<String>> {
+        Err(Error::Platform(
+            "No fixture shortcut writer configured".into(),
+        ))
+    }
+}
 impl ideck_core::signin::SignInFiles for FakePlatform {
     fn tree_bytes(&self, _: &Path) -> Result<u64> {
         Err(Error::Platform(
@@ -67,6 +79,13 @@ pub fn app(recipe: &Recipe, updated: bool) -> InstalledApp {
     }
 }
 impl Platform for FakePlatform {
+    fn track_profile_windows(&self, _: &Profile, _: &[ProcessInfo]) -> Result<()> {
+        if self.0.lock().unwrap().fail_identity {
+            Err(Error::Platform("Fixture identity unavailable".into()))
+        } else {
+            Ok(())
+        }
+    }
     fn directories(&self) -> Result<Directories> {
         Ok(Directories {
             local_app_data: r"C:\Users\Zoë Example\AppData\Local".into(),

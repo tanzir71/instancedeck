@@ -51,7 +51,7 @@ export function createPreviewClient(
           isolateClaudeCode: input.isolateClaudeCode,
           sharedCodexHistory: false,
         },
-        hotkey: null,
+        hotkey: input.hotkey ?? null,
         createdAt: new Date().toISOString(),
         lastLaunchedAt: null,
         signInState: 'needs-sign-in' as const,
@@ -139,6 +139,10 @@ export function createPreviewClient(
     },
     copyMcp: async () => {
       throw new Error(copy.desktop.previewBanner);
+    },
+    shortcuts: async (id, locations) => {
+      if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
+      return locations.map((location) => `${location}\\InstanceDeck-${id}.lnk`);
     },
     confirmAccount: async (id, matches) => {
       if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);

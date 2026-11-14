@@ -202,6 +202,21 @@ fn known_folder(id: &windows::core::GUID) -> Result<PathBuf> {
     value.map(PathBuf::from)
 }
 impl ShellOperations for WindowsPlatform {
+    fn sync_window_identity(
+        &self,
+        bindings: Vec<ideck_core::shell::IdentityBinding>,
+    ) -> Result<std::collections::BTreeMap<String, String>> {
+        if self.identity_monitor.get().is_none() && bindings.iter().all(|b| b.processes.is_empty())
+        {
+            return Ok(std::collections::BTreeMap::new());
+        }
+        Ok(self.identity_monitor().replace(bindings))
+    }
+    fn stop_window_identity(&self) {
+        if let Some(monitor) = self.identity_monitor.get() {
+            monitor.stop();
+        }
+    }
     fn create_shortcuts(
         &self,
         profile: &Profile,

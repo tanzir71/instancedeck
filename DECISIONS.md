@@ -1,5 +1,15 @@
 # Decisions
 
+## 2026-11-14 — Pages uses the Astro workflow
+
+Context: GitHub Pages appeared with a legacy main-branch/Jekyll source, which
+attempted to parse Astro source as YAML and failed. Choice: set its build type
+to workflow through the GitHub Pages API. Keep SITE_PUBLISH_ENABLED unset until
+the remaining desktop claims ship. The API setting was observed reverting once
+and was reapplied; verify it again at final deployment. Alternative: publishing
+repository sources or modifying valid Astro files for Jekyll. Reference:
+https://docs.github.com/en/rest/pages/pages#update-information-about-a-github-pages-site
+
 ## 2026-11-14 — Windows identity uses original project artwork
 
 Context: §4.6 suggests extracting a vendor icon, while AGENTS.md forbids drawing

@@ -1,0 +1,10 @@
+{
+  "source": "Built packages/ui Deck view",
+  "fixture": "Figma reference examples, not real accounts",
+  "dimensions": [
+    2560,
+    1600
+  ],
+  "deviceScaleFactor": 2,
+  "nativeVerification": "Deferred to the user"
+}

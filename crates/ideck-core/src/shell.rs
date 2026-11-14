@@ -54,6 +54,25 @@ pub trait ShellOperations: Send + Sync {
         profile: &Profile,
         locations: &[ShortcutLocation],
     ) -> Result<Vec<String>>;
+    fn sync_window_identity(&self, _: Vec<IdentityBinding>) -> Result<BTreeMap<String, String>> {
+        Ok(BTreeMap::new())
+    }
+    fn stop_window_identity(&self) {}
+}
+#[derive(Clone)]
+pub struct IdentityBinding {
+    pub profile: Profile,
+    pub processes: Vec<crate::process::ProcessInfo>,
+}
+/// Native manager hotkeys/autostart are injected, so service tests never change
+/// the user's registrations. Autostart changes only after an explicit setting edit.
+pub trait ShellRuntime: Send + Sync {
+    fn apply(
+        &self,
+        settings: &Settings,
+        profiles: &[Profile],
+        change_autostart: bool,
+    ) -> Result<()>;
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -70,8 +89,11 @@ pub struct StableWindows {
 }
 impl StableWindows {
     pub fn observe(&mut self, now_ms: u64, candidates: &[WindowCandidate]) -> Vec<WindowCandidate> {
-        self.seen
-            .retain(|handle, _| candidates.iter().any(|c| c.handle == *handle));
+        self.seen.retain(|handle, _| {
+            candidates
+                .iter()
+                .any(|c| c.handle == *handle && c.pid != 0 && c.process_started_at != 0)
+        });
         let mut ready = Vec::new();
         for candidate in candidates
             .iter()

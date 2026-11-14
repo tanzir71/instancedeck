@@ -1,0 +1,85 @@
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100vh;
+  min-height: 0;
+  padding: 20px 24px;
+  background: var(--paper);
+}
+
+.palette header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.palette h1 {
+  pointer-events: none;
+  font: 400 26px/1.2 var(--font-display);
+}
+
+.palette label {
+  color: var(--ink-2);
+}
+
+.palette input {
+  width: 100%;
+  height: 44px;
+  flex-shrink: 0;
+  padding: 0 14px;
+  border: 0;
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+.options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.options li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.options [aria-selected='true'] {
+  background: var(--accent-tint);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+}
+
+.options li > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.options strong,
+.options small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.options small,
+.hint {
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.hint {
+  margin-top: auto;
+}

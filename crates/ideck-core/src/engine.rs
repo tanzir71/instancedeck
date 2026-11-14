@@ -189,6 +189,9 @@ impl<P: Platform> Engine<P> {
         let mut plan = self.plan(&profile, false)?;
         let existing = self.matching(&plan, &self.platform.processes()?)?;
         if let Some(process) = existing.first() {
+            if let Err(error) = self.platform.track_profile_windows(&profile, &existing) {
+                tracing::warn!(%error, profile_id = %profile.id, "window identity unavailable");
+            }
             self.platform.focus(&existing)?;
             return Ok(LaunchOutcome {
                 profile_id: id.into(),
@@ -260,6 +263,13 @@ impl<P: Platform> Engine<P> {
         pid: u32,
     ) -> Result<LaunchOutcome> {
         self.store.mark_launched(id)?;
+        let profile = self.store.read()?.profile(id)?.clone();
+        if let Err(error) = self
+            .running(&profile)
+            .and_then(|processes| self.platform.track_profile_windows(&profile, &processes))
+        {
+            tracing::warn!(%error, profile_id = %profile.id, "window identity unavailable");
+        }
         tracing::info!(recipe_id = %plan.recipe_id, recipe_version = plan.recipe_version, app_version = %plan.app.version, strategy = %strategy, exit_status = "running", "launch");
         Ok(LaunchOutcome {
             profile_id: id.into(),

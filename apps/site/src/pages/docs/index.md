@@ -18,10 +18,11 @@ intro: Start with the isolation model, then read the guide for your app.
 4. Launch it and sign in through the official app. Check which account it shows.
 
 The current build is in development. Guided Claude sign-in has automated crash
-coverage; real account verification remains pending. Per-profile taskbar
-identity, custom recipes and update installation have not shipped yet. A
-preference or Storybook view does not imply that its later-phase engine is
-available.
+coverage; real account verification remains pending. Windows shortcuts, hotkeys,
+the switcher and window identity are implemented; actual pinning still needs
+manual verification. Custom recipes and update installation have not shipped
+yet. A preference or Storybook view does not imply that its later-phase engine
+is available.
 
 ## Guides
 

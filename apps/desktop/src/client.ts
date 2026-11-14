@@ -1,6 +1,7 @@
 import { isTauri } from '@tauri-apps/api/core';
 import { commands, type Request_Deserialize } from './bindings';
 import { listen } from '@tauri-apps/api/event';
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import type { DesktopClient, DesktopSnapshot } from '@instancedeck/ui';
 import { createPreviewClient } from '@instancedeck/ui';
 
@@ -36,11 +37,13 @@ const nativeClient: DesktopClient = {
   diagnostics: (redact) => request({ type: 'diagnostics', redact }),
   plan: (id) => request({ type: 'plan', id }),
   browse: () => request({ type: 'browse' }),
-  window: (action) => request({ type: 'window', action }),
+  window: (action) =>
+    request({ type: 'window', action, label: getCurrentWebviewWindow().label }),
   signIn: (id, action, closeMainConfirmed) =>
     request({ type: 'signIn', id, action, closeMainConfirmed }),
   copyMcp: (from, to) => request({ type: 'copyMcp', from, to }),
   confirmAccount: (id, matches) =>
     request({ type: 'confirmAccount', id, matches }),
+  shortcuts: (id, locations) => request({ type: 'shortcuts', id, locations }),
 };
 export const desktopClient = isTauri() ? nativeClient : createPreviewClient();

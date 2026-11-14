@@ -41,12 +41,14 @@ export function DesktopShell({
   onWindow,
   children,
   preview = false,
+  switcherHotkey = 'Ctrl+Alt+Space',
 }: {
   screen: Screen;
   onNavigate: (screen: Screen) => void;
   onWindow: DesktopClient['window'];
   children: ReactNode;
   preview?: boolean;
+  switcherHotkey?: string;
 }) {
   return (
     <div className={styles.shell}>
@@ -101,7 +103,9 @@ export function DesktopShell({
           <div className={styles.switcherHint}>
             <span>{copy.switcher}</span>
             <div>
-              <Kbd>Ctrl</Kbd> <Kbd>Alt</Kbd> <Kbd>Space</Kbd>
+              {switcherHotkey.split('+').map((key) => (
+                <Kbd key={key}>{key}</Kbd>
+              ))}
             </div>
           </div>
         </aside>
@@ -474,6 +478,7 @@ export function DesktopApp({
         }
       }}
       preview={client.preview}
+      switcherHotkey={snapshot?.settings.switcherHotkey}
     >
       {error && (
         <div className={styles.errorBanner} role="alert">
@@ -547,10 +552,19 @@ export function DesktopApp({
               onClose={() => setWizard(undefined)}
               onBrowse={client.browse}
               onCreate={async (input) => {
-                const created = await client.create(input);
+                const { shortcuts, ...profileInput } = input;
+                const created = await client.create(profileInput);
+                let shortcutWarning = '';
+                if (shortcuts?.length) {
+                  try {
+                    await client.shortcuts(created.id, shortcuts);
+                  } catch (error) {
+                    shortcutWarning = `${copy.desktop.shortcutFailed} ${String(error)}`;
+                  }
+                }
                 await reload();
                 setWizard(undefined);
-                setToast(copy.desktop.created);
+                setToast(shortcutWarning || copy.desktop.created);
                 if (created.appId === 'claude-desktop')
                   setSignInProfile(created);
               }}

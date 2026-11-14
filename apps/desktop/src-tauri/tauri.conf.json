@@ -17,7 +17,22 @@
         "height": 800,
         "minWidth": 900,
         "minHeight": 640,
-        "decorations": false
+        "decorations": false,
+        "visible": false
+      },
+      {
+        "label": "switcher",
+        "title": "InstanceDeck switcher",
+        "url": "index.html",
+        "width": 640,
+        "height": 420,
+        "minWidth": 520,
+        "minHeight": 300,
+        "decorations": false,
+        "visible": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "center": true
       }
     ],
     "security": {

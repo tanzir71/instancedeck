@@ -168,6 +168,13 @@
     "recoveryTitle": "An interrupted sign-in needs attention",
     "recoveryBody": "Your saved journal can resume the sign-in or restore the main Claude slot.",
     "switcherSearch": "Find a profile",
+    "switcherKeys": "↑ ↓ to choose · Enter to launch or focus · Esc to close",
+    "hotkeyHelp": "Optional · for example Ctrl+Alt+1. Each hotkey must be unique and available in Windows.",
+    "shortcutFailed": "Profile created. Shortcuts need attention in Profile details.",
+    "shellHelp": "Changes apply when saved. Taskbar grouping and pinned relaunch still need manual verification on your app version.",
+    "createShortcuts": "Create Desktop and Start Menu shortcuts",
+    "shortcutHelp": "Targets InstanceDeck with this profile’s stable ID. Recreate shortcuts to refresh saved names and colours. Windows taskbar pins are managed by you.",
+    "shellOptionsIntro": "Choose the shortcuts and optional hotkey for this profile.",
     "minimize": "Minimize",
     "maximize": "Maximize or restore",
     "closeWindow": "Close window"

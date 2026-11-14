@@ -169,15 +169,18 @@ export function SettingsScreen({
         <Switch
           label={copy.desktop.startWithWindows}
           checked={draft.startWithWindows}
-          onChange={() => {}}
-          disabled
+          onChange={(startWithWindows) =>
+            setDraft({ ...draft, startWithWindows })
+          }
         />
         <Input
           label={copy.desktop.switcherHotkey}
           value={draft.switcherHotkey}
-          disabled
+          onChange={(event) =>
+            setDraft({ ...draft, switcherHotkey: event.target.value })
+          }
         />
-        <p className={styles.muted}>{copy.desktop.shellPending}</p>
+        <p className={styles.muted}>{copy.desktop.shellHelp}</p>
         <Switch
           label={copy.desktop.allowUpdates}
           checked={draft.allowUpdateChecks}
@@ -444,10 +447,32 @@ export function ProfileDetail({
         )}
         <Input
           label={copy.desktop.hotkey}
-          value={profile.hotkey ?? ''}
-          disabled
+          value={draft.hotkey ?? ''}
+          onChange={(event) =>
+            setDraft({ ...draft, hotkey: event.target.value.trim() || null })
+          }
+          hint={copy.desktop.hotkeyHelp}
         />
-        <p className={styles.muted}>{copy.desktop.shellPending}</p>
+        <Button
+          kind="secondary"
+          size="M"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            setError('');
+            try {
+              await client.shortcuts(profile.id, ['desktop', 'start-menu']);
+              await onSaved();
+            } catch (error) {
+              setError(String(error));
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          {copy.desktop.createShortcuts}
+        </Button>
+        <p className={styles.muted}>{copy.desktop.shortcutHelp}</p>
         <p className={styles.muted}>{copy.desktop.pinTip}</p>
         <details>
           <summary>{copy.desktop.launchSettings}</summary>

@@ -6,9 +6,11 @@ apps with separate arguments, environment variables and profile data paths.
 **Status:** the launch engine/CLI are verified on Windows 11. The desktop UI is
 implemented with native keyboard/tray QA deferred to the user. Journaled Claude
 sign-in and recovery pass synthetic crash tests; actual account verification is
-pending. The complete Astro site is built and audited locally; publication waits
-for the desktop features described by its copy. See [PROGRESS.md](PROGRESS.md)
-for evidence and remaining gates.
+pending. Windows shortcuts, window identity, hotkeys, the switcher and autostart
+are implemented; native pinning verification remains deferred. The complete
+Astro site is built and audited locally; publication waits for the desktop
+features described by its copy. See [PROGRESS.md](PROGRESS.md) for evidence and
+remaining gates.
 
 The desktop uses Tauri 2, React and TypeScript. The static Astro site and
 desktop share `packages/ui`; all visual tokens are generated from

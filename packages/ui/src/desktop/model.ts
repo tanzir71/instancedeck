@@ -90,6 +90,7 @@ export interface CreateProfile {
   color: ProfileColor;
   root: string;
   isolateClaudeCode: boolean;
+  hotkey?: string | null;
 }
 export interface LaunchPlan {
   app: { executable: string; version: string };
@@ -126,6 +127,10 @@ export interface DesktopClient {
   ): Promise<SignInProgress>;
   copyMcp(from: string, to: string): Promise<void>;
   confirmAccount(id: string, matches: boolean): Promise<void>;
+  shortcuts(
+    id: string,
+    locations: ('desktop' | 'start-menu')[],
+  ): Promise<string[]>;
 }
 export function monogram(appId: string) {
   return appId === 'claude-desktop'

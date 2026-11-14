@@ -48,12 +48,17 @@ pub enum Request {
         from: String,
         to: String,
     },
+    Shortcuts {
+        id: String,
+        locations: Vec<ideck_core::shell::ShortcutLocation>,
+    },
     ConfirmAccount {
         id: String,
         matches: bool,
     },
     Window {
         action: WindowAction,
+        label: Option<String>,
     },
 }
 #[derive(Deserialize, specta::Type)]
@@ -112,6 +117,9 @@ pub async fn desktop_request(
                     state.confirm_account(&id, matches)?;
                     Ok(Value::Null)
                 }
+                Request::Shortcuts { id, locations } => {
+                    Ok(serde_json::to_value(state.shortcuts(&id, &locations)?)?)
+                }
                 Request::Plan { id } => {
                     let profile = state.engine.store.read()?.profile(&id)?.clone();
                     Ok(serde_json::to_value(state.engine.plan(&profile, false)?)?)
@@ -123,9 +131,13 @@ pub async fn desktop_request(
                         .and_then(|path| path.into_path().ok())
                         .map(|path| path.to_string_lossy().into_owned())
                 )),
-                Request::Window { action } => {
+                Request::Window { action, label } => {
+                    let label = label.as_deref().unwrap_or("main");
+                    if !matches!(label, "main" | "switcher") {
+                        return Err(ideck_core::Error::Invalid("Unknown manager window".into()));
+                    }
                     let window = app
-                        .get_webview_window("main")
+                        .get_webview_window(label)
                         .ok_or_else(|| ideck_core::Error::NotFound("Main window".into()))?;
                     match action {
                         WindowAction::Minimize => window.minimize(),

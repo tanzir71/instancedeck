@@ -89,7 +89,7 @@ the corrected dialog layouts. P2's Windows
 [Pages build](https://github.com/tanzir71/instancedeck/actions/runs/43591473182)
 also passed.
 
-## P4 — Windows shell integration (in progress)
+## P4 — Windows shell integration (implementation complete)
 
 Started after P3's automated checks passed. Implemented pure shortcut identity
 plans, safe Unicode shortcut names, canonical hotkey validation and duplicate
@@ -97,10 +97,46 @@ binding checks. Neutral profile ICOs use only project artwork and token colors.
 The Windows shortcut adapter saves to a staged file, commits shell properties,
 reloads with read/write mode to verify them, and retains an existing link before
 activation. Three core shell tests and two Windows shell fixture tests pass. All
-52 workspace Rust tests, clippy and generated-binding drift checks pass. window
-identity, runtime shortcut registration, switcher, autostart and their UI
-controls remain to be completed. Nothing has been added to the user's Desktop or
-Start Menu during automated tests.
+52 workspace Rust tests, clippy and generated-binding drift checks pass. The
+out-of-context window monitor is implemented with PID/creation-time proof, 750ms
+stability, relaunch properties, own profile icons and a 20s warning. It does not
+read window titles or run hooks inside target processes. Snapshot reconciliation
+and launch requests feed it; actual window/pinning QA remains deferred. Runtime
+hotkeys, switcher, autostart, launcher argument forwarding and their UI controls
+are implemented. Nothing has been added to the user's Desktop or Start Menu
+during automated tests.
+
+Tauri global shortcuts, autostart and window state use exact stable versions.
+Hotkey conflicts preserve saved metadata and restore previous registrations.
+Only an explicit startup preference edit changes autostart; unrelated privacy
+edits still work if hotkey registration fails. Profile and settings mutations
+are serialized with snapshot reconciliation. The switcher has its own hidden
+window, keyboard filtering, Arrow/Enter activation and Escape dismissal even
+during a pending launch. It hides on focus loss. Cold shortcut/autostart
+launches keep the manager in the tray; subsequent launch requests use
+single-instance forwarding. Window state stays in the manager's own state
+directory.
+
+Validation: **54 Rust tests**, clippy with warnings denied, TypeScript and lint
+pass. All **17 browser tests** pass, including **182 stories** with axe checks,
+the keyboard switcher flow, busy dismissal, shortcut failure and configured
+wizard options. The **x64 release executable builds** without opening the app.
+Core line coverage is **90.18%** (1524/1690), regions 83.91%, functions 73.85%.
+[Coverage](artifacts/p4/core-coverage.json). The previous shortcut foundation's
+[Windows CI](https://github.com/tanzir71/instancedeck/actions/runs/43593892203)
+passed its native release build too.
+
+Captures: [switcher](artifacts/p4/switcher.png),
+[wizard options](artifacts/p4/wizard-options-configured.png),
+[hotkey conflict](artifacts/p4/settings-hotkey-conflict.png),
+[shortcut failure](artifacts/p4/profile-shortcut-error.png). The site now uses a
+2560×1600 capture of the built shared Deck view instead of the permitted
+temporary Figma export. Its profiles are explicitly example data, not real
+accounts. [Capture metadata](artifacts/p4/product-capture.json).
+
+Actual taskbar grouping, pin/relaunch, startup behavior and the DWM border spike
+remain manual verification deferred to the user. DWM borders are not enabled.
+The site stays unpublished until the remaining power-feature claims ship.
 
 ## P0 — Scaffold and tooling (complete)
 

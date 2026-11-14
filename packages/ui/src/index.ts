@@ -12,3 +12,4 @@ export * from './desktop/ScreenViews';
 export * from './desktop/Wizard';
 export * from './desktop/SignInAssistant';
 export * from './desktop/previewClient';
+export * from './desktop/GlobalSwitcher';

@@ -36,7 +36,9 @@ export function Wizard({
   apps: AppDetection[];
   root: string;
   onClose: () => void;
-  onCreate: (input: CreateProfile) => Promise<void>;
+  onCreate: (
+    input: CreateProfile & { shortcuts?: ('desktop' | 'start-menu')[] },
+  ) => Promise<void>;
   onBrowse: () => Promise<string | null>;
   initialStep?: number;
   initialName?: string;
@@ -54,6 +56,9 @@ export function Wizard({
   const [id] = useState(() => initialId ?? ulid());
   const dataDir = [location.replace(/[\\/]+$/u, ''), appId, id].join('\\');
   const [isolate, setIsolate] = useState(true);
+  const [hotkey, setHotkey] = useState('');
+  const [desktopShortcut, setDesktopShortcut] = useState(false);
+  const [startShortcut, setStartShortcut] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const app = apps.find((item) => item.recipe.id === appId);
@@ -89,6 +94,11 @@ export function Wizard({
         color,
         root: location,
         isolateClaudeCode: isolate,
+        hotkey: hotkey.trim() || null,
+        shortcuts: [
+          ...(desktopShortcut ? ['desktop' as const] : []),
+          ...(startShortcut ? ['start-menu' as const] : []),
+        ],
       });
     } catch (error) {
       setError(String(error));
@@ -214,11 +224,23 @@ export function Wizard({
           </>
         ) : (
           <div className={styles.stack}>
-            <p className={styles.muted}>{copy.desktop.chooseLocation}</p>
-            <Checkbox label={copy.desktop.desktopShortcut} disabled />
-            <Checkbox label={copy.desktop.startShortcut} disabled />
-            <Input label={copy.desktop.hotkey} disabled />
-            <p className={styles.muted}>{copy.desktop.shellPending}</p>
+            <p className={styles.muted}>{copy.desktop.shellOptionsIntro}</p>
+            <Checkbox
+              label={copy.desktop.desktopShortcut}
+              checked={desktopShortcut}
+              onChange={(event) => setDesktopShortcut(event.target.checked)}
+            />
+            <Checkbox
+              label={copy.desktop.startShortcut}
+              checked={startShortcut}
+              onChange={(event) => setStartShortcut(event.target.checked)}
+            />
+            <Input
+              label={copy.desktop.hotkey}
+              value={hotkey}
+              onChange={(event) => setHotkey(event.target.value)}
+              hint={copy.desktop.hotkeyHelp}
+            />
             {appId === 'claude-desktop' && (
               <p className={styles.muted}>{copy.desktop.signInPending}</p>
             )}

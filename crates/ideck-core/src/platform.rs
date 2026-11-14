@@ -47,6 +47,9 @@ pub trait DesktopOperations: Send + Sync {
 
 /// Every Windows operation is behind this interface so the engine can run with fakes.
 pub trait Platform: Send + Sync {
+    fn track_profile_windows(&self, _: &crate::Profile, _: &[ProcessInfo]) -> Result<()> {
+        Ok(())
+    }
     fn directories(&self) -> Result<Directories>;
     fn discover(&self, recipe: &Recipe, refresh: bool) -> Result<InstalledApp>;
     fn exists(&self, path: &str) -> Result<bool>;

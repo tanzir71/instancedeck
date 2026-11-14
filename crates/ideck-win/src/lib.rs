@@ -7,6 +7,8 @@ mod platform;
 #[cfg(windows)]
 pub mod shell;
 #[cfg(windows)]
+mod window_identity;
+#[cfg(windows)]
 pub use platform::WindowsPlatform;
 #[cfg(windows)]
 mod desktop;

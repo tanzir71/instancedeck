@@ -3,6 +3,17 @@ use common::*;
 use ideck_core::{process::ProcessInfo, *};
 
 #[test]
+fn unavailable_window_identity_cannot_turn_a_successful_launch_or_focus_into_failure() {
+    let (_temp, engine, profile) = fixture();
+    engine.platform.0.lock().unwrap().fail_identity = true;
+    let launched = engine.launch(&profile.id).unwrap();
+    assert_eq!(launched.pid, 77);
+    assert!(!launched.already_running);
+    assert!(engine.launch(&profile.id).unwrap().already_running);
+    assert_eq!(engine.running(&profile).unwrap().len(), 1);
+}
+
+#[test]
 fn main_launch_has_no_profile_overrides_focuses_existing_and_never_forces() {
     let (_temp, engine, profile) = fixture();
     engine.launch_main("claude-desktop").unwrap();
