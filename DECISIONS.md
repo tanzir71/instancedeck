@@ -1,5 +1,22 @@
 # Decisions
 
+## 2026-11-14 — Manual verification deferred; unsigned releases
+
+Context: the user explicitly instructed “I will do manual verification later, do
+everything else and push to Github.” Choice: continue P3–P7 implementation and
+automated verification without waiting for native/manual acceptance gates.
+Record those checks as deferred, keep recipes Community, and never claim manual
+account, tray, taskbar or architecture verification that has not happened. This
+user instruction overrides the earlier phase-order gate only for deferred manual
+checks. No further Computer Use is needed for this work.
+
+The user also said releases cannot be signed and allowed self-signed or unsigned
+builds. Choice: ship unsigned installers and portable packages, with SHA-256
+checksums and clear Windows trust guidance. Do not pursue SignPath or describe
+signing approval as pending. Alternative: a self-signed certificate. This
+supersedes HANDOVER.md's signing and SignPath requirements and older decisions
+or progress notes about future signing approval.
+
 ## 2026-11-14 — Site publication follows shipped claims
 
 Context: P6 may run alongside the ordered desktop phases. The Figma home copy
