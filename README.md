@@ -10,8 +10,9 @@ pending. Windows shortcuts, window identity, hotkeys, the switcher and autostart
 are implemented; native pinning verification remains deferred. Eight built-in
 recipes, a custom app editor, metadata import/export, opt-in Codex sessions
 sharing and dark theme are implemented. All recipes remain Community pending
-manual account verification. The complete Astro site is built and audited
-locally; publication waits for the desktop features described by its copy. See
+manual account verification. The
+[Astro site](https://tanzir71.github.io/instancedeck/) is live, with 25 pages
+and live Lighthouse scores of 97–100 across all categories. See
 [PROGRESS.md](PROGRESS.md) for evidence and remaining gates.
 
 The desktop uses Tauri 2, React and TypeScript. The static Astro site and

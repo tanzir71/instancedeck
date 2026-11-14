@@ -200,6 +200,43 @@ Manual generic-app account smoke testing, live sharing, native dark-mode review,
 pinning and the hardware/account matrix remain deferred to the user. No recipe
 was promoted. P6 publication and P7 release engineering remain.
 
+## P6 — Publication and acceptance complete
+
+The site is live at <https://tanzir71.github.io/instancedeck/>. The
+[Pages workflow](https://github.com/tanzir71/instancedeck/actions/runs/43600905447)
+passed build, deployment and search notification. IndexNow accepted **24 URLs
+with HTTP 202**; acceptance is not an indexing guarantee. Pages is configured
+for the Astro workflow, and SITE_PUBLISH_ENABLED is now true.
+
+All **25 site pages** build, including eight recipe pages. The packaged site has
+**27 HTML files / 12 CSS files**, required footer credit/non-affiliation on
+every HTML file, zero absolute-root anchors and zero shadow declarations.
+[Packaged audit](artifacts/p6/packaged-site-audit.json). The main live route
+audit reached all 24 sitemap URLs, mobile capture and the nested custom 404
+successfully before checking the hosted Storybook theme.
+
+Live Lighthouse: **97–100 Performance / 100 Accessibility / 100 Best Practices /
+100 SEO** in all nine runs across home, Claude recipe and FAQ. LCP ≤1156ms; CLS
+≤0.0087. [Live results](artifacts/p6/lighthouse-live-summary.json). The
+refreshed local lab audit scores 100 in all four categories in all nine runs.
+These are measured lab runs, not real-user performance guarantees.
+
+Production verification caught Storybook's decorator overwriting the explicit
+dark examples. Both themes are registered, dark examples are locked, selected
+navigation contrast uses the existing deep token, and the marketing footer
+retains fixed white text. All twelve power-feature interaction/axe checks pass
+with true dark rendering. The packaged manager and dark preview also pass a real
+browser footer/AA check, now required before Pages deployment.
+[Packaged browser evidence](artifacts/p6/packaged-library-browser.json). The
+pushed fix's deployment and the combined live audit are being followed through
+while release engineering proceeds.
+
+Figma section-by-section comparisons remain in the historical P6 table below.
+Fresh published captures: [1440 home](artifacts/p6/live-home-desktop.png) and
+[390 home](artifacts/p6/live-home-mobile.png). Mobile matches the abridged Figma
+frame and the built product screenshot replaces the initial design export. P7
+release engineering remains; native/account verification remains deferred.
+
 ## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:
