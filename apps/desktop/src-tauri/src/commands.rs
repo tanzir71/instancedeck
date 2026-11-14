@@ -1,5 +1,5 @@
 use crate::service::{CreateProfile, DesktopState, MainAction, ProfileAction, SignInAction};
-use ideck_core::{Profile, Settings};
+use ideck_core::{Platform, Profile, Settings};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use std::sync::Arc;
@@ -38,6 +38,22 @@ pub enum Request {
         id: String,
     },
     Browse,
+    AddCustom {
+        input: ideck_core::custom::CustomApp,
+    },
+    PreviewCustom {
+        input: ideck_core::custom::CustomApp,
+        root: String,
+    },
+    PickImport,
+    ImportProfiles {
+        document: String,
+    },
+    ExportProfiles,
+    SharedHistory {
+        id: String,
+        enabled: bool,
+    },
     SignIn {
         id: String,
         action: SignInAction,
@@ -123,6 +139,36 @@ pub async fn desktop_request(
                 Request::Plan { id } => {
                     let profile = state.engine.store.read()?.profile(&id)?.clone();
                     Ok(serde_json::to_value(state.engine.plan(&profile, false)?)?)
+                }
+                Request::SharedHistory { id, enabled } => {state.shared_history(&id,enabled)?;Ok(Value::Null)}
+                Request::AddCustom { input } => state.add_custom(input),
+                Request::PreviewCustom { input, root } => {
+                    input.recipe()?;
+                    ideck_core::paths::validate_absolute(&root)?;
+                    let context = ideck_core::template::Context { profile: format!("{root}\\{}\\01M7CMM9SCQVK72JN29KCEXWQT", input.id), install_dir: input.executable.rsplit_once(['\\','/']).map_or("", |p| p.0).into(), exe_dir: input.executable.rsplit_once(['\\','/']).map_or("", |p| p.0).into(), user_profile: state.engine.platform.directories()?.user_profile, local_app_data: state.engine.platform.directories()?.local_app_data };
+                    let args=input.args.iter().map(|a|ideck_core::template::expand(a,&context)).collect::<ideck_core::Result<Vec<_>>>()?;
+                    let command_line=std::iter::once(input.executable.as_str()).chain(args.iter().map(String::as_str)).map(ideck_win::command::quote_windows).collect::<Vec<_>>().join(" ");
+                    Ok(json!({"app": {"executable": input.executable,"version":"Preview"}, "commandLine":command_line,"args":args, "env": input.env.iter().map(|(k,v)| Ok((k.clone(),ideck_core::template::expand(v,&context)?))).collect::<ideck_core::Result<std::collections::BTreeMap<_,_>>>()?, "workingDir": context.exe_dir}))
+                }
+                Request::PickImport => {
+                    let Some(path) = app.dialog().file().add_filter("InstanceDeck profiles metadata", &["json"]).blocking_pick_file().and_then(|p| p.into_path().ok()) else { return Ok(Value::Null); };
+                    if path.file_name().and_then(|n| n.to_str()) != Some("profiles.json") { return Err(ideck_core::Error::Invalid("Select an InstanceDeck export named profiles.json".into())); }
+                    let metadata = std::fs::symlink_metadata(&path).map_err(|e| ideck_core::error::io(&path,e))?;
+                    if !metadata.is_file() || metadata.file_type().is_symlink() || metadata.len() > 32*1024*1024 { return Err(ideck_core::Error::Invalid("Select a regular profiles.json metadata file below 32 MB".into())); }
+                    let document = std::fs::read_to_string(&path).map_err(|e| ideck_core::error::io(&path,e))?;
+                    let review = state.import_profiles(&document, false)?;
+                    Ok(json!({"document": document, "added": review["added"], "skipped": review["skipped"]}))
+                }
+                Request::ImportProfiles { document } => state.import_profiles(&document, true),
+                Request::ExportProfiles => {
+                    let Some(path) = app.dialog().file().set_file_name("profiles.json").add_filter("InstanceDeck metadata", &["json"]).blocking_save_file().and_then(|p| p.into_path().ok()) else { return Ok(Value::Null); };
+                    if path.file_name().and_then(|n| n.to_str()) != Some("profiles.json") { return Err(ideck_core::Error::Invalid("Save with the filename profiles.json".into())); }
+                    let document = state.export_profiles()?;
+                    if path.try_exists().map_err(|e| ideck_core::error::io(&path,e))? { std::fs::rename(&path, path.with_file_name(format!("profiles.retained-{}.json", ulid::Ulid::generate()))).map_err(|e| ideck_core::error::io(&path,e))?; }
+                    use std::io::Write;
+                    let mut file = std::fs::OpenOptions::new().write(true).create_new(true).open(&path).map_err(|e| ideck_core::error::io(&path,e))?;
+                    file.write_all(document.as_bytes()).and_then(|()| file.sync_all()).map_err(|e| ideck_core::error::io(&path,e))?;
+                    Ok(json!(path.to_string_lossy()))
                 }
                 Request::Browse => Ok(json!(
                     app.dialog()

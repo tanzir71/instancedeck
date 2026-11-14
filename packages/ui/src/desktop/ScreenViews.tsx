@@ -23,17 +23,20 @@ import {
 } from './model';
 import copy from '../copy/en.json';
 import styles from './Desktop.module.css';
+import { SharedHistory } from './SharedHistory';
 
 export function AppsScreen({
   snapshot,
   onRefresh,
   onNewProfile,
   onCloseMain,
+  onCustom,
 }: {
   snapshot: DesktopSnapshot;
   onRefresh: () => void;
   onNewProfile: (appId: string) => void;
   onCloseMain?: (appId: string) => void;
+  onCustom?: () => void;
 }) {
   return (
     <>
@@ -94,10 +97,9 @@ export function AppsScreen({
           </article>
         ))}
       </div>
-      <Button size="M" kind="quiet" disabled>
+      <Button size="M" kind="quiet" disabled={!onCustom} onClick={onCustom}>
         {copy.desktop.customApp}
       </Button>
-      <p className={styles.muted}>{copy.desktop.customPending}</p>
     </>
   );
 }
@@ -205,13 +207,16 @@ export function SettingsScreen({
         <Select
           label={copy.desktop.theme}
           value={draft.theme}
-          onChange={() => {}}
-          disabled
+          onChange={(event) =>
+            setDraft({
+              ...draft,
+              theme: event.target.value as Settings['theme'],
+            })
+          }
         >
           <option value="light">{copy.desktop.light}</option>
           <option value="dark">{copy.desktop.dark}</option>
         </Select>
-        <p className={styles.muted}>{copy.desktop.darkPending}</p>
         {error && <p role="alert">{error}</p>}
         <Button type="submit" size="M" disabled={busy}>
           {busy ? copy.desktop.busy : copy.desktop.save}
@@ -528,6 +533,9 @@ export function ProfileDetail({
             </Button>
             <p className={styles.muted}>{copy.desktop.signInPending}</p>
           </>
+        )}
+        {profile.appId === 'codex' && (
+          <SharedHistory client={client} profile={profile} onSaved={onSaved} />
         )}
         <Button
           kind="secondary"

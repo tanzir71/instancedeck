@@ -20,9 +20,10 @@ intro: Start with the isolation model, then read the guide for your app.
 The current build is in development. Guided Claude sign-in has automated crash
 coverage; real account verification remains pending. Windows shortcuts, hotkeys,
 the switcher and window identity are implemented; actual pinning still needs
-manual verification. Custom recipes and update installation have not shipped
-yet. A preference or Storybook view does not imply that its later-phase engine
-is available.
+manual verification. Custom recipes, metadata import/export, optional Codex
+sessions sharing and dark theme are implemented. Update installation has not
+shipped yet. A preference or Storybook view does not imply that its later-phase
+engine is available.
 
 ## Guides
 

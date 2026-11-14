@@ -1,5 +1,43 @@
 # Decisions
 
+## 2026-11-14 — Generic recipes, custom ownership and metadata transfer
+
+Context: the user deferred manual QA while asking for all implementation to
+continue. Choice: ship six generic recipes as Community with a local-smoke-test
+deferral reason and no invented version reports. Source links and limitations
+are in packages/recipes/README.md. Telegram uses the documented paired legacy
+`-workdir` switch. Cursor reports partial isolation.
+
+Custom apps are direct executable launches with bounded args/environment
+templates. Isolation starts Unknown/Experimental. Secret-like environment names
+are rejected. For environment-only apps, track only a PID and creation time
+acquired from the actual CreateProcess child handle, then verify its exact exe
+against the installed path. Manager-owned receipts survive restarts. An app
+handing off to an unrelated singleton fails tracking; no environment or tokens
+are read. Alternatives: scanning another process's environment or guessing by
+exe name, both rejected.
+
+Import/export contains only profiles metadata. Existing ids are skipped,
+overlapping/invalid paths fail, custom recipe ids must already exist, and
+imported account claims, last-launch times and sharing are reset. Imports are
+reviewed before applying; existing exports and manager metadata are retained.
+
+## 2026-11-14 — Sessions sharing and dark theme
+
+Choice: sharing is off by default and requires explicit UI consent. Journal
+intent is synced before same-volume renames or junction creation. Only Codex's
+sessions directory is linked to the manager's shared sessions folder. Private
+sessions are retained without merging; disabling restores them. Interrupted
+changes block launch and metadata removal until resumed or restored. Retired
+junctions move outside the profile folder and remain retained. Recycle rejects
+all nested reparse points. No transcript or authentication contents are read.
+
+Figma has light frames only. The dark variant conservatively maps the same
+generated tokens to dark surfaces and light text; profile colors, white card
+labels and primary blue action fills remain fixed. New power dialogs reuse the
+existing flat controls and spacing. Alternatives: inventing a second palette,
+silently sharing transcripts, or merging/pruning existing history.
+
 ## 2026-11-14 — Pages uses the Astro workflow
 
 Context: GitHub Pages appeared with a legacy main-branch/Jekyll source, which

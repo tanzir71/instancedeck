@@ -60,11 +60,18 @@ launch strategy without sharing credentials.
 
 ## Optional shared history
 
-Separate history is the default. An optional sessions-only directory junction is
-planned for a later phase; it is unavailable in the current development build.
-Sharing sessions would make those transcripts visible to all linked profiles, so
-it must remain an explicit choice. Authentication files must never be linked or
-copied.
+Separate history is the default. Stop the profile and open Profile details to
+enable sessions sharing explicitly. This links only `codex-home\sessions` to a
+local shared folder. Every opted-in profile can see those conversations.
+Existing private sessions are retained without merging; **Restore private
+history** brings them back. Authentication and configuration files are never
+linked or copied.
+
+Interrupted changes block launch until sharing is resumed or private history is
+restored. Retired links remain outside the profile folder. Recycling rejects
+nested reparse points, so restore private history before deleting profile data.
+Junction behavior passes synthetic NTFS fixtures; live Codex history
+verification remains a manual check.
 
 ## Questions
 

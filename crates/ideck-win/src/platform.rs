@@ -47,6 +47,7 @@ const CREATE_NO_WINDOW: u32 = 0x08000000;
 pub struct WindowsPlatform {
     pub(crate) state_dir: PathBuf,
     cache: Mutex<HashMap<String, InstalledApp>>,
+    spawned: Mutex<HashMap<u32, u64>>,
     pub(crate) sign_in_watch: Mutex<Option<crate::signin::MetadataWatch>>,
     pub(crate) identity_monitor: OnceLock<crate::window_identity::IdentityMonitor>,
 }
@@ -55,6 +56,7 @@ impl WindowsPlatform {
         Self {
             state_dir: state_dir.into(),
             cache: Mutex::new(HashMap::new()),
+            spawned: Mutex::new(HashMap::new()),
             sign_in_watch: Mutex::new(None),
             identity_monitor: OnceLock::new(),
         }
@@ -243,6 +245,18 @@ impl Drop for MutexGuard {
 }
 
 impl Platform for WindowsPlatform {
+    fn check_history(&self, p: &ideck_core::Profile, root: &Path) -> Result<()> {
+        self.history_check(p, root)
+    }
+    fn history_kind(&self, path: &Path) -> Result<ideck_core::history::Kind> {
+        crate::history::kind(path)
+    }
+    fn move_history(&self, from: &Path, to: &Path) -> Result<()> {
+        crate::history::move_path(from, to)
+    }
+    fn create_history_junction(&self, target: &Path, link: &Path) -> Result<()> {
+        crate::history::create(target, link)
+    }
     fn track_profile_windows(
         &self,
         profile: &ideck_core::Profile,
@@ -336,7 +350,32 @@ impl Platform for WindowsPlatform {
                 .stdout(Stdio::null())
                 .stderr(Stdio::null())
                 .spawn()
-                .map(|child| child.id())
+                .and_then(|child| {
+                    if plan.match_argument.is_empty() && plan.profile_id != "main" {
+                        use std::os::windows::io::AsRawHandle;
+                        let mut created = FILETIME::default();
+                        let mut exit = FILETIME::default();
+                        let mut kernel = FILETIME::default();
+                        let mut user = FILETIME::default();
+                        unsafe {
+                            GetProcessTimes(
+                                HANDLE(child.as_raw_handle()),
+                                &mut created,
+                                &mut exit,
+                                &mut kernel,
+                                &mut user,
+                            )
+                        }
+                        .map_err(std::io::Error::other)?;
+                        let started = (u64::from(created.dwHighDateTime) << 32)
+                            | u64::from(created.dwLowDateTime);
+                        self.spawned
+                            .lock()
+                            .map_err(|_| std::io::Error::other("Launch identity lock failed"))?
+                            .insert(child.id(), started);
+                    }
+                    Ok(child.id())
+                })
                 .map_err(|error| Error::Platform(format!("CreateProcessW: {error}"))),
             Strategy::PackageContext => {
                 let family = plan.app.package_family.as_deref().ok_or_else(|| {
@@ -374,6 +413,13 @@ impl Platform for WindowsPlatform {
                     .map_err(|error| Error::Platform(format!("Package-context helper: {error}")))
             }
         }
+    }
+    fn created_process_time(&self, pid: u32) -> Result<Option<u64>> {
+        Ok(self
+            .spawned
+            .lock()
+            .map_err(|_| Error::Platform("Launch identity lock failed".into()))?
+            .remove(&pid))
     }
     fn processes(&self) -> Result<Vec<ProcessInfo>> {
         use sysinfo::{ProcessRefreshKind, ProcessesToUpdate, System, UpdateKind};

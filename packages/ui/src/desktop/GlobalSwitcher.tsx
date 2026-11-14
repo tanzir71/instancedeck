@@ -9,9 +9,11 @@ import {
 } from './model';
 import copy from '../copy/en.json';
 import styles from './GlobalSwitcher.module.css';
+import { useDesktopTheme } from './useDesktopTheme';
 
 export function GlobalSwitcher({ client }: { client: DesktopClient }) {
   const [snapshot, setSnapshot] = useState<DesktopSnapshot>();
+  useDesktopTheme(snapshot?.settings.theme);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
   const [error, setError] = useState('');

@@ -19,6 +19,12 @@ for (const [group, entries] of Object.entries(source.color)) {
 }
 for (const [name, value] of Object.entries(source.font))
   tokens[`font-${name}`] = { value, type: 'fontFamily' };
+for (const [name, key] of Object.entries({
+  'on-color': 'paper',
+  'action-fill': 'accent',
+  'action-hover': 'accent-hover',
+}))
+  tokens[name] = { value: source.color.ui[key].value, type: 'color' };
 for (const size of source.space)
   tokens[`space-${size}`] = { value: `${size}px`, type: 'dimension' };
 for (const [name, value] of Object.entries(source.radius))
@@ -41,7 +47,21 @@ for (const [name, value] of Object.entries(source.type)) {
 StyleDictionary.registerFormat({
   name: 'ideck/css',
   format: ({ dictionary }) =>
-    `/* Generated from design/tokens.json. Do not edit. */\n:root {\n${dictionary.allTokens.map((t) => `  --${t.name}: ${t.value};`).join('\n')}\n}\n`,
+    `/* Generated from design/tokens.json. Do not edit. */\n:root {\n${dictionary.allTokens.map((t) => `  --${t.name}: ${t.value};`).join('\n')}\n}\n:root[data-theme='dark'] {\n  color-scheme: dark;\n${Object.entries(
+      {
+        paper: 'deep',
+        canvas: 'ink',
+        'canvas-2': 'ink-2',
+        ink: 'paper',
+        'ink-2': 'canvas-2',
+        'ink-3': 'accent-on-deep',
+        accent: 'accent-on-deep',
+        'accent-tint': 'ink-2',
+        success: 'accent-on-deep',
+      },
+    )
+      .map(([name, key]) => `  --${name}: ${source.color.ui[key].value};`)
+      .join('\n')}\n}\n`,
 });
 StyleDictionary.registerFormat({
   name: 'ideck/ts',

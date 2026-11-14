@@ -1,7 +1,9 @@
 //! Platform-independent profile and recipe engine. Target credentials are never read.
 
+pub mod custom;
 pub mod engine;
 pub mod error;
+pub mod history;
 pub mod layout;
 pub mod paths;
 pub mod platform;

@@ -24,7 +24,7 @@ source. Prices and compatibility can change.
 | Price               | Free, MIT licensed                                                 | $10.99 US App Store price; local prices vary                                  |
 | Source availability | Public MIT source on GitHub                                        | No public source link found on its product page when checked                  |
 | Isolation approach  | Per-profile launch arguments, environment variables and data paths | Separate data paths and per-shortcut environment settings for compatible apps |
-| Identity            | Per-profile Windows shell identity is planned                      | Separate Dock icons and names                                                 |
+| Identity            | Per-profile Windows shell identity; pinning QA pending             | Separate Dock icons and names                                                 |
 | Compatibility       | Public recipes with status, provenance and limitations             | Public manually tested compatibility directory                                |
 
 The source-availability entry is an observation about the product page, not a

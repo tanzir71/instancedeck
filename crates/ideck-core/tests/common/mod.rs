@@ -1,6 +1,11 @@
 #![allow(dead_code)]
 use ideck_core::{process::ProcessInfo, *};
-use std::{collections::BTreeSet, path::Path, sync::Mutex, time::Duration};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    path::Path,
+    sync::Mutex,
+    time::Duration,
+};
 
 #[derive(Default)]
 pub struct FakeState {
@@ -22,6 +27,9 @@ pub struct FakeState {
     pub reused_pid_on_close: bool,
     pub waits: usize,
     pub refreshes: usize,
+    pub history: BTreeMap<String, history::Kind>,
+    pub history_ops: usize,
+    pub fail_history_at: Option<usize>,
 }
 #[derive(Default)]
 pub struct FakePlatform(pub Mutex<FakeState>);
@@ -79,6 +87,59 @@ pub fn app(recipe: &Recipe, updated: bool) -> InstalledApp {
     }
 }
 impl Platform for FakePlatform {
+    fn created_process_time(&self, pid: u32) -> Result<Option<u64>> {
+        Ok(self
+            .0
+            .lock()
+            .unwrap()
+            .processes
+            .iter()
+            .find(|p| p.pid == pid)
+            .map(|p| p.started_at))
+    }
+    fn history_kind(&self, path: &Path) -> Result<history::Kind> {
+        Ok(self
+            .0
+            .lock()
+            .unwrap()
+            .history
+            .get(&path.to_string_lossy().into_owned())
+            .cloned()
+            .unwrap_or(history::Kind::Missing))
+    }
+    fn move_history(&self, from: &Path, to: &Path) -> Result<()> {
+        let mut state = self.0.lock().unwrap();
+        let destination = to.to_string_lossy().into_owned();
+        if state.history.contains_key(&destination) {
+            return Err(Error::Invalid("Destination exists".into()));
+        }
+        let kind = state
+            .history
+            .remove(&from.to_string_lossy().into_owned())
+            .ok_or_else(|| Error::NotFound("Source".into()))?;
+        state.history.insert(destination, kind);
+        state.history_ops += 1;
+        if state.fail_history_at == Some(state.history_ops) {
+            return Err(Error::Platform(
+                "Simulated interruption after history operation".into(),
+            ));
+        }
+        Ok(())
+    }
+    fn create_history_junction(&self, target: &Path, link: &Path) -> Result<()> {
+        let mut state = self.0.lock().unwrap();
+        state.history.insert(
+            link.to_string_lossy().into_owned(),
+            history::Kind::Junction(target.into()),
+        );
+        state.history_ops += 1;
+        if state.fail_history_at == Some(state.history_ops) {
+            return Err(Error::Platform(
+                "Simulated interruption after history operation".into(),
+            ));
+        }
+        Ok(())
+    }
     fn track_profile_windows(&self, _: &Profile, _: &[ProcessInfo]) -> Result<()> {
         if self.0.lock().unwrap().fail_identity {
             Err(Error::Platform("Fixture identity unavailable".into()))
@@ -107,7 +168,12 @@ impl Platform for FakePlatform {
         Ok(self.0.lock().unwrap().existing_paths.contains(path))
     }
     fn ensure_directory(&self, path: &str) -> Result<()> {
-        self.0.lock().unwrap().directories.push(path.into());
+        let mut state = self.0.lock().unwrap();
+        state.directories.push(path.into());
+        state
+            .history
+            .entry(path.into())
+            .or_insert(history::Kind::Directory);
         Ok(())
     }
     fn launch_lock(&self) -> Result<Box<dyn LaunchLock + '_>> {

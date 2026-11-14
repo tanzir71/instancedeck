@@ -1,0 +1,47 @@
+{
+  "id": "chrome",
+  "recipeVersion": 1,
+  "name": "Google Chrome",
+  "vendor": "Google",
+  "category": "browser",
+  "discovery": [
+    {
+      "type": "registry",
+      "displayName": "Google Chrome",
+      "exe": "chrome.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "{localAppData}\\Google\\Chrome\\Application\\chrome.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    }
+  ],
+  "launch": {
+    "args": ["--user-data-dir={profile}"],
+    "env": {},
+    "strategies": ["direct"]
+  },
+  "isolation": "full",
+  "signIn": {
+    "strategy": "in-profile"
+  },
+  "processMatch": {
+    "exeName": "chrome.exe",
+    "arg": "--user-data-dir={profile}"
+  },
+  "limitations": [
+    "Local two-instance and account smoke testing is deferred; this Community recipe has not been verified on this machine.",
+    "Enterprise policies may override the data directory. Verify the visible profile path before signing in. Browser-owned taskbar behavior may override the launcher identity."
+  ],
+  "verifiedOn": [],
+  "status": "community",
+  "seo": {
+    "slug": "chrome",
+    "title": "Multiple Google Chrome Profiles on Windows",
+    "description": "Launch separate Google Chrome data folders with InstanceDeck. Community recipe; local account verification is pending.",
+    "intro": "InstanceDeck launches the installed Google Chrome executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use."
+  }
+}

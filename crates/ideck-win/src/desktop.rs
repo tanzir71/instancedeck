@@ -43,6 +43,9 @@ impl DesktopOperations for WindowsPlatform {
                 "Reparse points and non-directory profile targets cannot be recycled".into(),
             ));
         }
+        // Refuse every nested reparse point, including sessions junctions. The
+        // user can restore private history first; a shared target is never recycled.
+        ideck_core::signin::SignInFiles::tree_bytes(self, path)?;
         recycle_only(path)
     }
 }

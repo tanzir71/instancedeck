@@ -138,6 +138,68 @@ Actual taskbar grouping, pin/relaunch, startup behavior and the DWM border spike
 remain manual verification deferred to the user. DWM borders are not enabled.
 The site stays unpublished until the remaining power-feature claims ship.
 
+## P5 — Generic recipes and power features (implementation complete)
+
+Added VS Code, Cursor, Chrome, Edge, Brave and Telegram Desktop recipes. All six
+are Community with a deferred local-smoke-test reason and no invented version
+reports. Sources are in packages/recipes/README.md. Telegram's paired workdir
+arguments have exact process matching; Cursor reports partial isolation. The
+site now generates all eight app pages and related links.
+
+The Custom app editor validates direct executable paths, argument/environment
+templates and an exact tracking marker, with a live resolved command preview.
+Environment-only apps use PID/creation-time receipts from the actual spawned
+process handle. PID reuse or singleton hand-offs grant no process authority.
+Custom recipes remain local Experimental metadata with Unknown isolation.
+
+Metadata import has a review step and preserves existing ids. It rejects
+overlapping folders/hotkey conflicts and resets imported account confirmations,
+last launch and sharing. Export contains no app data. Previous metadata and
+exports are retained. Import creates no app folders.
+
+Codex sessions sharing is off by default and explicitly opt-in. A synced,
+versioned journal protects sessions-only junction changes. Private sessions are
+retained without merging; Restore brings them back. Interrupted enable/disable
+operations can resume or restore, block launch and removal, and retain retired
+junctions outside the profile tree. Recycling rejects nested reparse points. No
+transcript or authentication contents are read.
+
+Dark theme uses the existing generated palette. Profile fills, white labels and
+primary action fills stay fixed. Modal portals and the switcher share the saved
+theme. New UI copy lives in en.json. The React checklist review covers debounced
+read-only previews, cancelled stale results, explicit consent, keyboard access
+and native error recovery.
+
+Validation: **61 Rust tests**, warnings-denied clippy, TypeScript and lint pass.
+All **21 browser tests** passed, including **194 stories** with axe WCAG 2.2 AA
+checks. The twelve P5 stories also pass targeted interaction/a11y checks,
+including actual save/sharing errors. Core coverage is **87.30% lines**
+(1911/2189), regions 82.15%, functions 68.07%.
+[Coverage](artifacts/p5/core-coverage.json). The x64 release executable builds
+without opening the app. P4's
+[Windows CI](https://github.com/tanzir71/instancedeck/actions/runs/43598876072)
+passed. Native fixtures test junction creation/target checks, retained links and
+byte-identical private/shared synthetic files under Unicode paths. No live Codex
+history or other target app data was touched.
+
+| Figma foundation                                            | Built variant                                |
+| ----------------------------------------------------------- | -------------------------------------------- |
+| ![Deck light reference](design/20-app-deck@2x.png)          | ![Dark Deck](artifacts/p5/dark-deck.png)     |
+| ![Wizard light reference](design/21-app-new-profile@2x.png) | ![Dark wizard](artifacts/p5/dark-wizard.png) |
+
+No dark/power-dialog Figma frame was supplied; these reuse its tokens, controls
+and spacing as recorded in DECISIONS.md. Additional captures:
+[dark settings](artifacts/p5/dark-settings.png),
+[custom arguments](artifacts/p5/custom-arguments.png),
+[environment-only editor](artifacts/p5/custom-environment.png),
+[invalid recipe](artifacts/p5/custom-invalid.png),
+[import review/error](artifacts/p5/import-review-error.png),
+[opted-in sessions](artifacts/p5/shared-sessions.png).
+
+Manual generic-app account smoke testing, live sharing, native dark-mode review,
+pinning and the hardware/account matrix remain deferred to the user. No recipe
+was promoted. P6 publication and P7 release engineering remain.
+
 ## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:
@@ -417,5 +479,6 @@ request path.
 
 Remaining: live Pages deployment/IndexNow, P5's additional recipe entries and
 related-app links, and replacing the permitted product design image when P2
-ships. P6 is not complete. P3–P5 and P7 have not started; the required native P2
-check was stopped with Escape and has not been resumed.
+ships. This historical P6 entry predates the completed P3–P5 implementation
+above. Live publication and P7 release engineering remain. Native/manual QA is
+explicitly deferred by the user; no desktop control will be resumed.

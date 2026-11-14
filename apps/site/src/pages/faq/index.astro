@@ -10,7 +10,7 @@ const schema: Graph = { '@context': 'https://schema.org', '@graph': [
 ---
 <SiteLayout title="Frequently Asked Questions – InstanceDeck" description="Plain answers about multiple accounts, Windows profiles, data safety, compatibility, SmartScreen and InstanceDeck's independence from app vendors." schema={schema} ogSlug="faq">
   <DocLayout title="Questions about accounts, data and trust" intro="Plain answers, with links to the details." breadcrumbs={[{ label: 'FAQ' }]} linkPrefix="../">
-    <aside>This project is in development. Guided Claude sign-in and custom-app editing are not available yet. The answers describe the planned release workflow; check each guide's current limitations.</aside>
+    <aside>This project is in development. Guided Claude sign-in and custom-app editing are implemented. Real account, native pinning and hardware verification remain pending; check each guide's current limitations.</aside>
     {faqItems.map((item) => <FAQItem question={item.question}><p>{item.answer}</p><p><a href={`../${item.related}`}>Read more</a></p></FAQItem>)}
   </DocLayout>
 </SiteLayout>

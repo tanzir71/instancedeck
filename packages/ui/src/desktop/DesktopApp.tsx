@@ -18,6 +18,9 @@ import {
   SettingsScreen,
 } from './ScreenViews';
 import { Wizard } from './Wizard';
+import { CustomAppEditor } from './CustomAppEditor';
+import { ProfileTransfer } from './ProfileTransfer';
+import { useDesktopTheme } from './useDesktopTheme';
 import { FirstRunDialog } from './FirstRunDialog';
 import { AccountGuidance, SignInFlow } from './SignInFlow';
 import { profileDetail } from './profileDetail';
@@ -42,6 +45,7 @@ export function DesktopShell({
   children,
   preview = false,
   switcherHotkey = 'Ctrl+Alt+Space',
+  theme = 'light',
 }: {
   screen: Screen;
   onNavigate: (screen: Screen) => void;
@@ -49,7 +53,9 @@ export function DesktopShell({
   children: ReactNode;
   preview?: boolean;
   switcherHotkey?: string;
+  theme?: 'light' | 'dark';
 }) {
+  useDesktopTheme(theme);
   return (
     <div className={styles.shell}>
       <header className={styles.titlebar}>
@@ -365,6 +371,7 @@ export function DesktopApp({
   const { setSnapshot, setScreen, setError } = store.getState();
   const [search, setSearch] = useState('');
   const [wizard, setWizard] = useState<{ appId?: string }>();
+  const [customOpen, setCustomOpen] = useState(false);
   const [detail, setDetail] = useState<string>();
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const [toast, setToast] = useState('');
@@ -479,6 +486,7 @@ export function DesktopApp({
       }}
       preview={client.preview}
       switcherHotkey={snapshot?.settings.switcherHotkey}
+      theme={snapshot?.settings.theme}
     >
       {error && (
         <div className={styles.errorBanner} role="alert">
@@ -526,6 +534,7 @@ export function DesktopApp({
               }}
               onNewProfile={(appId) => setWizard({ appId })}
               onCloseMain={setMainClose}
+              onCustom={() => setCustomOpen(true)}
             />
           ) : screen === 'diagnostics' ? (
             <DiagnosticsScreen
@@ -533,16 +542,19 @@ export function DesktopApp({
               onCopied={() => setToast(copy.desktop.copied)}
             />
           ) : (
-            <SettingsScreen
-              key={JSON.stringify(snapshot.settings)}
-              settings={snapshot.settings}
-              onSave={async (value) => {
-                await client.saveSettings(value);
-                await reload();
-                setToast(copy.desktop.saved);
-              }}
-              onBrowse={client.browse}
-            />
+            <>
+              <SettingsScreen
+                key={JSON.stringify(snapshot.settings)}
+                settings={snapshot.settings}
+                onSave={async (value) => {
+                  await client.saveSettings(value);
+                  await reload();
+                  setToast(copy.desktop.saved);
+                }}
+                onBrowse={client.browse}
+              />
+              <ProfileTransfer client={client} onImported={reload} />
+            </>
           )}
           {wizard && (
             <Wizard
@@ -551,6 +563,10 @@ export function DesktopApp({
               initialAppId={wizard.appId}
               onClose={() => setWizard(undefined)}
               onBrowse={client.browse}
+              onCustom={() => {
+                setWizard(undefined);
+                setCustomOpen(true);
+              }}
               onCreate={async (input) => {
                 const { shortcuts, ...profileInput } = input;
                 const created = await client.create(profileInput);
@@ -567,6 +583,18 @@ export function DesktopApp({
                 setToast(shortcutWarning || copy.desktop.created);
                 if (created.appId === 'claude-desktop')
                   setSignInProfile(created);
+              }}
+            />
+          )}
+          {customOpen && (
+            <CustomAppEditor
+              client={client}
+              root={snapshot.settings.profilesRoot}
+              onClose={() => setCustomOpen(false)}
+              onSaved={async (appId) => {
+                await reload(true);
+                setCustomOpen(false);
+                setWizard({ appId });
               }}
             />
           )}

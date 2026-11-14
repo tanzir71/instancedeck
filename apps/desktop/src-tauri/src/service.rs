@@ -116,6 +116,9 @@ impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopSta
         }
         let mut bindings = Vec::new();
         for profile in &profiles {
+            if let Err(error) = ideck_core::history::guard(&self.engine, profile) {
+                status_errors.insert(format!("shared-history:{}", profile.id), error.to_string());
+            }
             match self.engine.running(profile) {
                 Ok(processes) => {
                     bindings.push(IdentityBinding {
@@ -301,6 +304,7 @@ impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopSta
             }
             ProfileAction::Recycle => {
                 Self::confirm(&profile, confirmation)?;
+                ideck_core::history::guard_pending(self.engine.store.root(), &profile)?;
                 let _launch_lock = self.engine.platform.launch_lock()?;
                 if !self.engine.running(&profile)?.is_empty() {
                     return Err(Error::StillRunning);
@@ -385,11 +389,6 @@ impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopSta
             .lock()
             .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
         let previous = self.settings.read()?;
-        if !matches!(settings.theme, ideck_core::settings::Theme::Light) {
-            return Err(Error::Invalid(
-                "Shell integration and dark theme are not installed yet".into(),
-            ));
-        }
         settings.validate()?;
         let profiles = self.engine.store.read()?.profiles;
         ideck_core::shell::validate_hotkeys(settings, &profiles)?;
@@ -404,6 +403,51 @@ impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopSta
             let _ = self.apply_runtime(&previous, &profiles, autostart_changed);
         }
         result
+    }
+    pub fn shared_history(&self, id: &str, enabled: bool) -> Result<()> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck".into()))?;
+        ideck_core::history::configure(&self.engine, id, enabled)
+    }
+    pub fn add_custom(&self, input: ideck_core::custom::CustomApp) -> Result<Value> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck".into()))?;
+        Ok(serde_json::to_value(self.engine.save_custom(&input)?)?)
+    }
+    pub fn export_profiles(&self) -> Result<String> {
+        Ok(serde_json::to_string_pretty(&self.engine.store.read()?)? + "\n")
+    }
+    pub fn import_profiles(&self, document: &str, apply: bool) -> Result<Value> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck".into()))?;
+        let previous = self.engine.store.read()?;
+        let desired = previous.merge_import(document)?;
+        for profile in &desired.profiles {
+            self.engine.recipe(&profile.app_id)?;
+        }
+        let added = desired.profiles.len() - previous.profiles.len();
+        let settings = self.settings.read()?;
+        ideck_core::shell::validate_hotkeys(&settings, &desired.profiles)?;
+        if apply && added > 0 {
+            self.apply_runtime(&settings, &desired.profiles, false)?;
+            if let Err(error) = self.engine.store.transaction(|state| {
+                // Re-merge under the metadata file lock, protecting CLI edits too.
+                *state = state.merge_import(document)?;
+                ideck_core::shell::validate_hotkeys(&settings, &state.profiles)
+            }) {
+                let _ = self.apply_runtime(&settings, &previous.profiles, false);
+                return Err(error);
+            }
+        }
+        Ok(
+            json!({"added": added, "skipped": ideck_core::ProfileState::from_json(document)?.profiles.len() - added}),
+        )
     }
     pub fn install_runtime(&self, runtime: Arc<dyn ShellRuntime>) -> Result<()> {
         self.runtime
@@ -747,6 +791,45 @@ mod tests {
         let mut report = json!({"nested": [{"path": "C:\\Users\\Zoë\\AppData\\Local"}]});
         redact_value(&mut report, r"C:\Users\Zoë");
         assert!(!report.to_string().contains("Zoë"));
+    }
+    #[test]
+    fn dark_theme_and_metadata_import_do_not_create_app_data_or_change_startup() {
+        let temp = tempfile::tempdir().unwrap();
+        let state =
+            DesktopState::with_platform(temp.path().join("manager"), FakePlatform::default())
+                .unwrap();
+        let mut settings = state.settings.read().unwrap();
+        settings.theme = ideck_core::settings::Theme::Dark;
+        state.save_settings(&settings).unwrap();
+        assert!(matches!(
+            state.settings.read().unwrap().theme,
+            ideck_core::settings::Theme::Dark
+        ));
+        let profile = Profile::new(
+            "codex",
+            "Metadata",
+            &temp.path().join("Profiles Zoë 日本語"),
+            ProfileColor::Iris,
+        )
+        .unwrap();
+        let input = serde_json::to_string(&ideck_core::ProfileState {
+            schema_version: 1,
+            profiles: vec![profile.clone()],
+        })
+        .unwrap();
+        assert_eq!(
+            state.import_profiles(&input, false).unwrap()["added"],
+            json!(1)
+        );
+        assert!(state.engine.store.read().unwrap().profiles.is_empty());
+        state
+            .install_runtime(Arc::new(RecordingRuntime::default()))
+            .unwrap();
+        state.import_profiles(&input, true).unwrap();
+        assert_eq!(state.engine.store.read().unwrap().profiles.len(), 1);
+        assert!(!Path::new(&profile.data_dir).exists());
+        assert!(!state.settings.read().unwrap().start_with_windows);
+        assert!(state.export_profiles().unwrap().contains(&profile.id));
     }
     #[test]
     fn recycle_requires_confirmation_and_stopped_state_and_keeps_metadata_on_failure() {

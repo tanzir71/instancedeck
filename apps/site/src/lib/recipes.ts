@@ -24,5 +24,5 @@ export const lettersFor = (id: string) =>
     chrome: 'Ch',
     edge: 'Ed',
     brave: 'Br',
-    telegram: 'Tg',
+    'telegram-desktop': 'Tg',
   })[id] ?? id.slice(0, 2);

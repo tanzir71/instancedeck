@@ -1,0 +1,47 @@
+{
+  "id": "telegram-desktop",
+  "recipeVersion": 1,
+  "name": "Telegram Desktop",
+  "vendor": "Telegram",
+  "category": "messaging",
+  "discovery": [
+    {
+      "type": "registry",
+      "displayName": "Telegram Desktop",
+      "exe": "Telegram.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "{userProfile}\\AppData\\Roaming\\Telegram Desktop\\Telegram.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "C:\\Program Files\\Telegram Desktop\\Telegram.exe"
+    }
+  ],
+  "launch": {
+    "args": ["-workdir", "{profile}"],
+    "env": {},
+    "strategies": ["direct"]
+  },
+  "isolation": "full",
+  "signIn": {
+    "strategy": "in-profile"
+  },
+  "processMatch": {
+    "exeName": "Telegram.exe",
+    "arg": "-workdir={profile}"
+  },
+  "limitations": [
+    "Local two-instance and account smoke testing is deferred; this Community recipe has not been verified on this machine.",
+    "The legacy -workdir switch may change in an app update. Sign in inside each profile; no session data is copied."
+  ],
+  "verifiedOn": [],
+  "status": "community",
+  "seo": {
+    "slug": "telegram-desktop",
+    "title": "Multiple Telegram Desktop Profiles on Windows",
+    "description": "Launch separate Telegram Desktop data folders with InstanceDeck. Community recipe; local account verification is pending.",
+    "intro": "InstanceDeck launches the installed Telegram Desktop executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use."
+  }
+}

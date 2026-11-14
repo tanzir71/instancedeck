@@ -1,0 +1,51 @@
+{
+  "id": "cursor",
+  "recipeVersion": 1,
+  "name": "Cursor",
+  "vendor": "Anysphere",
+  "category": "editor",
+  "discovery": [
+    {
+      "type": "registry",
+      "displayName": "Cursor",
+      "exe": "Cursor.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "{localAppData}\\Programs\\cursor\\Cursor.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "C:\\Program Files\\cursor\\Cursor.exe"
+    }
+  ],
+  "launch": {
+    "args": [
+      "--user-data-dir={profile}\\data",
+      "--extensions-dir={profile}\\extensions"
+    ],
+    "env": {},
+    "strategies": ["direct"]
+  },
+  "isolation": "partial",
+  "signIn": {
+    "strategy": "in-profile"
+  },
+  "processMatch": {
+    "exeName": "Cursor.exe",
+    "arg": "--user-data-dir={profile}\\data"
+  },
+  "limitations": [
+    "Local two-instance and account smoke testing is deferred; this Community recipe has not been verified on this machine.",
+    "Portable data folders can override these flags. Remote extensions and external tools may use their own shared state.",
+    "Cursor features may use global state outside the selected folders. Account and agent isolation need manual verification."
+  ],
+  "verifiedOn": [],
+  "status": "community",
+  "seo": {
+    "slug": "cursor",
+    "title": "Multiple Cursor Profiles on Windows",
+    "description": "Launch separate Cursor data folders with InstanceDeck. Community recipe; local account verification is pending.",
+    "intro": "InstanceDeck launches the installed Cursor executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use."
+  }
+}

@@ -13,6 +13,7 @@ pub struct Engine<P: Platform> {
     pub platform: P,
     pub store: ProfileStore,
     recipes: Vec<Recipe>,
+    custom: std::sync::RwLock<Vec<Recipe>>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -41,23 +42,45 @@ impl<P: Platform> Engine<P> {
                 return Err(Error::Invalid("Duplicate recipe id".into()));
             }
         }
+        let custom = crate::custom::load(store.root())?;
         Ok(Self {
             platform,
             store,
             recipes,
+            custom: std::sync::RwLock::new(custom),
         })
     }
-    pub fn recipes(&self) -> &[Recipe] {
-        &self.recipes
+    pub fn recipes(&self) -> Vec<Recipe> {
+        let mut recipes = self.recipes.clone();
+        recipes.extend(
+            self.custom
+                .read()
+                .unwrap_or_else(|e| e.into_inner())
+                .clone(),
+        );
+        recipes
     }
-    pub fn recipe(&self, id: &str) -> Result<&Recipe> {
-        self.recipes
-            .iter()
+    pub fn recipe(&self, id: &str) -> Result<Recipe> {
+        self.recipes()
+            .into_iter()
             .find(|recipe| recipe.id == id)
             .ok_or_else(|| Error::NotFound("Recipe".into()))
     }
+    pub fn save_custom(&self, input: &crate::custom::CustomApp) -> Result<Recipe> {
+        let recipe = input.recipe()?;
+        let mut custom = self
+            .custom
+            .write()
+            .map_err(|_| Error::Platform("Restart after failed recipe edit".into()))?;
+        if custom.iter().any(|r| r.id == recipe.id) {
+            return Err(Error::Invalid("Custom app id already exists".into()));
+        }
+        crate::custom::save(self.store.root(), &recipe)?;
+        custom.push(recipe.clone());
+        Ok(recipe)
+    }
     pub fn apps(&self, refresh: bool) -> Vec<AppDetection> {
-        self.recipes
+        self.recipes()
             .iter()
             .map(|recipe| match self.platform.discover(recipe, refresh) {
                 Ok(app) => AppDetection {
@@ -76,7 +99,7 @@ impl<P: Platform> Engine<P> {
     pub fn plan(&self, profile: &Profile, refresh: bool) -> Result<LaunchPlan> {
         profile.validate()?;
         let recipe = self.recipe(&profile.app_id)?;
-        let app = self.platform.discover(recipe, refresh)?;
+        let app = self.platform.discover(&recipe, refresh)?;
         let directories = self.platform.directories()?;
         let exe_dir = app
             .executable
@@ -143,7 +166,11 @@ impl<P: Platform> Engine<P> {
         })
     }
     fn matching(&self, plan: &LaunchPlan, processes: &[ProcessInfo]) -> Result<Vec<ProcessInfo>> {
-        let matcher = &self.recipe(&plan.recipe_id)?.process_match;
+        let recipe = self.recipe(&plan.recipe_id)?;
+        if recipe.process_match.arg.is_empty() {
+            return crate::custom::owned_tree(self.store.root(), plan, processes);
+        }
+        let matcher = &recipe.process_match;
         let roots: Vec<_> = processes
             .iter()
             .filter(|p| process::matches_profile(p, &plan.app, matcher, &plan.match_argument))
@@ -157,7 +184,7 @@ impl<P: Platform> Engine<P> {
     }
     pub fn main_processes(&self, app_id: &str) -> Result<Vec<ProcessInfo>> {
         let recipe = self.recipe(app_id)?;
-        let app = self.platform.discover(recipe, false)?;
+        let app = self.platform.discover(&recipe, false)?;
         let processes = self.platform.processes()?;
         let mut managed = BTreeSet::new();
         for profile in self
@@ -186,6 +213,7 @@ impl<P: Platform> Engine<P> {
         let _lock = self.platform.launch_lock()?;
         let profile = self.store.read()?.profile(id)?.clone();
         crate::signin::guard_launch(self.store.root(), &profile.app_id)?;
+        crate::history::guard(self, &profile)?;
         let mut plan = self.plan(&profile, false)?;
         let existing = self.matching(&plan, &self.platform.processes()?)?;
         if let Some(process) = existing.first() {
@@ -240,7 +268,16 @@ impl<P: Platform> Engine<P> {
                 "Package-context launch requires an MSIX package".into(),
             ));
         }
-        self.platform.launch(plan, strategy)?;
+        let pid = self.platform.launch(plan, strategy)?;
+        if plan.match_argument.is_empty() {
+            let started = self.platform.created_process_time(pid)?.ok_or_else(|| {
+                Error::Platform(
+                    "Cannot prove the newly launched process identity; no process was killed"
+                        .into(),
+                )
+            })?;
+            crate::custom::record_owned(self.store.root(), plan, pid, started)?;
+        }
         // A successful CreateProcess is insufficient: require a tracked isolated process.
         for attempt in 0..40 {
             let processes = self.platform.processes()?;
@@ -298,12 +335,15 @@ impl<P: Platform> Engine<P> {
         self.launch_main_locked(app_id)
     }
     fn launch_main_locked(&self, app_id: &str) -> Result<()> {
+        if self.recipe(app_id)?.process_match.arg.is_empty() {
+            return Err(Error::Invalid("Environment-only custom apps support profile launches only; an unrelated main process cannot be identified safely".into()));
+        }
         let current = self.main_processes(app_id)?;
         if !current.is_empty() {
             return self.platform.focus(&current);
         }
         let recipe = self.recipe(app_id)?;
-        let app = self.platform.discover(recipe, true)?;
+        let app = self.platform.discover(&recipe, true)?;
         let working_dir = app
             .executable
             .rsplit_once(['\\', '/'])

@@ -47,6 +47,33 @@ pub trait DesktopOperations: Send + Sync {
 
 /// Every Windows operation is behind this interface so the engine can run with fakes.
 pub trait Platform: Send + Sync {
+    fn check_history(&self, profile: &crate::Profile, _: &std::path::Path) -> Result<()> {
+        if profile.options.shared_codex_history {
+            return Err(crate::Error::Platform(
+                "Shared-history adapter unavailable".into(),
+            ));
+        }
+        Ok(())
+    }
+    fn history_kind(&self, _: &std::path::Path) -> Result<crate::history::Kind> {
+        Err(crate::Error::Platform(
+            "History filesystem adapter unavailable".into(),
+        ))
+    }
+    fn move_history(&self, _: &std::path::Path, _: &std::path::Path) -> Result<()> {
+        Err(crate::Error::Platform(
+            "History filesystem adapter unavailable".into(),
+        ))
+    }
+    fn create_history_junction(&self, _: &std::path::Path, _: &std::path::Path) -> Result<()> {
+        Err(crate::Error::Platform(
+            "History junction adapter unavailable".into(),
+        ))
+    }
+    /// Creation time acquired from the exact process handle returned by our spawn.
+    fn created_process_time(&self, _: u32) -> Result<Option<u64>> {
+        Ok(None)
+    }
     fn track_profile_windows(&self, _: &crate::Profile, _: &[ProcessInfo]) -> Result<()> {
         Ok(())
     }

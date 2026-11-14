@@ -4,6 +4,28 @@
   flex-direction: column;
 }
 
+.powerDialog {
+  width: min(740px, calc(100vw - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.jsonField {
+  display: grid;
+  gap: 8px;
+}
+
+.jsonField textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 12px;
+  border: 0;
+  color: var(--ink);
+  background: var(--canvas);
+  font: 13px/1.5 var(--font-mono);
+}
+
 .titlebar {
   height: 40px;
   flex-shrink: 0;

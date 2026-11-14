@@ -32,6 +32,7 @@ export function Wizard({
   initialAppId,
   initialColor = 'iris',
   initialId,
+  onCustom,
 }: {
   apps: AppDetection[];
   root: string;
@@ -45,6 +46,7 @@ export function Wizard({
   initialAppId?: string;
   initialColor?: ProfileColor;
   initialId?: string;
+  onCustom?: () => void;
 }) {
   const [step, setStep] = useState(initialStep);
   const [appId, setAppId] = useState(
@@ -175,12 +177,11 @@ export function Wizard({
             <Button
               size="M"
               kind="quiet"
-              disabled
-              title={copy.desktop.customPending}
+              disabled={!onCustom}
+              onClick={onCustom}
             >
               {copy.desktop.customApp}
             </Button>
-            <p className={styles.muted}>{copy.desktop.customPending}</p>
           </div>
         ) : step === 1 ? (
           <>

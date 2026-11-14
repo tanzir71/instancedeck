@@ -30,6 +30,68 @@ export function createPreviewClient(
     for (const listener of listeners) listener(structuredClone(state));
   };
   return {
+    sharedHistory: async (id, enabled) => {
+      if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
+      if (state.running[id]?.length)
+        throw new Error('The profile is still running');
+      state.profiles = state.profiles.map((p) =>
+        p.id === id
+          ? { ...p, options: { ...p.options, sharedCodexHistory: enabled } }
+          : p,
+      );
+      emit();
+    },
+    addCustom: async (input) => {
+      if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
+      if (state.apps.some((a) => a.recipe.id === input.id))
+        throw new Error('Custom app id already exists');
+      state.apps.push({
+        recipe: {
+          id: input.id,
+          name: input.name,
+          vendor: 'User configured',
+          status: 'experimental',
+          limitations: ['Unverified custom app'],
+          signIn: { strategy: 'manual' },
+        },
+        installed: {
+          version: 'Fixture',
+          installType: 'known-path',
+          executable: input.executable,
+          installDir: input.executable.replace(/[^\\]+$/, ''),
+        },
+        error: null,
+      });
+      emit();
+    },
+    previewCustom: async (input, root) => {
+      const expand = (v: string) =>
+        v.replaceAll(
+          '{profile}',
+          `${root}\\${input.id}\\01M7CMM9SCQVK72JN29KCEXWQT`,
+        );
+      return {
+        app: { executable: input.executable, version: 'Preview' },
+        commandLine: [input.executable, ...input.args.map(expand)]
+          .map(
+            (value) =>
+              `"${value.replace(/(\\*)"/g, '$1$1\\"').replace(/(\\+)$/g, '$1$1')}"`,
+          )
+          .join(' '),
+        args: input.args.map(expand),
+        env: Object.fromEntries(
+          Object.entries(input.env).map(([k, v]) => [k, expand(v)]),
+        ),
+        workingDir: root,
+      };
+    },
+    pickImport: async () => null,
+    importProfiles: async () => {
+      throw new Error(copy.desktop.previewBanner);
+    },
+    exportProfiles: async () => {
+      throw new Error(copy.desktop.previewBanner);
+    },
     preview: true,
     snapshot: async () => structuredClone(state),
     subscribe: async (listener) => {

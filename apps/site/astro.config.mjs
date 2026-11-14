@@ -2,9 +2,18 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import { execFileSync } from 'node:child_process';
+import { readdirSync, readFileSync } from 'node:fs';
 
 const base = `/${(process.env.BASE_PATH ?? 'instancedeck').replace(/^\/+|\/+$/g, '')}`;
 let lastmod;
+const recipeDirectory = new URL('../../packages/recipes/', import.meta.url);
+const experimentalSlugs = readdirSync(recipeDirectory)
+  .filter((name) => name.endsWith('.recipe.json'))
+  .map((name) =>
+    JSON.parse(readFileSync(new URL(name, recipeDirectory), 'utf8')),
+  )
+  .filter((recipe) => recipe.status === 'experimental')
+  .map((recipe) => recipe.seo.slug);
 try {
   lastmod =
     execFileSync(
@@ -54,7 +63,10 @@ export default defineConfig({
       filter: (page) =>
         !page.endsWith('/404.html') &&
         !page.endsWith('/404/') &&
-        !page.includes('/storybook/'),
+        !page.includes('/storybook/') &&
+        !experimentalSlugs.some((slug) =>
+          new URL(page).pathname.endsWith(`/apps/${slug}/`),
+        ),
       serialize: (item) => ({ ...item, ...(lastmod ? { lastmod } : {}) }),
     }),
   ],

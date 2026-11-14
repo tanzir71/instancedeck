@@ -174,8 +174,26 @@ impl Recipe {
                 "Process match requires an executable file name".into(),
             ));
         }
-        if !self.process_match.arg.contains("{profile}")
-            || !self.launch.args.contains(&self.process_match.arg)
+        let paired = self
+            .process_match
+            .arg
+            .split_once('=')
+            .is_some_and(|(flag, value)| {
+                self.launch
+                    .args
+                    .windows(2)
+                    .any(|pair| pair[0] == flag && pair[1] == value)
+            });
+        let environment_only = self.process_match.arg.is_empty()
+            && self.id.starts_with("custom-")
+            && self
+                .launch
+                .env
+                .values()
+                .any(|value| value.starts_with("{profile}"));
+        if !environment_only
+            && (!self.process_match.arg.contains("{profile}")
+                || (!self.launch.args.contains(&self.process_match.arg) && !paired))
         {
             return Err(Error::Invalid(
                 "The exact profile match argument must be part of the launch arguments".into(),
@@ -254,6 +272,12 @@ pub fn built_in_recipes() -> Result<Vec<Recipe>> {
     [
         include_str!("../../../packages/recipes/claude-desktop.recipe.json"),
         include_str!("../../../packages/recipes/codex.recipe.json"),
+        include_str!("../../../packages/recipes/vscode.recipe.json"),
+        include_str!("../../../packages/recipes/cursor.recipe.json"),
+        include_str!("../../../packages/recipes/chrome.recipe.json"),
+        include_str!("../../../packages/recipes/edge.recipe.json"),
+        include_str!("../../../packages/recipes/brave.recipe.json"),
+        include_str!("../../../packages/recipes/telegram-desktop.recipe.json"),
     ]
     .into_iter()
     .map(Recipe::from_json)

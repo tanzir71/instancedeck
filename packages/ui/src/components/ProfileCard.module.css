@@ -48,7 +48,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: var(--paper);
+  color: var(--on-color);
 }
 
 .top {
@@ -89,7 +89,7 @@
 .meta p {
   margin-top: 4px;
   font: 11px/1.4 var(--font-mono);
-  color: var(--paper);
+  color: var(--on-color);
 }
 
 .actions {

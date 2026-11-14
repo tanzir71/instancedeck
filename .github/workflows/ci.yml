@@ -60,6 +60,8 @@ jobs:
             artifacts/p3/*.json
             artifacts/p4/*.png
             artifacts/p4/*.json
+            artifacts/p5/*.png
+            artifacts/p5/*.json
             artifacts/p2/*.json
             artifacts/p6/*.png
             artifacts/p6/*.json

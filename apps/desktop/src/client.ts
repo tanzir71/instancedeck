@@ -9,6 +9,14 @@ function request<T>(value: Request_Deserialize): Promise<T> {
   return commands.desktopRequest(value).then((result) => result as T);
 }
 const nativeClient: DesktopClient = {
+  sharedHistory: (id, enabled) =>
+    request({ type: 'sharedHistory', id, enabled }),
+  addCustom: (input) => request({ type: 'addCustom', input }),
+  previewCustom: (input, root) =>
+    request({ type: 'previewCustom', input, root }),
+  pickImport: () => request({ type: 'pickImport' }),
+  importProfiles: (document) => request({ type: 'importProfiles', document }),
+  exportProfiles: () => request({ type: 'exportProfiles' }),
   snapshot: (refresh = false) => request({ type: 'snapshot', refresh }),
   subscribe: async (listener, onError) => {
     const stopStatus = await listen<DesktopSnapshot>(

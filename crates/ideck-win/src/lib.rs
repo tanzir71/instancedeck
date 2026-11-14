@@ -13,4 +13,6 @@ pub use platform::WindowsPlatform;
 #[cfg(windows)]
 mod desktop;
 #[cfg(windows)]
+mod history;
+#[cfg(windows)]
 mod signin;

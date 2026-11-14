@@ -8,24 +8,66 @@
       "axeViolations": 0
     },
     {
+      "path": "apps/brave/",
+      "title": "Brave Profiles on Windows – InstanceDeck",
+      "descriptionLength": 110,
+      "links": 50,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/chrome/",
+      "title": "Google Chrome Profiles on Windows – InstanceDeck",
+      "descriptionLength": 118,
+      "links": 50,
+      "axeViolations": 0
+    },
+    {
       "path": "apps/claude-desktop/",
       "title": "Claude Desktop Profiles on Windows – InstanceDeck",
       "descriptionLength": 132,
-      "links": 49,
+      "links": 51,
       "axeViolations": 0
     },
     {
       "path": "apps/codex/",
       "title": "Codex Profiles on Windows – InstanceDeck",
       "descriptionLength": 130,
-      "links": 48,
+      "links": 50,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/cursor/",
+      "title": "Cursor Profiles on Windows – InstanceDeck",
+      "descriptionLength": 111,
+      "links": 50,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/edge/",
+      "title": "Microsoft Edge Profiles on Windows – InstanceDeck",
+      "descriptionLength": 119,
+      "links": 50,
       "axeViolations": 0
     },
     {
       "path": "apps/",
       "title": "App Compatibility Directory – InstanceDeck",
       "descriptionLength": 150,
-      "links": 49,
+      "links": 61,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/telegram-desktop/",
+      "title": "Telegram Desktop Profiles on Windows – InstanceDeck",
+      "descriptionLength": 121,
+      "links": 50,
+      "axeViolations": 0
+    },
+    {
+      "path": "apps/vscode/",
+      "title": "Visual Studio Code Profiles on Windows – InstanceDeck",
+      "descriptionLength": 123,
+      "links": 50,
       "axeViolations": 0
     },
     {

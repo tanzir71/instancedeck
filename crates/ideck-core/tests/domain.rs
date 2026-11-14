@@ -100,7 +100,7 @@ fn windows_paths_use_component_boundaries_and_normalize_extended_prefixes() {
 #[test]
 fn recipes_roundtrip_generate_schema_and_reject_unsafe_shapes() {
     let recipes = built_in_recipes().unwrap();
-    assert_eq!(recipes.len(), 2);
+    assert_eq!(recipes.len(), 8);
     let schema: serde_json::Value = serde_json::from_str(&recipe_schema().unwrap()).unwrap();
     assert!(schema["properties"]["recipeVersion"].is_object());
     for recipe in &recipes {

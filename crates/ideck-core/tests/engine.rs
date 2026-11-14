@@ -49,7 +49,7 @@ fn resolved_plans_isolate_claude_and_optional_codex_cli() {
     assert!(plan.env["CLAUDE_CONFIG_DIR"].ends_with("\\claude-code"));
     assert!(plan.args[0].contains("Profiles with spaces\\Zoë"));
     assert_eq!(plan.directories.len(), 4);
-    assert_eq!(engine.recipes().len(), 2);
+    assert_eq!(engine.recipes().len(), 8);
     profile.options.isolate_claude_code = false;
     assert!(
         !engine
@@ -130,7 +130,7 @@ fn discovery_is_reported_honestly_without_launching() {
             .iter()
             .all(|app| app.installed.is_none() && app.error.is_some())
     );
-    assert_eq!(engine.platform.0.lock().unwrap().refreshes, 2);
+    assert_eq!(engine.platform.0.lock().unwrap().refreshes, 8);
 }
 
 #[test]

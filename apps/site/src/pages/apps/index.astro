@@ -12,8 +12,8 @@ const schema: Graph = { '@context': 'https://schema.org', '@graph': [{ '@type': 
     <div class="directory">
       {recipes.map((recipe) => <AppDirectoryCard name={recipe.name} letters={lettersFor(recipe.id)} intro={recipe.seo.intro} status={recipe.status} href={`./${recipe.seo.slug}/`} note={recipe.verifiedOn.length ? `Reported ${recipe.verifiedOn.at(-1)!.date} · ${recipe.verifiedOn.at(-1)!.by}` : 'No verified app/Windows version recorded.'} />)}
     </div>
-    <h2 id="planned">Additional recipes are planned</h2>
-    <p>VS Code, Cursor, Chrome, Edge, Brave and Telegram recipes belong to a later phase. They are not available in the current development build. The directory will generate their pages from the same recipe files once those recipes ship.</p>
+    <h2 id="planned">Configure another app</h2>
+    <p>The desktop Custom app editor accepts executable paths, argument templates and non-secret environment variables. Custom isolation starts as Unknown. Built-in generic recipes remain Community while local account smoke testing is deferred.</p>
     <p><a href="../how-it-works/">How isolation works</a> · <a href="../claude-desktop-multiple-accounts/">Claude guide</a> · <a href="../codex-multiple-accounts/">Codex guide</a></p>
   </DocLayout>
 </SiteLayout>

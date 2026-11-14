@@ -31,6 +31,16 @@ export type CreateProfile_Serialize = {
 	hotkey: string | null,
 };
 
+export type CustomApp = {
+	id: string,
+	name: string,
+	executable: string,
+	args: string[],
+	env: { [key in string]: string },
+	/**  Empty for environment-only launch. Otherwise a launch argument or flag=value pair. */
+	matchArgument: string,
+};
+
 export type MainAction = "launch" | "close";
 
 export type Profile = Profile_Serialize | Profile_Deserialize;
@@ -81,9 +91,9 @@ export type Profile_Serialize = {
 
 export type Request = Request_Serialize | Request_Deserialize;
 
-export type Request_Deserialize = { type: "snapshot"; refresh?: boolean | null } | { type: "create"; input: CreateProfile_Deserialize } | { type: "update"; profile: Profile_Deserialize } | { type: "action"; id: string; action: ProfileAction; confirmation?: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed?: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "shortcuts"; id: string; locations: ShortcutLocation[] } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction; label?: string | null };
+export type Request_Deserialize = { type: "snapshot"; refresh?: boolean | null } | { type: "create"; input: CreateProfile_Deserialize } | { type: "update"; profile: Profile_Deserialize } | { type: "action"; id: string; action: ProfileAction; confirmation?: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "addCustom"; input: CustomApp } | { type: "previewCustom"; input: CustomApp; root: string } | { type: "pickImport" } | { type: "importProfiles"; document: string } | { type: "exportProfiles" } | { type: "sharedHistory"; id: string; enabled: boolean } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed?: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "shortcuts"; id: string; locations: ShortcutLocation[] } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction; label?: string | null };
 
-export type Request_Serialize = { type: "snapshot"; refresh: boolean | null } | { type: "create"; input: CreateProfile_Serialize } | { type: "update"; profile: Profile_Serialize } | { type: "action"; id: string; action: ProfileAction; confirmation: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "shortcuts"; id: string; locations: ShortcutLocation[] } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction; label: string | null };
+export type Request_Serialize = { type: "snapshot"; refresh: boolean | null } | { type: "create"; input: CreateProfile_Serialize } | { type: "update"; profile: Profile_Serialize } | { type: "action"; id: string; action: ProfileAction; confirmation: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "addCustom"; input: CustomApp } | { type: "previewCustom"; input: CustomApp; root: string } | { type: "pickImport" } | { type: "importProfiles"; document: string } | { type: "exportProfiles" } | { type: "sharedHistory"; id: string; enabled: boolean } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "shortcuts"; id: string; locations: ShortcutLocation[] } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction; label: string | null };
 
 export type Settings = {
 	schemaVersion: number,

@@ -23,12 +23,12 @@
 }
 
 .primary {
-  background: var(--accent);
-  color: var(--paper);
+  background: var(--action-fill);
+  color: var(--on-color);
 }
 
 .primary:hover:enabled {
-  background: var(--accent-hover);
+  background: var(--action-hover);
 }
 
 .secondary {
@@ -43,7 +43,7 @@
 
 .onColor {
   background: color-mix(in srgb, var(--alpha-paper-16) 12.5%, transparent);
-  color: var(--paper);
+  color: var(--on-color);
 }
 
 .quiet {
@@ -53,7 +53,7 @@
 
 .danger {
   background: var(--profile-terracotta);
-  color: var(--paper);
+  color: var(--on-color);
 }
 
 .button:disabled {

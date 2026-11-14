@@ -93,6 +93,7 @@ export interface CreateProfile {
   hotkey?: string | null;
 }
 export interface LaunchPlan {
+  commandLine?: string;
   app: { executable: string; version: string };
   args: string[];
   env: Record<string, string>;
@@ -101,6 +102,16 @@ export interface LaunchPlan {
 export type ProfileAction =
   'launch' | 'close' | 'force-close' | 'remove' | 'recycle' | 'open-folder';
 export interface DesktopClient {
+  sharedHistory(id: string, enabled: boolean): Promise<void>;
+  addCustom(input: CustomApp): Promise<void>;
+  previewCustom(input: CustomApp, root: string): Promise<LaunchPlan>;
+  pickImport(): Promise<{
+    document: string;
+    added: number;
+    skipped: number;
+  } | null>;
+  importProfiles(document: string): Promise<{ added: number; skipped: number }>;
+  exportProfiles(): Promise<string | null>;
   readonly preview?: boolean;
   snapshot(refresh?: boolean): Promise<DesktopSnapshot>;
   subscribe(
@@ -138,4 +149,12 @@ export function monogram(appId: string) {
     : appId === 'codex'
       ? 'Cx'
       : appId.slice(0, 2);
+}
+export interface CustomApp {
+  id: string;
+  name: string;
+  executable: string;
+  args: string[];
+  env: Record<string, string>;
+  matchArgument: string;
 }

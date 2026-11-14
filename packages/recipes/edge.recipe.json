@@ -1,0 +1,47 @@
+{
+  "id": "edge",
+  "recipeVersion": 1,
+  "name": "Microsoft Edge",
+  "vendor": "Microsoft",
+  "category": "browser",
+  "discovery": [
+    {
+      "type": "registry",
+      "displayName": "Microsoft Edge",
+      "exe": "msedge.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+      "type": "known-path",
+      "path": "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe"
+    }
+  ],
+  "launch": {
+    "args": ["--user-data-dir={profile}"],
+    "env": {},
+    "strategies": ["direct"]
+  },
+  "isolation": "full",
+  "signIn": {
+    "strategy": "in-profile"
+  },
+  "processMatch": {
+    "exeName": "msedge.exe",
+    "arg": "--user-data-dir={profile}"
+  },
+  "limitations": [
+    "Local two-instance and account smoke testing is deferred; this Community recipe has not been verified on this machine.",
+    "Enterprise policies may override the data directory. Verify the visible profile path before signing in. Browser-owned taskbar behavior may override the launcher identity."
+  ],
+  "verifiedOn": [],
+  "status": "community",
+  "seo": {
+    "slug": "edge",
+    "title": "Multiple Microsoft Edge Profiles on Windows",
+    "description": "Launch separate Microsoft Edge data folders with InstanceDeck. Community recipe; local account verification is pending.",
+    "intro": "InstanceDeck launches the installed Microsoft Edge executable with a separate data directory. The recipe uses app launch settings and leaves binaries untouched. Verify each visible account and data path before use."
+  }
+}

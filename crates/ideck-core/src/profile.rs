@@ -182,6 +182,34 @@ impl ProfileState {
             .find(|p| p.id == id)
             .ok_or_else(|| Error::NotFound("Profile".into()))
     }
+    /// Metadata only. Existing IDs are retained, and local account claims do not travel.
+    pub fn merge_import(&self, input: &str) -> Result<Self> {
+        if input.len() > 32 * 1024 * 1024 {
+            return Err(Error::Invalid("Import exceeds 32 MB".into()));
+        }
+        let incoming = Self::from_json(input)?;
+        let mut merged = self.clone();
+        for mut profile in incoming.profiles {
+            if self.profiles.iter().any(|p| p.id == profile.id) {
+                continue;
+            }
+            let expected = format!("{}\\{}", profile.app_id, profile.id);
+            if !paths::normalize_windows(&profile.data_dir)
+                .ends_with(&format!("\\{}", expected.to_lowercase()))
+                || merged.profiles.iter().any(|p| {
+                    paths::is_within_windows(&profile.data_dir, &p.data_dir)
+                        || paths::is_within_windows(&p.data_dir, &profile.data_dir)
+                })
+            {
+                return Err(Error::Invalid("Imported folders must end in app-id\\profile-id and cannot overlap saved profiles".into()));
+            }
+            profile.sign_in_state = SignInState::Unknown;
+            profile.last_launched_at = None;
+            profile.options.shared_codex_history = false;
+            merged.profiles.push(profile);
+        }
+        Self::from_json(&serde_json::to_string(&merged)?)
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -283,6 +311,7 @@ impl ProfileStore {
         self.transaction(|state| {
             let profile = state.profile(id)?;
             crate::signin::guard_launch(self.root(), &profile.app_id)?;
+            crate::history::guard_pending(self.root(), profile)?;
             let position = state
                 .profiles
                 .iter()

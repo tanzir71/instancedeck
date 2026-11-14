@@ -53,6 +53,10 @@ pub fn matches_profile(
 }
 
 pub fn matches_main(process: &ProcessInfo, app: &InstalledApp, matcher: &ProcessMatch) -> bool {
+    // Environment-only custom apps cannot prove which unrelated process is the main.
+    if matcher.arg.is_empty() {
+        return false;
+    }
     let name = process
         .executable
         .rsplit(['\\', '/'])

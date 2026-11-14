@@ -213,7 +213,7 @@ const appNames = [
   ['Ch', 'Chrome', 'chrome'],
   ['Ed', 'Edge', 'edge'],
   ['Br', 'Brave', 'brave'],
-  ['Tg', 'Telegram', 'telegram'],
+  ['Tg', 'Telegram', 'telegram-desktop'],
 ] as const;
 const initialSlugs = ['claude-desktop', 'codex'];
 export function LogoTextStrip({
