@@ -45,7 +45,9 @@ You are building **InstanceDeck**, a multi-instance app launcher for Windows, pl
 - `pnpm typecheck`: TypeScript and Astro checks
 - `pnpm build:storybook`: static component documentation
 - `pnpm test:smoke`: desktop, site and all Storybook browser checks
-- `pnpm build:desktop`: native Windows build (no installer until P7)
+- `pnpm build:desktop`: native Windows executable without installer
+- `pnpm publish:site`: build/audit locally and push prebuilt Pages files
+- `docs/local-builds.md`: local NSIS/portable and release commands; project workflows are manual-only
 - `pnpm exec playwright install chromium`: install the browser used by tests
 - `cargo run -p ideck-cli -- <command>`: apps, profiles, launch, close, plan, doctor
 - `cargo llvm-cov -p ideck-core --summary-only --fail-under-lines 85`: core coverage gate

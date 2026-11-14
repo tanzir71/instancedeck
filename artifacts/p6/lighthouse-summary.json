@@ -9,7 +9,18 @@
         "best-practices": 100,
         "seo": 100
       },
-      "lcpMs": 755.3399999999999,
+      "lcpMs": 781.8119999999999,
+      "cls": 0
+    },
+    {
+      "url": "http://127.0.0.1:4323/instancedeck/",
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "lcpMs": 763.8430000000001,
       "cls": 0
     },
     {
@@ -21,17 +32,6 @@
         "seo": 100
       },
       "lcpMs": 810,
-      "cls": 0
-    },
-    {
-      "url": "http://127.0.0.1:4323/instancedeck/",
-      "scores": {
-        "performance": 100,
-        "accessibility": 100,
-        "best-practices": 100,
-        "seo": 100
-      },
-      "lcpMs": 754.566,
       "cls": 0
     },
     {

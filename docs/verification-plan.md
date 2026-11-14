@@ -6,6 +6,11 @@ push the work to GitHub. Manual account, tray, pinning and hardware-matrix
 checks stay unverified. Releases will be unsigned; signing-provider approval is
 no longer a dependency. See the newest decision in DECISIONS.md.
 
+The latest instruction selects local verification and Git pushes and authorizes
+the public unsigned v0.1.0 preview before manual QA. Project workflows are
+manual-only; Pages serves locally built gh-pages files. Publication does not
+change any unverified account, installer or hardware result.
+
 The handover and Figma remain authoritative. This ledger preserves the full
 scope and identifies the evidence required to close each phase. A passing
 scaffold check does not prove isolation, account identity, recovery or shell
@@ -22,7 +27,7 @@ integration.
 | P4    | Distinct taskbar groups/icons for two Claude profiles; pin A, close and relaunch A correctly; shortcut property persistence; switcher, autostart and DWM spike                                                                   | Implemented; native fixture checks pass; pinning/startup deferred; DWM disabled             |
 | P5    | Six generic recipes smoke-tested or honestly community-labelled with reasons; custom editor command preview; metadata-only import/export; optional shared sessions junctions; dark theme                                         | Implemented and automated checks pass; all recipes Community                                |
 | P6    | All §9.1 routes live at the project base; Lighthouse ≥95 in all four categories on home/app/FAQ; 1440/390 Figma comparisons for all sections; link/CSS/footer audits                                                             | Passed; live Pages, IndexNow, Lighthouse 97–100; see PROGRESS.md                            |
-| P7    | Tag v0.1.0 creates a draft release containing x64/ARM64 NSIS and portable artifacts, checksums and updater feed; site consumes the release; unsigned policy, winget template and Store checklist                                 | Implementation pushed; package preflight running                                            |
+| P7    | x64/ARM64 NSIS and portable artifacts, checksums and updater feed; site consumes the authorized public unsigned preview; trust files, winget template and Store checklist                                                        | Passed; local verification, public v0.1.0 and prebuilt Pages; manual QA deferred            |
 
 Finish each phase with its evidence in PROGRESS.md and a `phase N: …` commit. P6
 is the only phase explicitly allowed to run alongside P1–P5 after P0.

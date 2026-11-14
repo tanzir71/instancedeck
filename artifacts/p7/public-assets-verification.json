@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "manifestMatchesLocallyVerifiedBytes": true,
+  "manifestSha256": "a5a7e0bcdfd58e1cdb12e08201ab34bb83885e6c8cb09cb7b4c531b9a5e84c1d",
+  "packages": [
+    {
+      "name": "InstanceDeck_0.1.0_x64-setup.exe",
+      "status": 200
+    },
+    {
+      "name": "InstanceDeck_0.1.0_x64-portable.zip",
+      "status": 200
+    },
+    {
+      "name": "InstanceDeck_0.1.0_arm64-setup.exe",
+      "status": 200
+    },
+    {
+      "name": "InstanceDeck_0.1.0_arm64-portable.zip",
+      "status": 200
+    }
+  ],
+  "site": {
+    "sourceCommit": "cdf6811f05ae1647301c8aa3b5c285d674eafe16",
+    "publishedAt": "2026-11-14T16:14:33.2769778Z",
+    "builtLocally": true
+  },
+  "siteStatus": 200
+}

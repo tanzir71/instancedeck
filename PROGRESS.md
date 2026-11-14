@@ -4,9 +4,9 @@
 
 The user selected local verification and Git pushes, and explicitly authorized
 public release: "you can release no problem". Project CI/Pages/Release/beta-feed
-workflows are now manual-only. The static site will be built and audited locally
-and pushed to gh-pages; GitHub only deploys those prebuilt files. Manual
-account, installer and hardware checks remain unverified, and all recipes remain
+workflows are now manual-only. The static site was built and audited locally and
+pushed to gh-pages; GitHub only deploys those prebuilt files. Manual account,
+installer and hardware checks remain unverified, and all recipes remain
 Community. This overrides the earlier keep-draft gate.
 
 The final local JS run passed **3 metadata tests**, the contrast checks and all
@@ -16,10 +16,32 @@ locally, including signature/version checks and tamper rejection. No installer
 has been executed. The unsigned v0.1.0 preview is now public with all **11
 assets**, and the local public-release audit passes at 1440px and 390px with
 zero AA violations. Five post-publication site tests pass, including the new
-download/changelog case, bringing the unique browser checks to **25**. The final
-local site package and prebuilt-branch push are in progress.
+download/changelog case, bringing the unique browser checks to **25**. All **64
+Rust tests**, warnings-denied clippy, TypeScript, lint, actionlint and
+PowerShell syntax checks pass locally. Core line coverage is **87.54%**.
 
-## Current user instructions — 2026-11-14
+The local package has **27 HTML / 12 CSS files**, required footer credit and
+non-affiliation, zero absolute-root anchors and zero box-shadow declarations.
+The packaged Storybook manager/dark preview passes AA checks. All nine local
+Lighthouse runs score **100 in every category**, LCP ≤810ms and CLS 0. These are
+local lab results. The prebuilt site is live, including public Download and
+Changelog links; the combined live audit passes all 24 sitemap routes, 390px
+layout, nested 404 and dark Storybook footer checks.
+
+Evidence: [public release](artifacts/p7/published-release.json),
+[local integrity checks](artifacts/p7/release-verification.json),
+[public bytes/availability](artifacts/p7/public-assets-verification.json),
+[public desktop/mobile audit](artifacts/p7/local-public-site.json),
+[prebuilt publication](artifacts/p7/local-site-publication.json),
+[live audit](artifacts/p6/live-site-audit.json) and
+[local Lighthouse](artifacts/p6/lighthouse-summary.json).
+
+All implementation and automated acceptance work is complete. Remaining work is
+the user's [manual verification matrix](docs/manual-verification.md); no recipe
+has been promoted from Community. No installer, protocol broker or DWM-border
+experiment was executed.
+
+## Earlier user instructions — historical
 
 Manual verification is deferred to the user. Continue all remaining coding,
 automated verification and GitHub pushes without waiting for those checks. Keep
@@ -30,10 +52,10 @@ and no signing approval is described as pending. TypeScript, lint and all **12
 browser tests**, including **161 Storybook stories**, passed after this change.
 Historical phase evidence below remains intact.
 
-## P7 — Release engineering (in progress)
+## P7 — Release engineering (implementation and local acceptance complete)
 
-Implemented unsigned, per-user NSIS and portable x64/ARM64 packaging, a
-tag-triggered draft-release workflow, architecture/provenance/checksum checks,
+Implemented unsigned, per-user NSIS and portable x64/ARM64 packaging, release
+scripts and optional manual workflows, architecture/provenance/checksum checks,
 trust documents, a winget PR template and Store checklist. The installer has no
 profile-data deletion option. WebView2 is installed separately, so setup has no
 runtime download. Installer execution and hardware QA remain deferred.
@@ -51,9 +73,10 @@ CI never receives its contents. Local finalization signed and verified the exact
 draft artifacts, exercised tamper/version rejection, and uploaded public
 signatures, feed and checksums. No trusted Windows signing claim is made.
 
-Remaining: deploying and verifying the actual draft notice on Download and
-Changelog, then the final acceptance commit. The release stays a draft for
-manual verification; it has not been published.
+The initial draft was finalized and then published with explicit maintainer
+authorization. Download and Changelog consume its public metadata. Manual QA
+stays unverified. The following checkpoints preserve the implementation history
+before the final local-delivery direction above.
 
 The implementation checkpoint `50b46dd` is pushed. The
 [build-only Release preflight](https://github.com/tanzir71/instancedeck/actions/runs/43605787043)

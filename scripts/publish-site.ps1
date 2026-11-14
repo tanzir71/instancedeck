@@ -12,7 +12,7 @@ $taskSource=(git -C $taskRoot rev-parse HEAD).Trim()
 if($LASTEXITCODE -ne 0){throw 'Cannot identify source commit'}
 $taskStage=Join-Path $taskRoot ('target/site-publish-'+[guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $taskStage | Out-Null
-git -C $taskStage init --initial-branch gh-pages
+git -C $taskStage init --quiet --initial-branch gh-pages
 if($LASTEXITCODE -ne 0){throw 'Could not initialize isolated publication directory'}
 git -C $taskStage remote add origin $taskRemote
 git -C $taskStage config core.autocrlf false
@@ -35,7 +35,7 @@ Get-ChildItem -LiteralPath $taskDist -Force | ForEach-Object {Copy-Item -Literal
 Set-Content -LiteralPath (Join-Path $taskStage '.gitattributes') -Value '* -text' -Encoding ascii
 @{sourceCommit=$taskSource;builtLocally=$true;publishedAt=[DateTime]::UtcNow.ToString('o')}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $taskStage 'build-info.json') -Encoding utf8
 git -C $taskStage add --all
-git -C $taskStage commit -m "site: publish local build from $($taskSource.Substring(0,7))"
+git -C $taskStage commit --quiet -m "site: publish local build from $($taskSource.Substring(0,7))"
 if($LASTEXITCODE -ne 0){throw 'Could not commit prebuilt files'}
 git -C $taskStage push origin gh-pages
 if($LASTEXITCODE -ne 0){throw 'Publication branch push failed; all staging files are retained'}
@@ -43,5 +43,7 @@ $taskSettings=Join-Path $taskRoot ('target/pages-settings-'+[guid]::NewGuid().To
 @{build_type='legacy';source=@{branch='gh-pages';path='/'}}|ConvertTo-Json|Set-Content -LiteralPath $taskSettings -Encoding utf8
 gh api --method PUT "repos/$taskRepo/pages" --input $taskSettings | Out-Null
 if($LASTEXITCODE -ne 0){throw 'Files are pushed; configure Pages to use gh-pages at /'}
+gh api --method POST "repos/$taskRepo/pages/builds" | Out-Null
+if($LASTEXITCODE -ne 0){throw 'Files are pushed; request the Pages hosting deployment'}
 @{sourceCommit=$taskSource;branch='gh-pages';builtLocally=$true;stagingDirectory=[IO.Path]::GetRelativePath($taskRoot,$taskStage)}|ConvertTo-Json|Set-Content -LiteralPath (Join-Path $taskRoot 'artifacts/p7/local-site-publication.json') -Encoding utf8
 Write-Output 'Pushed the prebuilt site to gh-pages. GitHub Pages only needs to deploy these files.'

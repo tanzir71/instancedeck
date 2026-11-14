@@ -1,4 +1,4 @@
-# Manual verification before publication
+# Manual verification matrix
 
 The automated build does not complete these checks. All entries below are
 **unverified**. Keep all recipes Community until the relevant checks have
