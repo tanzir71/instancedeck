@@ -1,1 +1,22 @@
-null
+{
+  "tag": "v0.1.0",
+  "version": "0.1.0",
+  "createdAt": "2026-11-14T15:14:04Z",
+  "commit": "ff27c9adeb827f82a6a4160f7f19da656c31c4a5",
+  "runUrl": "https://github.com/tanzir71/instancedeck/actions/runs/43609072832",
+  "notes": "# InstanceDeck v0.1.0 — unsigned development preview\n\nLaunch official installed apps with separate profile data paths. Includes the\nWindows desktop manager and CLI, eight Community recipes, guided journaled\nClaude sign-in/recovery, profile shortcuts and icons, window identity, tray,\nhotkeys/switcher, custom app configuration, metadata import/export, optional\nCodex sessions sharing, dark theme and consent-gated update support.\n\nWindows executables and per-user NSIS installers are unsigned. Portable archives\nare available for x64 and ARM64. SHA-256 checksums and build reports accompany\nthe packages. Updater integrity signatures verify project artifacts and their\nversion; they do not make the Windows publisher trusted.\n\nThis remains a draft for verification. Visible-account isolation, real sign-in\nand recovery, taskbar pin/relaunch, tray/startup behavior, Windows 10, installer\nexecution and native ARM64 hardware checks remain manual. All recipes stay\nCommunity. Callbackless/protocol-broker and DWM-border experiments are disabled.\nCowork VM sharing is not claimed.\n\nRequires the official target apps and WebView2 Runtime to be installed\nseparately. Profiles are not a security sandbox. No target app binaries are\nincluded or modified, no credentials are inspected and no telemetry is\ncollected.\n\n[Source](https://github.com/tanzir71/instancedeck) ·\n[Site](https://tanzir71.github.io/instancedeck/) ·\n[Security policy](https://github.com/tanzir71/instancedeck/blob/main/SECURITY.md)\n",
+  "assetNames": [
+    "InstanceDeck_0.1.0_arm64-portable.zip",
+    "InstanceDeck_0.1.0_arm64-setup.exe",
+    "InstanceDeck_0.1.0_arm64-setup.exe.sig",
+    "InstanceDeck_0.1.0_x64-portable.zip",
+    "InstanceDeck_0.1.0_x64-setup.exe",
+    "InstanceDeck_0.1.0_x64-setup.exe.sig",
+    "SHA256SUMS.txt",
+    "build-arm64.json",
+    "build-x64.json",
+    "latest.json",
+    "latest.json.sig"
+  ],
+  "verified": true
+}

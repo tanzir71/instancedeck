@@ -147,6 +147,11 @@ test('keyboard creates a profile, launches it, closes it and keeps confirmation 
   );
   await page.keyboard.press('Enter');
   const confirm = page.getByRole('dialog', { name: 'Delete profile data' });
+  // Radix's focus handoff also establishes the top dialog's keyboard layer.
+  // A visible portal alone can precede that handoff on a fast CI renderer.
+  await expect(
+    confirm.getByRole('textbox', { name: 'Type the profile name to confirm' }),
+  ).toBeFocused();
   await expect(
     confirm.getByRole('button', { name: 'Delete profile data', exact: true }),
   ).toBeDisabled();

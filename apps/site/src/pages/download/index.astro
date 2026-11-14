@@ -24,7 +24,7 @@ const schema: Graph = { '@context': 'https://schema.org', '@graph': [{ '@type': 
       <h2>No public release is available yet.</h2><p>InstanceDeck is in development. Installers and portable packages will appear here after a release is published. Source code and build instructions are available now.</p>
       <ButtonLink href={sourceUrl}>View source on GitHub</ButtonLink>
     </>}
-    <h2>Requirements</h2><p>Windows 10 22H2 or later, or Windows 11. x64 and ARM64 are target architectures; native x64 development builds have been tested. Install the official target apps separately.</p>
+    <h2>Requirements</h2><p>Windows 10 22H2 or later, or Windows 11. x64 and ARM64 packages are built in CI; manual hardware verification remains pending. Install Microsoft Edge WebView2 Runtime and the official target apps separately.</p>
     {draft && <ReleaseDraftNotice tag={draft.tag} createdAt={draft.createdAt} runUrl={draft.runUrl} notes={draft.notes} />}
     <h2>Signing and SmartScreen</h2><p>Releases are unsigned. Windows may warn or block installation. Check the source and SHA-256 checksum; do not disable Windows protection to install an untrusted file.</p>
     <h2>Verify integrity</h2><p>Download the checksum file from the same release, then compare it with PowerShell's result:</p><pre><code>Get-FileHash -Algorithm SHA256 -LiteralPath '.\your-downloaded-file.exe'</code></pre>

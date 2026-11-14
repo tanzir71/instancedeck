@@ -28,13 +28,13 @@ cleanup, keyboard dialogs and plain release-note rendering. Fifteen updater
 stories pass interaction/AA checks; three dedicated browser tests pass.
 
 Windows binaries remain unsigned. A separate project integrity key stays local;
-CI never receives its contents. Local finalization will sign and verify the
-exact draft artifacts, exercise tamper/version rejection, then upload public
+CI never receives its contents. Local finalization signed and verified the exact
+draft artifacts, exercised tamper/version rejection, and uploaded public
 signatures, feed and checksums. No trusted Windows signing claim is made.
 
-Remaining: the actual v0.1.0 tag/draft, exact-artifact integrity verification
-and a real draft-status snapshot for Download/Changelog. No release has been
-published.
+Remaining: deploying and verifying the actual draft notice on Download and
+Changelog, then the final acceptance commit. The release stays a draft for
+manual verification; it has not been published.
 
 The implementation checkpoint `50b46dd` is pushed. The
 [build-only Release preflight](https://github.com/tanzir71/instancedeck/actions/runs/43605787043)
@@ -92,6 +92,23 @@ data. Three metadata tests pass, including private-draft exclusion and rejection
 of unexpected download URLs. TypeScript, lint and actionlint pass. The
 authenticated build path also builds all 25 pages locally. No token is embedded
 in browser code or page data.
+
+The
+[tagged release workflow](https://github.com/tanzir71/instancedeck/actions/runs/43609072832)
+passed on attempt 3. The draft has **11 assets**: two unsigned NSIS installers,
+two portable archives, two build reports, both installer integrity signatures,
+the updater feed and its signature, and SHA-256 checksums. Local finalization
+verified both exact CI installers and the feed, rejected a signed-version
+mismatch and a tampered own-installer copy, and uploaded public files only. No
+installer was executed and the private key was not transmitted.
+[Verification evidence](artifacts/p7/release-verification.json).
+
+The second attempt exposed a keyboard-test timing race before Radix's focus
+handoff. The test now waits for the confirmation input to own focus before
+Escape; five consecutive keyboard runs pass. The actual draft-status snapshot
+was generated from the verified release and successful tagged workflow. It
+contains no private asset download URLs. Main CI and Pages for the metadata
+authentication fix both passed before this readiness snapshot.
 
 ## P2 — Implementation and automated acceptance complete
 
