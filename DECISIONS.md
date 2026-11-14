@@ -1,5 +1,35 @@
 # Decisions
 
+## 2026-11-14 — Snapshot recovery and cross-drive adoption
+
+Context: P3 must survive interruptions without reading credential files,
+including profiles stored on another drive. Choice: keep a same-volume capture
+beside the default slot, transfer it with opaque Windows CopyFileW operations
+into a staged profile directory, then activate with a no-replace rename. The
+capture, previous profile data, interrupted transfers and journal history are
+retained indefinitely. Rust never opens or parses target data. This
+conservatively extends the handover's simple move into a recoverable cross-drive
+transfer. Alternative: cross-volume moves that remove the only captured source
+before restoration.
+
+Every rename uses MoveFileExW without REPLACE_EXISTING, with at most ten
+attempts over fifteen seconds. Reparse points, unknown/ambiguous layouts and low
+disk space fail closed. Journal intent is synced before each operation;
+restoration validates the resulting main layout before relaunch. A
+changed/ambiguous layout keeps recovery pending even after the original folder
+has been restored.
+
+Account state is changed only through explicit user confirmation. The optional
+metadata hint is scoped to one journal, uses a bounded notify event queue plus
+size/mtime sampling, and waits three seconds after a burst. It never establishes
+identity. MCP copy transfers exactly the regular claude_desktop_config.json file
+and preserves an existing destination as a backup.
+
+The callbackless-sign-in and protocol-handler spikes require the native/manual
+verification the user deferred. They remain unverified and disabled; no claude:
+handler is registered. Snapshot recovery is the implemented path. Alternative:
+shipping callback routing without evidence that the current app supports it.
+
 ## 2026-11-14 — Desktop state, dialogs and generated IPC
 
 Context: HANDOVER §5.1 requires Radix, Zustand and tauri-specta. Choice: use

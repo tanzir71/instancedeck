@@ -1,5 +1,32 @@
 import { test, expect } from '@playwright/test';
 
+test('sign-in and account guidance states have reviewable browser captures', async ({
+  page,
+}) => {
+  for (const name of [
+    'sign-in-consent',
+    'sign-in-consent-error',
+    'sign-in-metadata-hint',
+    'codex-account-guidance',
+    'account-guidance-error',
+    'profile-mcp',
+    'recovery-on-startup',
+  ]) {
+    await page.goto(
+      `http://127.0.0.1:6006/iframe.html?id=desktop-screens--${name}&viewMode=story`,
+    );
+    await expect(page.getByRole('dialog')).toBeVisible();
+    if (name === 'profile-mcp')
+      await page
+        .getByRole('combobox', { name: 'Source Claude profile' })
+        .scrollIntoViewIfNeeded();
+    if (name.endsWith('error'))
+      await expect(page.getByRole('alert')).toBeVisible();
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `artifacts/p3/${name}.png`, fullPage: true });
+  }
+});
+
 test('desktop views render local assets and capture Figma comparison evidence', async ({
   page,
 }) => {
@@ -30,6 +57,10 @@ test('desktop views render local assets and capture Figma comparison evidence', 
     )
       await expect(page.getByRole('dialog')).toBeVisible();
     else await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    if (name === 'wizard-name') {
+      const bounds = await page.getByRole('dialog').boundingBox();
+      expect(bounds?.width).toBe(812); // Figma: 500px form + 312px preview.
+    }
     const invalid = await page
       .locator('img')
       .evaluateAll((images) =>
@@ -80,6 +111,12 @@ test('keyboard creates a profile, launches it, closes it and keeps confirmation 
     dialog.getByRole('button', { name: 'Create profile', exact: true }),
   );
   await page.keyboard.press('Enter');
+  const signInConsent = page.getByRole('dialog', {
+    name: 'Sign in now',
+    exact: true,
+  });
+  await expect(signInConsent).toBeVisible();
+  await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   const launch = page.getByRole('button', {
     name: 'Launch Keyboard QA Zoë',
@@ -117,6 +154,42 @@ test('keyboard creates a profile, launches it, closes it and keeps confirmation 
   await expect(confirm).toBeHidden();
   await page.screenshot({
     path: 'artifacts/p2/keyboard-flow.png',
+    fullPage: true,
+  });
+});
+
+test('startup recovery resumes a supplied journal and account mismatch stays a manual report', async ({
+  page,
+}) => {
+  await page.goto(
+    'http://127.0.0.1:6006/iframe.html?id=desktop-screens--recovery-on-startup&viewMode=story',
+  );
+  await expect(
+    page.getByRole('dialog', {
+      name: 'An interrupted sign-in needs attention',
+    }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Resume', exact: true }).click();
+  await expect(page.getByRole('dialog')).toContainText('Client — Acme');
+  await page
+    .getByRole('button', { name: 'I’ve signed in', exact: true })
+    .click();
+  await expect(page.getByRole('dialog')).toContainText(
+    'This is your confirmation only',
+  );
+  await page
+    .getByRole('button', { name: 'Wrong account — flag for review' })
+    .click();
+  await expect(page.getByRole('dialog')).toBeHidden();
+  await page
+    .getByRole('button', {
+      name: 'Profile details: Client — Acme',
+      exact: true,
+    })
+    .click();
+  await expect(page.getByRole('dialog')).toContainText('Not signed in yet');
+  await page.screenshot({
+    path: 'artifacts/p3/manual-account-warning.png',
     fullPage: true,
   });
 });

@@ -17,7 +17,8 @@ intro: Start with the isolation model, then read the guide for your app.
 3. Create a named profile in InstanceDeck and choose its parent data folder.
 4. Launch it and sign in through the official app. Check which account it shows.
 
-The current build is in development. Guided Claude sign-in, per-profile taskbar
+The current build is in development. Guided Claude sign-in has automated crash
+coverage; real account verification remains pending. Per-profile taskbar
 identity, custom recipes and update installation have not shipped yet. A
 preference or Storybook view does not imply that its later-phase engine is
 available.

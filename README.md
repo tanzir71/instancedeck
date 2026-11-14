@@ -4,9 +4,11 @@ InstanceDeck is a multi-instance app launcher for Windows. It launches official
 apps with separate arguments, environment variables and profile data paths.
 
 **Status:** the launch engine/CLI are verified on Windows 11. The desktop UI is
-implemented with native keyboard/tray QA pending. The complete Astro site is
-built and audited locally; publication waits for the desktop features described
-by its copy. See [PROGRESS.md](PROGRESS.md) for evidence and remaining gates.
+implemented with native keyboard/tray QA deferred to the user. Journaled Claude
+sign-in and recovery pass synthetic crash tests; actual account verification is
+pending. The complete Astro site is built and audited locally; publication waits
+for the desktop features described by its copy. See [PROGRESS.md](PROGRESS.md)
+for evidence and remaining gates.
 
 The desktop uses Tauri 2, React and TypeScript. The static Astro site and
 desktop share `packages/ui`; all visual tokens are generated from
@@ -63,6 +65,21 @@ launching it. `profiles remove <id>` only removes deck metadata and keeps data.
 Force close requires the profile name after an eight-second graceful attempt.
 Recipe status stays Community until the full manual account checklist has been
 run.
+
+Claude sign-in recovery is available in the desktop assistant and CLI:
+
+```powershell
+cargo run -p ideck-cli -- sign-in list
+cargo run -p ideck-cli -- sign-in start <profile-id> --close-main
+cargo run -p ideck-cli -- sign-in finish <journal-id>
+cargo run -p ideck-cli -- sign-in restore <journal-id>
+```
+
+`--close-main` explicitly permits graceful closure of your main Claude. Save
+your work first. An unfinished journal blocks ordinary Claude launches until it
+is resumed or restored. Captures, previous profile data and journal history are
+retained; nothing is automatically pruned. The metadata hint does not establish
+account identity. Confirm the visible account inside the official app.
 
 ## License and attribution
 

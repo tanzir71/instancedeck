@@ -19,6 +19,7 @@ import {
 } from './ScreenViews';
 import { Wizard } from './Wizard';
 import { FirstRunDialog } from './FirstRunDialog';
+import { AccountGuidance, SignInFlow } from './SignInFlow';
 import { profileDetail } from './profileDetail';
 import type {
   DesktopClient,
@@ -369,6 +370,8 @@ export function DesktopApp({
   }>();
   const [confirmError, setConfirmError] = useState('');
   const [mainClose, setMainClose] = useState<string>();
+  const [signInProfile, setSignInProfile] = useState<Profile>();
+  const [accountProfile, setAccountProfile] = useState<Profile>();
   const reload = async (refresh = false) => {
     const value = await client.snapshot(refresh);
     setSnapshot(value);
@@ -544,10 +547,12 @@ export function DesktopApp({
               onClose={() => setWizard(undefined)}
               onBrowse={client.browse}
               onCreate={async (input) => {
-                await client.create(input);
+                const created = await client.create(input);
                 await reload();
                 setWizard(undefined);
                 setToast(copy.desktop.created);
+                if (created.appId === 'claude-desktop')
+                  setSignInProfile(created);
               }}
             />
           )}
@@ -556,6 +561,15 @@ export function DesktopApp({
               key={selectedProfile.id}
               profile={selectedProfile}
               client={client}
+              profiles={snapshot.profiles}
+              onSignIn={() => {
+                setDetail(undefined);
+                setSignInProfile(selectedProfile);
+              }}
+              onAccountHealth={() => {
+                setDetail(undefined);
+                setAccountProfile(selectedProfile);
+              }}
               onClose={() => setDetail(undefined)}
               onSaved={async () => {
                 await reload();
@@ -573,6 +587,24 @@ export function DesktopApp({
                 await client.saveSettings(settings);
                 await reload();
               }}
+            />
+          )}
+          <SignInFlow
+            client={client}
+            snapshot={snapshot}
+            profile={signInProfile}
+            onDismiss={() => setSignInProfile(undefined)}
+            onRefresh={reload}
+            onComplete={(id) =>
+              setAccountProfile(snapshot.profiles.find((p) => p.id === id))
+            }
+          />
+          {accountProfile && (
+            <AccountGuidance
+              profile={accountProfile}
+              client={client}
+              onClose={() => setAccountProfile(undefined)}
+              onRefresh={reload}
             />
           )}
         </>

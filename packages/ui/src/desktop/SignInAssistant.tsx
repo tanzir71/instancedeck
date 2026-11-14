@@ -10,6 +10,8 @@ export function SignInAssistant({
   journalSaved,
   busy = false,
   error,
+  looksSignedIn = false,
+  primaryLabel,
   onFinish,
   onRestore,
 }: {
@@ -18,6 +20,8 @@ export function SignInAssistant({
   journalSaved: boolean;
   busy?: boolean;
   error?: string;
+  looksSignedIn?: boolean;
+  primaryLabel?: string;
   onFinish: () => void;
   onRestore: () => void;
 }) {
@@ -74,7 +78,11 @@ export function SignInAssistant({
           {copy.desktop.cancelRestore}
         </Button>
         <Button size="M" disabled={busy || !journalSaved} onClick={onFinish}>
-          {busy ? copy.desktop.busy : copy.desktop.finishedSignIn}
+          {busy
+            ? copy.desktop.busy
+            : looksSignedIn
+              ? copy.desktop.looksSignedIn
+              : (primaryLabel ?? copy.desktop.finishedSignIn)}
         </Button>
       </div>
     </Dialog>

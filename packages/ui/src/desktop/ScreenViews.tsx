@@ -351,17 +351,24 @@ export function ProfileDetail({
   onClose,
   onSaved,
   onAction,
+  onSignIn,
+  onAccountHealth,
+  profiles = [],
 }: {
   profile: Profile;
   client: DesktopClient;
   onClose: () => void;
   onSaved: () => Promise<void>;
   onAction: (action: ProfileAction, profile: Profile) => void;
+  onSignIn?: () => void;
+  onAccountHealth?: () => void;
+  profiles?: Profile[];
 }) {
   const [draft, setDraft] = useState(profile);
   const [plan, setPlan] = useState<LaunchPlan>();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [mcpSource, setMcpSource] = useState('');
   useEffect(() => {
     let active = true;
     client
@@ -405,7 +412,17 @@ export function ProfileDetail({
           value={draft.color}
           onChange={(color) => setDraft({ ...draft, color })}
         />
-        <KeyValueList values={{ [copy.desktop.dataFolder]: profile.dataDir }} />
+        <KeyValueList
+          values={{
+            [copy.desktop.dataFolder]: profile.dataDir,
+            [copy.desktop.accountHealth]:
+              profile.signInState === 'signed-in'
+                ? copy.desktop.signedIn
+                : profile.signInState === 'needs-sign-in'
+                  ? copy.desktop.notSignedIn
+                  : copy.desktop.unknownSignIn,
+          }}
+        />
         <Button
           kind="secondary"
           size="M"
@@ -440,15 +457,61 @@ export function ProfileDetail({
         </details>
         {profile.appId === 'claude-desktop' && (
           <>
-            <Button kind="secondary" size="M" disabled>
+            <Button
+              kind="secondary"
+              size="M"
+              disabled={!onSignIn}
+              onClick={onSignIn}
+            >
               {copy.desktop.signInNow}
             </Button>
-            <Button kind="quiet" size="M" disabled>
+            <Select
+              label={copy.desktop.mcpSource}
+              value={mcpSource}
+              onChange={(event) => setMcpSource(event.target.value)}
+            >
+              <option value="">{copy.desktop.mcpSource}</option>
+              {profiles
+                .filter(
+                  (p) => p.appId === 'claude-desktop' && p.id !== profile.id,
+                )
+                .map((p) => (
+                  <option value={p.id} key={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+            </Select>
+            <p className={styles.muted}>{copy.desktop.mcpCopyHelp}</p>
+            <Button
+              kind="quiet"
+              size="M"
+              disabled={busy || !mcpSource}
+              onClick={async () => {
+                setBusy(true);
+                setError('');
+                try {
+                  await client.copyMcp(mcpSource, profile.id);
+                  await onSaved();
+                } catch (error) {
+                  setError(String(error));
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
               {copy.desktop.mcpCopy}
             </Button>
             <p className={styles.muted}>{copy.desktop.signInPending}</p>
           </>
         )}
+        <Button
+          kind="secondary"
+          size="M"
+          disabled={!onAccountHealth}
+          onClick={onAccountHealth}
+        >
+          {copy.desktop.accountHealth}
+        </Button>
         {error && <p role="alert">{error}</p>}
         <Button type="submit" size="M" disabled={busy}>
           {busy ? copy.desktop.busy : copy.desktop.save}

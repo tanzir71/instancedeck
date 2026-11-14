@@ -240,7 +240,7 @@
   color: var(--profile-terracotta);
 }
 
-.wizard[open] {
+.wizard {
   display: flex;
   width: 812px;
 }
@@ -377,9 +377,6 @@
 .signIn {
   width: 640px;
   padding: 36px 40px;
-}
-
-.signIn[open] {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -476,9 +473,6 @@
 .confirm {
   width: 540px;
   padding: 32px;
-}
-
-.confirm[open] {
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -590,7 +584,7 @@
     display: none;
   }
 
-  .wizard[open] {
+  .wizard {
     width: 500px;
   }
 

@@ -24,6 +24,29 @@ pub struct FakeState {
 }
 #[derive(Default)]
 pub struct FakePlatform(pub Mutex<FakeState>);
+impl ideck_core::signin::SignInFiles for FakePlatform {
+    fn tree_bytes(&self, _: &Path) -> Result<u64> {
+        Err(Error::Platform(
+            "No fixture file operations configured".into(),
+        ))
+    }
+    fn free_bytes(&self, _: &Path) -> Result<u64> {
+        Ok(0)
+    }
+    fn rename_data(&self, _: &Path, _: &Path) -> Result<()> {
+        Err(Error::Platform(
+            "No fixture file operations configured".into(),
+        ))
+    }
+    fn copy_data(&self, _: &Path, _: &Path) -> Result<()> {
+        Err(Error::Platform(
+            "No fixture file operations configured".into(),
+        ))
+    }
+    fn sign_in_hint(&self, _: &Path, _: &str) -> Result<bool> {
+        Ok(false)
+    }
+}
 struct FakeLock;
 impl LaunchLock for FakeLock {}
 pub fn app(recipe: &Recipe, updated: bool) -> InstalledApp {

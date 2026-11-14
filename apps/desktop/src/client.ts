@@ -37,5 +37,10 @@ const nativeClient: DesktopClient = {
   plan: (id) => request({ type: 'plan', id }),
   browse: () => request({ type: 'browse' }),
   window: (action) => request({ type: 'window', action }),
+  signIn: (id, action, closeMainConfirmed) =>
+    request({ type: 'signIn', id, action, closeMainConfirmed }),
+  copyMcp: (from, to) => request({ type: 'copyMcp', from, to }),
+  confirmAccount: (id, matches) =>
+    request({ type: 'confirmAccount', id, matches }),
 };
 export const desktopClient = isTauri() ? nativeClient : createPreviewClient();

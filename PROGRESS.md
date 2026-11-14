@@ -27,6 +27,68 @@ targeted two desktop browser tests passed after the modal migration. Actual
 native account, tray and keyboard verification remains deferred to the user. No
 recipe was promoted from Community.
 
+## P3 — Sign-in and app integrations (implementation complete)
+
+Implemented journaled Claude snapshot sign-in, startup Resume/Restore, explicit
+main-close consent, graceful-only closure and launch guards across UI, tray and
+CLI. Unknown/ambiguous layouts, relocation markers, reparse points and low free
+space stop the flow. Atomic no-replace renames retry at most ten times over
+fifteen seconds. A same-volume capture is transferred opaquely by Windows into a
+staged profile folder, supporting another drive while retaining the capture,
+previous profile data and incomplete transfers. No app file contents are opened,
+parsed, hashed or logged by production code. Journal history is retained.
+
+The assistant's optional metadata hint observes a burst followed by three
+seconds of quiet. Manual Finish is always available. Adoption never infers
+account identity. Profile details offers Codex/in-profile guidance and an
+explicit matches/mismatch report; recipe status remains Community. MCP copy
+transfers only the regular `claude_desktop_config.json` file with a retained
+destination backup. The experimental Claude Code isolation toggle remains per
+profile.
+
+The synthetic crash harness covers all durable states, three adoption steps, and
+fourteen before/after-operation interruption points for both Resume and Restore.
+SHA-256 fixture-tree comparisons prove original main data restoration. It also
+covers partial adoption failure, an unexpected alternate live layout, low space,
+relocation markers, journal-path tampering and the MCP allowlist. Native fixture
+tests exercise opaque Windows copy, no-overwrite rename and notify metadata
+activity under paths with spaces and non-ASCII characters.
+
+Visual review caught native `[open]` selectors left over from the Radix
+migration; dialog layout selectors now apply to Radix content. The browser check
+asserts the Figma wizard's 812px two-column width. Updated screenshots retain
+the same Figma references:
+
+| Figma                                                     | Built shared view                       |
+| --------------------------------------------------------- | --------------------------------------- |
+| ![Sign-in reference](design/22-app-claude-sign-in@2x.png) | ![Sign-in](artifacts/p2/sign-in.png)    |
+| ![Wizard reference](design/21-app-new-profile@2x.png)     | ![Wizard](artifacts/p2/wizard-name.png) |
+
+Additional captures: [consent](artifacts/p3/sign-in-consent.png),
+[preflight failure](artifacts/p3/sign-in-consent-error.png),
+[metadata hint](artifacts/p3/sign-in-metadata-hint.png),
+[startup recovery](artifacts/p3/recovery-on-startup.png),
+[MCP copy](artifacts/p3/profile-mcp.png),
+[Codex guidance](artifacts/p3/codex-account-guidance.png),
+[account warning](artifacts/p3/manual-account-warning.png).
+
+Real account sign-in/recovery and callbackless/protocol-handler spikes remain
+manual verification deferred to the user. No protocol handler was registered and
+no real main/profile data was moved during this phase. The guides document the
+implemented flow and distinguish synthetic evidence from account QA.
+
+Validation: **47 Rust tests** passed; clippy with warnings denied, TypeScript
+and lint pass. Core coverage is **89.89% lines** (1387/1543), above the 85%
+gate; regions are 83.39% and functions 73.40%. These are not branch-coverage
+figures. [Coverage report](artifacts/p3/core-coverage.json). The browser suite
+passed all 13 tests before the added screenshot check; the final targeted
+desktop/site run passes eight tests including that check. The final rerun passes
+all **171 stories / 10 suites** with zero axe WCAG 2.2 AA violations, including
+the corrected dialog layouts. P2's Windows
+[CI](https://github.com/tanzir71/instancedeck/actions/runs/43591473177) and
+[Pages build](https://github.com/tanzir71/instancedeck/actions/runs/43591473182)
+also passed.
+
 ## P0 — Scaffold and tooling (complete)
 
 Started 2026-11-14 on Windows 11 25H2, build 26200, x64. Initial workspace:

@@ -7,3 +7,5 @@ mod platform;
 pub use platform::WindowsPlatform;
 #[cfg(windows)]
 mod desktop;
+#[cfg(windows)]
+mod signin;

@@ -54,8 +54,9 @@ normal sign-in.
 Some community reports describe app-server versions that ignore `CODEX_HOME`. A
 separate process tree is not sufficient proof of a separate account. Open each
 profile, inspect its visible account, then record the manual health check in
-Diagnostics. If two profiles show the same unexpected account, stop and report
-the app version and launch strategy without sharing credentials.
+Profile details → Account health. Diagnostics shows the recorded state. If two
+profiles show the same unexpected account, stop and report the app version and
+launch strategy without sharing credentials.
 
 ## Optional shared history
 

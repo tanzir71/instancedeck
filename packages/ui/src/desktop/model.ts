@@ -66,6 +66,22 @@ export interface DesktopSnapshot {
   mainRunning: Record<string, number[]>;
   statusErrors: Record<string, string>;
   settings: Settings;
+  signIn?: SignInProgress[];
+}
+export interface SignInProgress {
+  id: string;
+  profileId: string;
+  state:
+    | 'preflight'
+    | 'stashed'
+    | 'awaiting-sign-in'
+    | 'captured'
+    | 'adopting'
+    | 'restoring'
+    | 'done'
+    | 'aborted';
+  looksSignedIn?: boolean;
+  metadataError?: string | null;
 }
 export interface CreateProfile {
   id?: string;
@@ -103,6 +119,13 @@ export interface DesktopClient {
   plan(id: string): Promise<LaunchPlan>;
   browse(): Promise<string | null>;
   window(action: 'minimize' | 'maximize' | 'close'): Promise<void>;
+  signIn(
+    id: string,
+    action: 'start' | 'resume' | 'finish' | 'restore',
+    closeMainConfirmed?: boolean,
+  ): Promise<SignInProgress>;
+  copyMcp(from: string, to: string): Promise<void>;
+  confirmAccount(id: string, matches: boolean): Promise<void>;
 }
 export function monogram(appId: string) {
   return appId === 'claude-desktop'

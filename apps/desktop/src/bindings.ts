@@ -79,9 +79,9 @@ export type Profile_Serialize = {
 
 export type Request = Request_Serialize | Request_Deserialize;
 
-export type Request_Deserialize = { type: "snapshot"; refresh?: boolean | null } | { type: "create"; input: CreateProfile_Deserialize } | { type: "update"; profile: Profile_Deserialize } | { type: "action"; id: string; action: ProfileAction; confirmation?: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "window"; action: WindowAction };
+export type Request_Deserialize = { type: "snapshot"; refresh?: boolean | null } | { type: "create"; input: CreateProfile_Deserialize } | { type: "update"; profile: Profile_Deserialize } | { type: "action"; id: string; action: ProfileAction; confirmation?: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed?: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction };
 
-export type Request_Serialize = { type: "snapshot"; refresh: boolean | null } | { type: "create"; input: CreateProfile_Serialize } | { type: "update"; profile: Profile_Serialize } | { type: "action"; id: string; action: ProfileAction; confirmation: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "window"; action: WindowAction };
+export type Request_Serialize = { type: "snapshot"; refresh: boolean | null } | { type: "create"; input: CreateProfile_Serialize } | { type: "update"; profile: Profile_Serialize } | { type: "action"; id: string; action: ProfileAction; confirmation: string | null } | { type: "mainAction"; appId: string; action: MainAction } | { type: "saveSettings"; settings: Settings } | { type: "diagnostics"; redact: boolean } | { type: "plan"; id: string } | { type: "browse" } | { type: "signIn"; id: string; action: SignInAction; closeMainConfirmed: boolean | null } | { type: "copyMcp"; from: string; to: string } | { type: "confirmAccount"; id: string; matches: boolean } | { type: "window"; action: WindowAction };
 
 export type Settings = {
 	schemaVersion: number,
@@ -94,6 +94,8 @@ export type Settings = {
 	theme: Theme,
 	onboardingCompleted: boolean,
 };
+
+export type SignInAction = "start" | "resume" | "finish" | "restore";
 
 export type SignInState = "signed-in" | "unknown" | "needs-sign-in";
 

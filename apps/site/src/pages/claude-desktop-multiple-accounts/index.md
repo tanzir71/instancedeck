@@ -44,33 +44,40 @@ that callback to the default package instance rather than the profile that
 started it. Launching another data directory does not, by itself, solve that
 routing constraint.
 
-## Guided sign-in design
+## Guided snapshot sign-in
 
-The journaled assistant is planned and its screen is available for design
-review, but its recovery engine has not shipped in the current development
-build. Do not manually rename your existing main Claude data to imitate this
-flow.
+The development build includes a journaled sign-in assistant. Its crash and
+restoration harness uses synthetic data; real account verification is still
+pending. Use the assistant rather than manually renaming your main data.
 
-The intended workflow is:
+The workflow is:
 
 1. Close the main Claude gracefully, then set its proven live data slot aside
    with a same-volume rename.
 2. Open a fresh default Claude and let you sign in normally.
-3. After you confirm sign-in, close that fresh window and move its data into the
-   selected profile.
+3. After you confirm sign-in, close that fresh window, capture its folder and
+   adopt it into the selected profile. The capture and previous profile data
+   remain as retained backups, including when the profile is on another drive.
 4. Restore the original main slot before relaunching it. An interrupted
    operation must offer Resume or Restore on the next start.
 
-Unknown or ambiguous layouts must fail closed. A stash must never be removed
-before restoration. The implementation will be verified with crash tests at
-every journal transition before this feature is enabled.
+Unknown or ambiguous layouts fail closed. A stash is never discarded; it is
+renamed back to its original location. Crash tests at every journal transition
+and before/after file operations compare synthetic fixture hashes. On restart,
+choose Resume or Restore my main Claude. Neither option force-closes the app.
+
+The optional “Looks signed in” hint watches file events and metadata, then waits
+for three seconds of quiet. It does not verify an account. “I’ve signed in” is
+always available; check the visible account afterwards and record your manual
+confirmation in Profile details → Account health.
 
 ## MCP configuration per profile
 
-The app's MCP configuration follows its user-data folder. A later integration
-will copy only `claude_desktop_config.json` on request, never login state. MCP
-configuration can itself contain secrets; do not publish it in a diagnostic
-report.
+The app's MCP configuration follows its user-data folder. In Profile details,
+choose a source Claude profile to copy only `claude_desktop_config.json` on
+request. The launcher does not open or parse it, and preserves an existing
+destination file as a backup. Stop the destination profile first. MCP
+configuration can itself contain secrets; do not publish it in a report.
 
 ## Limitations
 

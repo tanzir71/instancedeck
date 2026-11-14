@@ -272,6 +272,8 @@ impl ProfileStore {
     /// Removing metadata never touches the profile's data folder.
     pub fn remove(&self, id: &str) -> Result<Profile> {
         self.transaction(|state| {
+            let profile = state.profile(id)?;
+            crate::signin::guard_launch(self.root(), &profile.app_id)?;
             let position = state
                 .profiles
                 .iter()

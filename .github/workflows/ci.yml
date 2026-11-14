@@ -56,6 +56,8 @@ jobs:
             artifacts/p0/
             artifacts/p1/*.json
             artifacts/p2/*.png
+            artifacts/p3/*.png
+            artifacts/p3/*.json
             artifacts/p2/*.json
             artifacts/p6/*.png
             artifacts/p6/*.json

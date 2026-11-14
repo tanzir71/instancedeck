@@ -116,5 +116,38 @@ export function createPreviewClient(
     }),
     browse: async () => null,
     window: async () => {},
+    signIn: async (id, action) => {
+      if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
+      const progress = {
+        id: action === 'start' ? `fixture-${id}` : id,
+        profileId:
+          action === 'start' ? id : (state.signIn?.[0]?.profileId ?? ''),
+        state: 'awaiting-sign-in' as const,
+      };
+      state.signIn =
+        action === 'finish' || action === 'restore' ? [] : [progress];
+      emit();
+      return {
+        ...progress,
+        state:
+          action === 'finish'
+            ? 'done'
+            : action === 'restore'
+              ? 'aborted'
+              : progress.state,
+      };
+    },
+    copyMcp: async () => {
+      throw new Error(copy.desktop.previewBanner);
+    },
+    confirmAccount: async (id, matches) => {
+      if (!simulateProcesses) throw new Error(copy.desktop.previewBanner);
+      state.profiles = state.profiles.map((profile) =>
+        profile.id === id
+          ? { ...profile, signInState: matches ? 'signed-in' : 'needs-sign-in' }
+          : profile,
+      );
+      emit();
+    },
   };
 }

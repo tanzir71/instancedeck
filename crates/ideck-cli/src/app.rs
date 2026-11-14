@@ -58,6 +58,29 @@ enum Command {
         #[arg(long)]
         check: Option<PathBuf>,
     },
+    /// Journaled Claude sign-in; never reads target file contents.
+    SignIn {
+        #[command(subcommand)]
+        command: SignInCommand,
+    },
+}
+#[derive(Subcommand)]
+enum SignInCommand {
+    List,
+    Start {
+        id: String,
+        #[arg(long)]
+        close_main: bool,
+    },
+    Resume {
+        id: String,
+    },
+    Finish {
+        id: String,
+    },
+    Restore {
+        id: String,
+    },
 }
 #[derive(Subcommand)]
 enum Profiles {
@@ -174,6 +197,22 @@ pub fn run() -> Result<()> {
             print_json(&json!({ "closed": id }))
         }
         Command::Doctor { redact } => doctor(&engine, &log_dir, redact),
+        Command::SignIn { command } => {
+            use ideck_core::signin::{JournalStore, SignIn};
+            let runner = SignIn::new(&engine);
+            match command {
+                SignInCommand::List => {
+                    print_json(&JournalStore::new(engine.store.root()).active()?)
+                }
+                SignInCommand::Start { id, close_main } => {
+                    let journal = runner.prepare(&id, close_main)?;
+                    print_json(&runner.resume(&journal.id)?)
+                }
+                SignInCommand::Resume { id } => print_json(&runner.resume(&id)?),
+                SignInCommand::Finish { id } => print_json(&runner.finish(&id)?),
+                SignInCommand::Restore { id } => print_json(&runner.restore(&id)?),
+            }
+        }
         Command::RecipeSchema { .. } => unreachable!(),
     }
 }

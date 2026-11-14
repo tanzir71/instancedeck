@@ -24,7 +24,7 @@ const launch = [...recipe.launch.args, ...Object.entries(recipe.launch.env).map(
     <p>Launch strategies: {recipe.launch.strategies.join(' → ')}. Target binaries are left untouched.</p>
     <h2>Set up a profile</h2>
     <ol><li>Install the official {recipe.name} app for your Windows user.</li><li>Create a profile in InstanceDeck and choose its data location.</li><li>Launch it, complete the app's supported sign-in flow and verify the visible account.</li></ol>
-    {recipe.id === 'claude-desktop' && <aside>The guided snapshot sign-in engine has not shipped in this development build. Read the <a href="../../claude-desktop-multiple-accounts/">Claude guide</a> before attempting sign-in.</aside>}
+    {recipe.id === 'claude-desktop' && <aside>Use the journaled snapshot assistant for browser sign-in. Its automated crash tests use synthetic data; real account verification remains pending. Read the <a href="../../claude-desktop-multiple-accounts/">Claude guide</a> first.</aside>}
     <h2>Known limitations</h2>
     <ul>{recipe.limitations.map((limitation) => <li>{limitation}</li>)}</ul>
     <h2>Related apps and guides</h2>

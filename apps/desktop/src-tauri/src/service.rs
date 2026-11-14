@@ -1,3 +1,4 @@
+use ideck_core::signin::{self, JournalStore, SignIn, SignInFiles};
 use ideck_core::{
     DesktopOperations, Engine, Error, Platform, Profile, ProfileColor, ProfileStore, Result,
     Settings, SettingsStore, built_in_recipes, layout, paths,
@@ -28,6 +29,24 @@ pub struct Snapshot {
     main_running: BTreeMap<String, Vec<u32>>,
     status_errors: BTreeMap<String, String>,
     settings: Settings,
+    sign_in: Vec<SignInProgress>,
+}
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SignInProgress {
+    id: String,
+    profile_id: String,
+    state: signin::State,
+    looks_signed_in: bool,
+    metadata_error: Option<String>,
+}
+#[derive(Deserialize, specta::Type)]
+#[serde(rename_all = "kebab-case")]
+pub enum SignInAction {
+    Start,
+    Resume,
+    Finish,
+    Restore,
 }
 #[derive(Deserialize, specta::Type)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -61,7 +80,7 @@ impl DesktopState {
         Self::with_platform(root, platform)
     }
 }
-impl<P: Platform + DesktopOperations> DesktopState<P> {
+impl<P: Platform + DesktopOperations + SignInFiles> DesktopState<P> {
     fn with_platform(root: PathBuf, platform: P) -> Result<Self> {
         Ok(Self {
             engine: Engine::new(platform, ProfileStore::new(&root), built_in_recipes()?)?,
@@ -123,6 +142,24 @@ impl<P: Platform + DesktopOperations> DesktopState<P> {
             main_running,
             status_errors,
             settings: self.settings.read()?,
+            sign_in: JournalStore::new(self.engine.store.root())
+                .active()?
+                .into_iter()
+                .map(|j| {
+                    let hint = if j.state == signin::State::AwaitingSignIn {
+                        self.engine.platform.sign_in_hint(&j.slot, &j.id)
+                    } else {
+                        Ok(false)
+                    };
+                    SignInProgress {
+                        id: j.id,
+                        profile_id: j.profile_id,
+                        state: j.state,
+                        looks_signed_in: matches!(hint, Ok(true)),
+                        metadata_error: hint.err().map(|e| e.to_string()),
+                    }
+                })
+                .collect(),
         })
     }
     pub fn create(&self, input: CreateProfile) -> Result<Profile> {
@@ -169,6 +206,7 @@ impl<P: Platform + DesktopOperations> DesktopState<P> {
             Error::Platform("A previous operation failed; restart InstanceDeck".into())
         })?;
         let profile = self.engine.store.read()?.profile(id)?.clone();
+        signin::guard_launch(self.engine.store.root(), &profile.app_id)?;
         match action {
             ProfileAction::Launch => {
                 self.engine.launch(id)?;
@@ -202,6 +240,46 @@ impl<P: Platform + DesktopOperations> DesktopState<P> {
             ));
         }
         Ok(())
+    }
+    pub fn sign_in(
+        &self,
+        id: &str,
+        action: SignInAction,
+        close_main_confirmed: bool,
+    ) -> Result<Value> {
+        let _mutation = self
+            .mutation
+            .lock()
+            .map_err(|_| Error::Platform("Restart InstanceDeck after a failed operation".into()))?;
+        let runner = SignIn::new(&self.engine);
+        let journal = match action {
+            SignInAction::Start => {
+                let j = runner.prepare(id, close_main_confirmed)?;
+                runner.resume(&j.id)?
+            }
+            SignInAction::Resume => runner.resume(id)?,
+            SignInAction::Finish => runner.finish(id)?,
+            SignInAction::Restore => runner.restore(id)?,
+        };
+        Ok(json!({"id": journal.id, "profileId": journal.profile_id, "state": journal.state}))
+    }
+    pub fn copy_mcp(&self, from: &str, to: &str) -> Result<()> {
+        signin::copy_mcp(&self.engine, from, to)
+    }
+    pub fn confirm_account(&self, id: &str, matches: bool) -> Result<()> {
+        self.engine.store.transaction(|state| {
+            let profile = state
+                .profiles
+                .iter_mut()
+                .find(|p| p.id == id)
+                .ok_or_else(|| Error::NotFound("Profile".into()))?;
+            profile.sign_in_state = if matches {
+                ideck_core::SignInState::SignedIn
+            } else {
+                ideck_core::SignInState::NeedsSignIn
+            };
+            Ok(())
+        })
     }
     pub fn main_action(&self, app_id: &str, action: MainAction) -> Result<()> {
         match action {
@@ -398,6 +476,52 @@ mod tests {
             .unwrap();
         assert!(state.engine.store.read().unwrap().profiles.is_empty());
         assert_eq!(fs::read_to_string(sentinel).unwrap(), "retained");
+    }
+    #[test]
+    fn explicit_account_report_changes_only_manual_profile_state_and_never_recipe_status() {
+        let temp = tempfile::tempdir().unwrap();
+        let state =
+            DesktopState::with_platform(temp.path().join("manager"), FakePlatform::default())
+                .unwrap();
+        let profile = state
+            .create(CreateProfile {
+                id: None,
+                app_id: "codex".into(),
+                name: "Manual account fixture".into(),
+                color: ProfileColor::Teal,
+                root: temp.path().join("Profiles").to_string_lossy().into_owned(),
+                isolate_claude_code: true,
+            })
+            .unwrap();
+        state.confirm_account(&profile.id, true).unwrap();
+        assert_eq!(
+            state
+                .engine
+                .store
+                .read()
+                .unwrap()
+                .profile(&profile.id)
+                .unwrap()
+                .sign_in_state,
+            ideck_core::SignInState::SignedIn
+        );
+        assert_eq!(
+            serde_json::to_value(state.engine.recipe("codex").unwrap().status).unwrap(),
+            json!("community")
+        );
+        state.confirm_account(&profile.id, false).unwrap();
+        assert_eq!(
+            state
+                .engine
+                .store
+                .read()
+                .unwrap()
+                .profile(&profile.id)
+                .unwrap()
+                .sign_in_state,
+            ideck_core::SignInState::NeedsSignIn
+        );
+        assert!(!Path::new(&profile.data_dir).exists());
     }
     #[test]
     fn diagnostic_redaction_recurses_and_settings_reject_uninstalled_features() {

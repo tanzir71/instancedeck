@@ -47,12 +47,14 @@ const CREATE_NO_WINDOW: u32 = 0x08000000;
 pub struct WindowsPlatform {
     state_dir: PathBuf,
     cache: Mutex<HashMap<String, InstalledApp>>,
+    pub(crate) sign_in_watch: Mutex<Option<crate::signin::MetadataWatch>>,
 }
 impl WindowsPlatform {
     pub fn new(state_dir: impl Into<PathBuf>) -> Self {
         Self {
             state_dir: state_dir.into(),
             cache: Mutex::new(HashMap::new()),
+            sign_in_watch: Mutex::new(None),
         }
     }
     fn msix(

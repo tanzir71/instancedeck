@@ -1,4 +1,4 @@
-use crate::service::{CreateProfile, DesktopState, MainAction, ProfileAction};
+use crate::service::{CreateProfile, DesktopState, MainAction, ProfileAction, SignInAction};
 use ideck_core::{Profile, Settings};
 use serde::Deserialize;
 use serde_json::{Value, json};
@@ -38,6 +38,20 @@ pub enum Request {
         id: String,
     },
     Browse,
+    SignIn {
+        id: String,
+        action: SignInAction,
+        #[serde(rename = "closeMainConfirmed")]
+        close_main_confirmed: Option<bool>,
+    },
+    CopyMcp {
+        from: String,
+        to: String,
+    },
+    ConfirmAccount {
+        id: String,
+        matches: bool,
+    },
     Window {
         action: WindowAction,
     },
@@ -85,6 +99,19 @@ pub async fn desktop_request(
                     Ok(Value::Null)
                 }
                 Request::Diagnostics { redact } => state.diagnostics(redact),
+                Request::SignIn {
+                    id,
+                    action,
+                    close_main_confirmed,
+                } => state.sign_in(&id, action, close_main_confirmed.unwrap_or(false)),
+                Request::CopyMcp { from, to } => {
+                    state.copy_mcp(&from, &to)?;
+                    Ok(Value::Null)
+                }
+                Request::ConfirmAccount { id, matches } => {
+                    state.confirm_account(&id, matches)?;
+                    Ok(Value::Null)
+                }
                 Request::Plan { id } => {
                     let profile = state.engine.store.read()?.profile(&id)?.clone();
                     Ok(serde_json::to_value(state.engine.plan(&profile, false)?)?)

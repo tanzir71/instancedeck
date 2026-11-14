@@ -185,6 +185,7 @@ impl<P: Platform> Engine<P> {
     pub fn launch(&self, id: &str) -> Result<LaunchOutcome> {
         let _lock = self.platform.launch_lock()?;
         let profile = self.store.read()?.profile(id)?.clone();
+        crate::signin::guard_launch(self.store.root(), &profile.app_id)?;
         let mut plan = self.plan(&profile, false)?;
         let existing = self.matching(&plan, &self.platform.processes()?)?;
         if let Some(process) = existing.first() {
@@ -272,10 +273,21 @@ impl<P: Platform> Engine<P> {
         self.close_processes(self.running(&profile)?)
     }
     pub fn close_main(&self, app_id: &str) -> Result<()> {
+        crate::signin::guard_launch(self.store.root(), app_id)?;
         self.close_processes(self.main_processes(app_id)?)
+    }
+    pub(crate) fn close_main_for_sign_in(&self) -> Result<()> {
+        self.close_processes(self.main_processes("claude-desktop")?)
+    }
+    pub(crate) fn launch_main_for_sign_in(&self) -> Result<()> {
+        self.launch_main_locked("claude-desktop")
     }
     pub fn launch_main(&self, app_id: &str) -> Result<()> {
         let _lock = self.platform.launch_lock()?;
+        crate::signin::guard_launch(self.store.root(), app_id)?;
+        self.launch_main_locked(app_id)
+    }
+    fn launch_main_locked(&self, app_id: &str) -> Result<()> {
         let current = self.main_processes(app_id)?;
         if !current.is_empty() {
             return self.platform.focus(&current);

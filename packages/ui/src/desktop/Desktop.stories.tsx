@@ -14,6 +14,7 @@ import {
   SettingsScreen,
 } from './ScreenViews';
 import { SignInAssistant, RecoveryDialog } from './SignInAssistant';
+import { SignInFlow, AccountGuidance } from './SignInFlow';
 import { Wizard } from './Wizard';
 import { createPreviewClient, emptyPreviewSnapshot } from './previewClient';
 import { fixtureApps, fixtureProfiles, fixtureSnapshot } from './fixtures';
@@ -232,6 +233,140 @@ export const SignIn: Story = {
     </ReferenceDeck>
   ),
 };
+export const SignInConsent: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <SignInFlow
+        client={createPreviewClient(fixtureSnapshot)}
+        snapshot={fixtureSnapshot}
+        profile={fixtureProfiles[1]!}
+        onDismiss={noop}
+        onRefresh={done}
+      />
+    </ReferenceDeck>
+  ),
+};
+export const SignInConsentError: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <SignInFlow
+        client={{
+          ...createPreviewClient(fixtureSnapshot),
+          signIn: async () => {
+            throw new globalThis.Error(
+              'The live Claude layout is unknown. No data was moved.',
+            );
+          },
+        }}
+        snapshot={fixtureSnapshot}
+        profile={fixtureProfiles[1]!}
+        onDismiss={noop}
+        onRefresh={done}
+      />
+    </ReferenceDeck>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(body.getByRole('button', { name: 'Start sign-in' }));
+    await expect(body.getByRole('alert')).toHaveTextContent(
+      'No data was moved.',
+    );
+  },
+};
+export const SignInMetadataHint: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <SignInAssistant
+        name="Client — Acme"
+        journalSaved
+        looksSignedIn
+        onFinish={noop}
+        onRestore={noop}
+      />
+    </ReferenceDeck>
+  ),
+};
+export const SignInAdopting: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <SignInAssistant
+        name="Client — Acme"
+        step={2}
+        journalSaved
+        busy
+        onFinish={noop}
+        onRestore={noop}
+      />
+    </ReferenceDeck>
+  ),
+};
+export const RecoveryBusy: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <RecoveryDialog busy onResume={noop} onRestore={noop} />
+    </ReferenceDeck>
+  ),
+};
+export const CodexAccountGuidance: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <AccountGuidance
+        profile={fixtureProfiles[3]!}
+        client={createPreviewClient(fixtureSnapshot, true)}
+        onClose={noop}
+        onRefresh={done}
+      />
+    </ReferenceDeck>
+  ),
+};
+export const AccountGuidanceError: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <AccountGuidance
+        profile={fixtureProfiles[3]!}
+        client={{
+          ...createPreviewClient(fixtureSnapshot),
+          confirmAccount: async () => {
+            throw new globalThis.Error(
+              'The profile metadata could not be saved.',
+            );
+          },
+        }}
+        onClose={noop}
+        onRefresh={done}
+      />
+    </ReferenceDeck>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(
+      body.getByRole('button', { name: 'Account matches this profile' }),
+    );
+    await expect(body.getByRole('alert')).toHaveTextContent(
+      'could not be saved',
+    );
+  },
+};
+export const RecoveryOnStartup: Story = {
+  render: function Example() {
+    const [client] = useState(() =>
+      createPreviewClient(
+        {
+          ...fixtureSnapshot,
+          signIn: [
+            {
+              id: 'synthetic-journal',
+              profileId: 'client',
+              state: 'awaiting-sign-in',
+            },
+          ],
+        },
+        true,
+      ),
+    );
+    return <DesktopApp client={client} />;
+  },
+};
 export const SignInPreflight: Story = {
   render: () => (
     <ReferenceDeck>
@@ -304,6 +439,58 @@ export const Profile: Story = {
       />
     </ReferenceDeck>
   ),
+};
+export const ProfileMcp: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <ProfileDetail
+        profile={fixtureProfiles[0]!}
+        profiles={fixtureProfiles}
+        client={createPreviewClient(fixtureSnapshot)}
+        onSignIn={noop}
+        onAccountHealth={noop}
+        onClose={noop}
+        onSaved={done}
+        onAction={noop}
+      />
+    </ReferenceDeck>
+  ),
+};
+export const ProfileMcpError: Story = {
+  render: () => (
+    <ReferenceDeck>
+      <ProfileDetail
+        profile={fixtureProfiles[0]!}
+        profiles={fixtureProfiles}
+        client={{
+          ...createPreviewClient(fixtureSnapshot),
+          copyMcp: async () => {
+            throw new globalThis.Error(
+              'The source MCP configuration is unavailable. Existing files were kept.',
+            );
+          },
+        }}
+        onSignIn={noop}
+        onAccountHealth={noop}
+        onClose={noop}
+        onSaved={done}
+        onAction={noop}
+      />
+    </ReferenceDeck>
+  ),
+  play: async ({ canvasElement }) => {
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.selectOptions(
+      body.getByRole('combobox', { name: 'Source Claude profile' }),
+      'client',
+    );
+    await userEvent.click(
+      body.getByRole('button', { name: 'Copy MCP config from…' }),
+    );
+    await expect(body.getByRole('alert')).toHaveTextContent(
+      'Existing files were kept.',
+    );
+  },
 };
 export const Apps: Story = {
   render: () => (
