@@ -507,6 +507,8 @@
 }
 
 .footer {
+  --paper: var(--on-color);
+
   padding: 96px max(32px, calc((100vw - 1280px) / 2)) 56px;
   background: var(--deep);
   color: var(--paper);
