@@ -32,19 +32,19 @@ CI never receives its contents. Local finalization will sign and verify the
 exact draft artifacts, exercise tamper/version rejection, then upload public
 signatures, feed and checksums. No trusted Windows signing claim is made.
 
-Remaining: native x64/ARM64 package builds, complete automated checks, the
-actual v0.1.0 tag/draft, local integrity verification and a real draft-status
-snapshot for Download/Changelog. No release has been published.
+Remaining: the actual v0.1.0 tag/draft, exact-artifact integrity verification
+and a real draft-status snapshot for Download/Changelog. No release has been
+published.
 
 The implementation checkpoint `50b46dd` is pushed. The
 [build-only Release preflight](https://github.com/tanzir71/instancedeck/actions/runs/43605787043)
-is running without creating a release or executing an installer. All **63 Rust
+passed without creating a release or executing an installer. All **64 Rust
 tests**, warnings-denied clippy, TypeScript, lint, actionlint and PowerShell
 syntax checks pass. Core coverage is **87.54% lines** (1954/2232), regions
 82.42%, functions 68.62%; [report](artifacts/p7/core-coverage.json). Manual
 remaining work is collected in [the checklist](docs/manual-verification.md).
 
-The complete browser suite passes **24 tests**, including all **209 stories**
+The complete browser suite passes **24 tests**, including all **211 stories**
 and their AA checks. The first local x64 NSIS build succeeds (4.14 MiB), without
 executing the installer. Visual inspection caught missing padding in the shared
 power dialog; it now uses the existing 32px confirmation spacing. All seven
@@ -69,6 +69,20 @@ stories**. All **17 P7 stories** pass interaction and AA checks after the fix;
 TypeScript passes. The local own-installer verifier rejects both tampering and a
 signed-version mismatch:
 [evidence](artifacts/p7/local-integrity-verification.json).
+
+The
+[native package preflight](https://github.com/tanzir71/instancedeck/actions/runs/43605787043)
+passed for both **x64 and ARM64**: unsigned NSIS, portable ZIP, PE architecture,
+checksums and provenance. It created no release and executed no installer.
+
+The final backend audit moves the consent/channel read after the serialized
+request wait, so disabling checks while an earlier request runs also denies a
+queued check/download. Installation rechecks the selected channel after
+acquiring its mutation/launch locks. A deterministic queued-request test and
+installer callback checks cover revoked consent and changed channels. All **64
+Rust tests** and warnings-denied clippy pass; core coverage is unchanged because
+these guards live in the desktop adapter. The exact tag workflow will repeat
+verification before building and creating the draft.
 
 ## P2 — Implementation and automated acceptance complete
 

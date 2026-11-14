@@ -404,13 +404,19 @@ impl<P: Platform + DesktopOperations + SignInFiles + ShellOperations> DesktopSta
         }
         result
     }
-    pub fn run_installer(&self, install: impl FnOnce() -> Result<()>) -> Result<()> {
+    pub fn run_installer(&self, channel: &str, install: impl FnOnce() -> Result<()>) -> Result<()> {
         let _mutation = self
             .mutation
             .lock()
             .map_err(|_| Error::Platform("Restart InstanceDeck".into()))?;
         let _launch = self.engine.platform.launch_lock()?;
-        ideck_core::updates::permitted(&self.settings.read()?)?;
+        let settings = self.settings.read()?;
+        ideck_core::updates::permitted(&settings)?;
+        if ideck_core::updates::endpoint(&settings.update_channel) != channel {
+            return Err(Error::Invalid(
+                "Update channel changed; check again before installing".into(),
+            ));
+        }
         if !JournalStore::new(self.engine.store.root())
             .active()?
             .is_empty()
@@ -815,6 +821,7 @@ mod tests {
     #[test]
     fn installer_callback_requires_saved_consent_and_completed_history_recovery() {
         use std::cell::Cell;
+        let channel = ideck_core::updates::endpoint(&ideck_core::settings::UpdateChannel::Stable);
         let temp = tempfile::tempdir().unwrap();
         let state =
             DesktopState::with_platform(temp.path().join("manager"), FakePlatform::default())
@@ -822,7 +829,7 @@ mod tests {
         let calls = Cell::new(0);
         assert!(
             state
-                .run_installer(|| {
+                .run_installer(channel, || {
                     calls.set(calls.get() + 1);
                     Ok(())
                 })
@@ -834,7 +841,7 @@ mod tests {
         state.settings.write(&settings).unwrap();
         assert!(
             state
-                .run_installer(|| {
+                .run_installer(channel, || {
                     calls.set(calls.get() + 1);
                     Ok(())
                 })
@@ -858,7 +865,7 @@ mod tests {
         assert!(ideck_core::history::configure(&state.engine, &profile.id, true).is_err());
         assert!(
             state
-                .run_installer(|| {
+                .run_installer(channel, || {
                     calls.set(calls.get() + 1);
                     Ok(())
                 })
@@ -867,8 +874,21 @@ mod tests {
         assert_eq!(calls.get(), 0);
         state.engine.platform.0.lock().unwrap().fail_history_at = None;
         ideck_core::history::configure(&state.engine, &profile.id, false).unwrap();
+        settings.update_channel = ideck_core::settings::UpdateChannel::Beta;
+        state.settings.write(&settings).unwrap();
+        assert!(
+            state
+                .run_installer(channel, || {
+                    calls.set(calls.get() + 1);
+                    Ok(())
+                })
+                .is_err()
+        );
+        assert_eq!(calls.get(), 0);
+        settings.update_channel = ideck_core::settings::UpdateChannel::Stable;
+        state.settings.write(&settings).unwrap();
         state
-            .run_installer(|| {
+            .run_installer(channel, || {
                 calls.set(calls.get() + 1);
                 Ok(())
             })

@@ -1,14 +1,15 @@
 use crate::service::DesktopState;
 use ideck_core::shell::ShellOperations;
-use ideck_core::{Error, Result, updates};
+use ideck_core::{Error, Result, Settings, SettingsStore, updates};
 use serde::Serialize;
 use std::{sync::Arc, time::Duration};
 use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_updater::{Update, UpdaterExt};
 
+type CachedUpdate = Option<(String, Update)>;
 #[derive(Default)]
 pub struct Updates {
-    cached: tokio::sync::Mutex<Option<(String, Update)>>,
+    cached: tokio::sync::Mutex<CachedUpdate>,
 }
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -35,11 +36,20 @@ fn info(status: &'static str, version: Option<String>, notes: Option<String>) ->
     }
 }
 impl Updates {
-    pub async fn check(&self, app: AppHandle, state: Arc<DesktopState>) -> Result<UpdateInfo> {
-        let settings = state.settings.read()?;
+    async fn authorized<'a>(
+        &'a self,
+        store: &SettingsStore,
+    ) -> Result<(tokio::sync::MutexGuard<'a, CachedUpdate>, Settings)> {
+        // A queued request must use permission/channel saved after it acquires
+        // the request lock, never a snapshot taken before an earlier request.
+        let cached = self.cached.lock().await;
+        let settings = store.read()?;
         updates::permitted(&settings)?;
+        Ok((cached, settings))
+    }
+    pub async fn check(&self, app: AppHandle, state: Arc<DesktopState>) -> Result<UpdateInfo> {
+        let (mut cached, settings) = self.authorized(&state.settings).await?;
         let channel = updates::endpoint(&settings.update_channel).to_owned();
-        let mut cached = self.cached.lock().await;
         *cached = None;
         // The plugin itself makes no requests on registration. This is the only
         // manifest request, and both saved consent gates precede client creation.
@@ -98,9 +108,7 @@ impl Updates {
         if portable() {
             return Err(Error::Invalid("Portable builds update by extracting a new portable package. Your profiles stay in the configured folder.".into()));
         }
-        let settings = state.settings.read()?;
-        updates::permitted(&settings)?;
-        let mut cached = self.cached.lock().await;
+        let (mut cached, settings) = self.authorized(&state.settings).await?;
         let (channel, update) = cached
             .as_ref()
             .filter(|(channel, u)| {
@@ -135,7 +143,7 @@ impl Updates {
         }
         *cached = None;
         tauri::async_runtime::spawn_blocking(move || {
-            state.run_installer(|| {
+            state.run_installer(&channel, || {
                 update
                     .install(bytes)
                     .map_err(|e| Error::Platform(format!("Update installation: {e}")))
@@ -157,4 +165,49 @@ pub async fn install(
     app.state::<Updates>()
         .install(app.clone(), state, version, confirmed)
         .await
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[tokio::test]
+    async fn queued_requests_recheck_saved_consent_and_channel_after_waiting() {
+        let temp = tempfile::tempdir().unwrap();
+        let store = SettingsStore::new(temp.path().join("Manager Zoë 日本語"));
+        let mut settings = store.read().unwrap();
+        settings.onboarding_completed = true;
+        store.write(&settings).unwrap();
+        let updates = Updates::default();
+        let held = updates.cached.lock().await;
+        let attempt = updates.authorized(&store);
+        tokio::pin!(attempt);
+        assert!(
+            tokio::time::timeout(Duration::from_millis(5), &mut attempt)
+                .await
+                .is_err()
+        );
+        settings.allow_update_checks = false;
+        store.write(&settings).unwrap();
+        drop(held);
+        assert!(attempt.await.is_err());
+
+        settings.allow_update_checks = true;
+        store.write(&settings).unwrap();
+        let held = updates.cached.lock().await;
+        let attempt = updates.authorized(&store);
+        tokio::pin!(attempt);
+        assert!(
+            tokio::time::timeout(Duration::from_millis(5), &mut attempt)
+                .await
+                .is_err()
+        );
+        settings.update_channel = ideck_core::settings::UpdateChannel::Beta;
+        store.write(&settings).unwrap();
+        drop(held);
+        let (_guard, current) = attempt.await.unwrap();
+        assert!(matches!(
+            current.update_channel,
+            ideck_core::settings::UpdateChannel::Beta
+        ));
+    }
 }
