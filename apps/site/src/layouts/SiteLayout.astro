@@ -6,11 +6,11 @@ import type { Graph } from 'schema-dts';
 import { serifFont, sansFont } from '@instancedeck/ui/fonts';
 import favicon from '../../../../design/assets/logo-mark.svg?url';
 
-interface Props { title: string; description: string; noindex?: boolean; schema?: Graph; ogSlug?: string; canonicalPath?: string; }
+interface Props { title: string; description: string; noindex?: boolean; schema?: Graph; ogSlug?: string; canonicalPath?: string; linkPrefix?: string; }
 const { title, description, noindex = false, schema, ogSlug = 'home', canonicalPath } = Astro.props;
 const pagePath = canonicalPath ?? Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/+$/, ''), '').replace(/^\/+/, '');
 const canonical = absoluteUrl(pagePath);
-const prefix = relativePrefix(`${import.meta.env.BASE_URL.replace(/\/+$/, '')}/${pagePath}`);
+const prefix = Astro.props.linkPrefix ?? relativePrefix(`${import.meta.env.BASE_URL.replace(/\/+$/, '')}/${pagePath}`);
 const og = absoluteUrl(`og/${ogSlug}.png`);
 const structured: Graph = schema ?? { '@context': 'https://schema.org', '@graph': [
   { '@type': 'WebPage', name: title, description, url: canonical },

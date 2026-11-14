@@ -267,6 +267,16 @@ Built Astro screenshots: [1440 home](artifacts/p6/home-desktop-browser.png),
 eleven `artifacts/p6/site-*.png` files capture each actual built section, in
 addition to the component comparisons above.
 
+The
+[Pages build](https://github.com/tanzir71/instancedeck/actions/runs/43588371850)
+passed on Ubuntu, including Lighthouse and packaging. Deploy/IndexNow were
+correctly skipped by the publication gate. The Windows job in
+[CI](https://github.com/tanzir71/instancedeck/actions/runs/43588371901) passed
+all steps for the site milestone. A further targeted browser regression passed
+for a missing nested URL: custom 404 navigation uses the configured absolute
+project URL, so links remain correct when GitHub serves 404.html at an arbitrary
+request path.
+
 Remaining: live Pages deployment/IndexNow, P5's additional recipe entries and
 related-app links, and replacing the permitted product design image when P2
 ships. P6 is not complete. P3–P5 and P7 have not started; the required native P2

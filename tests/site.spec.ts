@@ -192,3 +192,25 @@ test('app, FAQ and comparison content fit a mobile viewport', async ({
     });
   }
 });
+
+test('custom 404 navigation stays inside the project from a missing nested URL', async ({
+  page,
+}) => {
+  const response = await page.goto(
+    'http://127.0.0.1:4322/instancedeck/missing/nested/page/',
+  );
+  expect(response?.status()).toBe(404);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'This page is not in the deck.',
+  );
+  const links = await page
+    .locator('a[href]')
+    .evaluateAll((nodes) => nodes.map((node) => node.getAttribute('href')!));
+  expect(
+    links.filter(
+      (href) => !href.startsWith('#') && !href.startsWith('https://'),
+    ).length,
+  ).toBe(0);
+  expect(links).toContain('https://tanzir71.github.io/instancedeck/apps/');
+  expect(links).toContain('https://tanzir71.github.io/instancedeck/download/');
+});
